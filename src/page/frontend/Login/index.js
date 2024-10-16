@@ -15,6 +15,7 @@ export default function Login() {
     password: ''
   });
 
+  const [loginState, setLoginState] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value })
@@ -30,6 +31,7 @@ export default function Login() {
     try {
       const res = await postLoginApi(data)
       if (res.data.success) {
+        setLoginState(res.data)
         setTimeout(() => {
           navigate('/backend')
         }, 1500)
@@ -52,7 +54,11 @@ export default function Login() {
   return (
     <div className="user-page">
       <div className="user-box">
-
+        {Object.keys(loginState).length !== 0 && (
+          <div className={`alert alert-${loginState.success ? "success" : "danger"}`}>
+            {loginState.message}
+          </div>
+        )}
         <div className="user-headLine"><h2>歡迎登入</h2></div>
         <div className="user-label">
           <label htmlFor="username" className="form-label">帳號</label>
