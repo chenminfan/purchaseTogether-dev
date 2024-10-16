@@ -1,9 +1,26 @@
+import React, { useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom';
+import Home from './page/frontend/Home';
+import Login from './page/frontend/Login';
+import Dashboard from './page/backend/Dashboard';
+import BackendProduct from './page/backend/BackendProduct';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
+export default function App() {
+  useEffect(() => {
+
+  }, [])
   return (
-    <div className="App">
-    </div>
-  );
-}
+    <Routes>
+      <Route exact path='/' element={<Home />}>
+        <Route path='/login' element={<Login />}></Route>
+      </Route>
+      <Route path='/backend' element={<Dashboard />}>
+        <Route path='/backend/product' element={<BackendProduct />}></Route>
 
-export default App;
+      </Route>
+      {/* 暫放 */}
+      {/* <Route path='/reactDaily' element={<ReactDailyApp />}></Route> */}
+    </Routes>
+  )
+}
