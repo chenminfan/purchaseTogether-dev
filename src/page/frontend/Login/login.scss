@@ -1,0 +1,18 @@
+.user {
+  &-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 24px;
+  }
+  &-box {
+    margin: 48px 0;
+    width: 100%;
+    max-width: 500px;
+    padding: 24px;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 1px 1px 12px 0 #ccc;
+  }
+}

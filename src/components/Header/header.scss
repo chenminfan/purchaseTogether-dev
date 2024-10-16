@@ -1,0 +1,11 @@
+$gray-400: #ced4da;
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  border-bottom: 1px solid $gray-400;
+  background-color: #f8f9fa;
+}
