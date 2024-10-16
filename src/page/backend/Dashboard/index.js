@@ -36,7 +36,17 @@ export default function Dashboard(props) {
     if (!token) {
       return navigate('/')
     }
-    
+    (async () => {
+      try {
+        await postUserCheckApi();
+        const res = await postUserCheckApi();
+        console.log(res)
+      } catch (error) {
+        if (!error.response.data.success) {
+          navigate('/')
+        }
+      }
+    })()
   }, [token, navigate])
 
   const { window } = props;
@@ -231,16 +241,20 @@ export default function Dashboard(props) {
           </Drawer>
         </nav>
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-        }}
-      >
-        <Outlet />
-      </Box>
+      {
+        token && (
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 3,
+              width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+            }}
+          >
+            <Outlet />
+          </Box>
+        )
+      }
     </Box >
 
 
