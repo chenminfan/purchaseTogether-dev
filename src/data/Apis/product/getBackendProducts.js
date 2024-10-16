@@ -11,7 +11,7 @@ const token = () => {
 token();
 async function getBackendProducts() {
   try {
-    return await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/products/all`)
+    return await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/products`)
   } catch (error) {
     throw error;
   }
