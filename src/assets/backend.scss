@@ -1,0 +1,27 @@
+@import '~bootstrap-icons/font/bootstrap-icons';
+
+.page
+{
+  padding: 48px 0;
+  width: 100%;
+  &-box
+  {
+    display: flex;
+    justify-content: center;
+  }
+  &-item
+  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 4px;
+    padding: 4px 8px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  a{
+    text-decoration: none;
+  }
+}
