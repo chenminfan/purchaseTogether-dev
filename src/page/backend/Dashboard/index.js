@@ -35,7 +35,17 @@ export default function Dashboard(props) {
     if (!token) {
       return navigate('/')
     }
-
+    (async () => {
+      try {
+        await postUserCheckApi();
+        const res = await postUserCheckApi();
+        console.log(res)
+      } catch (error) {
+        if (!error.response.data.success) {
+          navigate('/')
+        }
+      }
+    })()
   }, [token, navigate])
 
   const { window } = props;
