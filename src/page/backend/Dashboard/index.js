@@ -17,6 +17,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   postUserCheckApi,
 } from '../../../data/Apis'
+import '../../../assets/backend.scss'
 
 const DRAWER_WIDTH = 340;
 
@@ -39,8 +40,6 @@ export default function Dashboard(props) {
     (async () => {
       try {
         await postUserCheckApi();
-        const res = await postUserCheckApi();
-        console.log(res)
       } catch (error) {
         if (!error.response.data.success) {
           navigate('/')

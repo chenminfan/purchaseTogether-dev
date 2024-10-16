@@ -4,7 +4,16 @@ $main-color:#ccc;
 a{
   text-decoration: none;
 }
-img{
+.img_box
+{
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+img
+{
   position: absolute;
   top: 0;
   bottom: 0;
@@ -15,7 +24,8 @@ img{
   object-fit: cover;
   background: #ddd;
 }
-main{
+main
+{
   margin-top: 56px;
   padding: 24px 0;
   color: $main-color;
