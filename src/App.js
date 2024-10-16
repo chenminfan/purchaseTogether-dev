@@ -1,3 +1,5 @@
+import React from 'react'
+import './assets/all.scss'
 
 function App() {
   return (
