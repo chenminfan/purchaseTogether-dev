@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import {
   getBackendProducts,
   // postBackendProducts,
 } from '../../../data/Apis'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
@@ -27,7 +34,7 @@ export default function BackendProduct() {
       setPage(productRes.data.pagination)
     })()
   }, [])
-  console.log(data)
+  // console.log(data)
   const columns = [
     {
       field: 'imageUrl',
@@ -45,74 +52,118 @@ export default function BackendProduct() {
     { field: 'tool', headerName: 'edit', width: 200, },
 
   ];
-  return (
-    <div>
-      <Typography variant="h4" component="div">產品列表</Typography>
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer component={Paper} sx={{ maxHeight: 440, minWidth: '100%', }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead >
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    color="primary"
-                    inputProps={{
-                      'aria-label': 'select all desserts',
-                    }}
-                  />
-                </TableCell>
-                {columns.map((col) => (
-                  <TableCell key={col.field} style={{ width: col.width }}>{col.headerName}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {prodData.map((row) => {
-                // const isItemSelected = selected.includes(row.id);
-                const labelId = `enhanced-table-checkbox-${row.id}`;
-                return (
-                  <TableRow key={row.id} onClick={() => { }}>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        // checked={ }
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div className='img_box'><img src={row.imageUrl} alt="" /></div>
-                    </TableCell>
-                    {/* <TableCell component="th" scope="row">{row.id} </TableCell> */}
-                    <TableCell>{row.id} </TableCell>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.category}</TableCell>
-                    <TableCell><div className="text">{row.content}</div></TableCell>
-                    <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                    <TableCell align="right">{row.origin_price}</TableCell>
-                    <TableCell align="right">{row.price}</TableCell>
-                    <TableCell>
-                      <Button>編輯</Button>
-                      <Button>刪除</Button>
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+  const [open, setOpen] = React.useState(false);
+  const handleProdOpen = () => {
+    setOpen(true);
+  }
+  const handleProdClose = (e, reason) => {
+    if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
+      setOpen(false);
+    }
+  };
+  const handleProdSubmit = () => setOpen(false);
 
-      <nav className='page'>
-        <ul className="page-box">
-          <li className="page-item"><NavLink to={`/backend/product/`}><i className="bi bi-caret-left-fill"></i></NavLink></li>
-          {[...Array(page.total_pages)].map((item, index) => (
-            <li className="page-item" key={`item_${index}`}><NavLink to={`/backend/product/#${index + 1}`}>{index + 1}</NavLink></li>
-          ))}
-          <li className="page-item"><NavLink to={`/backend/product/`}><i className="bi bi-caret-right-fill"></i></NavLink></li>
-        </ul>
-      </nav>
-    </div>
+  const dialogRef = useRef(null)
+  // console.log()
+  useEffect(() => {
+    // dialogRef.current
+  })
+  return (
+    <>
+      <Box component="section" sx={{ p: 2 }}>
+        <Typography variant="h4" component="div">產品列表</Typography>
+        <Box component="div" sx={{ display: 'flex', marginBottom: '12px' }}>
+          <Button sx={{ marginLeft: 'auto' }} onClick={handleProdOpen}>新增商品</Button>
+        </Box>
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <TableContainer component={Paper} sx={{ maxHeight: 440, minWidth: '100%', }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead >
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="primary"
+                      inputProps={{
+                        'aria-label': 'select all desserts',
+                      }}
+                    />
+                  </TableCell>
+                  {columns.map((col) => (
+                    <TableCell key={col.field} style={{ width: col.width }}>{col.headerName}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {prodData.map((row) => {
+                  // const isItemSelected = selected.includes(row.id);
+                  const labelId = `enhanced-table-checkbox-${row.id}`;
+                  return (
+                    <TableRow key={row.id} onClick={() => { }}>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          // checked={ }
+                          inputProps={{
+                            'aria-labelledby': labelId,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <div className='img_box'><img src={row.imageUrl} alt="" /></div>
+                      </TableCell>
+                      {/* <TableCell component="th" scope="row">{row.id} </TableCell> */}
+                      <TableCell>{row.id} </TableCell>
+                      <TableCell>{row.title}</TableCell>
+                      <TableCell>{row.category}</TableCell>
+                      <TableCell><div className="text">{row.content}</div></TableCell>
+                      <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
+                      <TableCell align="right">{row.origin_price}</TableCell>
+                      <TableCell align="right">{row.price}</TableCell>
+                      <TableCell>
+                        <Button>編輯</Button>
+                        <Button>刪除</Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+
+        <nav className='page'>
+          <ul className="page-box">
+            <li className="page-item"><NavLink to={`/backend/product/`}><i className="bi bi-caret-left-fill"></i></NavLink></li>
+            {[...Array(page.total_pages)].map((item, index) => (
+              <li className="page-item" key={`item_${index}`}><NavLink to={`/backend/product/#${index + 1}`}>{index + 1}</NavLink></li>
+            ))}
+            <li className="page-item"><NavLink to={`/backend/product/`}><i className="bi bi-caret-right-fill"></i></NavLink></li>
+          </ul>
+        </nav>
+
+      </Box>
+      <Dialog
+        open={open}
+        onClose={handleProdClose}
+        ref={dialogRef}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          我的商品
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleProdClose}>關閉</Button>
+          <Button onClick={handleProdSubmit} autoFocus>
+            新增
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
