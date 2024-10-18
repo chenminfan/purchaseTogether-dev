@@ -19,17 +19,16 @@ import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 export default function BackendProduct() {
-  const [data, setData] = useState([]);
   const [prodData, setProdData] = useState([]);
   const [page, setPage] = useState([]);
-  const [selected, setSelected] = React.useState([]);
+
+  const getProds = async () => {
+    const productRes = await getBackendProducts()
+    setProdData(productRes.data.products)
+    setPage(productRes.data.pagination)
+  }
   useEffect(() => {
-    (async () => {
-      const productRes = await getBackendProducts()
-      setData(productRes.data)
-      setProdData(productRes.data.products)
-      setPage(productRes.data.pagination)
-    })()
+    getProds();
   }, [])
   // console.log(data)
   const columns = [
@@ -58,7 +57,6 @@ export default function BackendProduct() {
       setOpen(false);
     }
   };
-  const handleProdSubmit = () => setOpen(false);
 
   const dialogRef = useRef(null)
   // console.log()
@@ -140,6 +138,7 @@ export default function BackendProduct() {
 
       </Box >
       <DialogNewProd
+        getProds={getProds}
         open={open}
         dialogRef={dialogRef}
         handleProdClose={handleProdClose}
