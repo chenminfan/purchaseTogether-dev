@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -15,22 +16,24 @@ import {
 } from '../../../data/Apis'
 
 export default function DialogNewProd(props) {
-  const { open, dialogRef, handleProdClose } = props;
-  const [imageUpdate, setImageUpdate] = useState('');
+  const { open, dialogRef, getProds, handleProdClose } = props;
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  // const [imageUpdate, setImageUpdate] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     category: '',
     content: '',
     origin_price: 3000,
     price: 300,
-    unit: '',
+    unit: '個',
     description: '',
     is_enabled: 1,
     imageUrl: 'https://images.unsplash.com/photo-1525088553748-01d6e210e00b?q=80&w=1752&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
   })
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, checked } = e.target;
     if (['origin_price', 'price'].includes(name)) {
       setFormData({
         ...formData,
@@ -39,12 +42,13 @@ export default function DialogNewProd(props) {
     } else if (name === 'is_enabled') {
       setFormData({
         ...formData,
-        [name]: Number(e.target.checked), //Number或＋
+        [name]: Number(checked), //Number或＋
       })
     }
-    else if (e.target.type === 'input') {
-      setImageUpdate(e.target.files)
-    } else {
+    // else if (e.target.type === 'input') {
+    //   setImageUpdate(e.target.files)
+    // } 
+    else {
       setFormData({
         ...formData,
         [name]: value,//變數的方式帶入屬性
@@ -54,7 +58,8 @@ export default function DialogNewProd(props) {
   const handleProdSubmit = async () => {
     try {
       await postBackendProduct(formData)
-      handleProdClose()
+      handleProdClose();
+      getProds();
     } catch (error) {
     }
   }
@@ -86,14 +91,11 @@ export default function DialogNewProd(props) {
         [
           { '& > .MuiBox-root': { display: 'flex', flexDirection: 'column' } }]
       }>
-        {/* <DialogContentText id="alert-dialog-description">
-          我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品
-        </DialogContentText> */}
         <Box
           component="form"
           sx={[
 
-            { '& .MuiTextField-root': { m: 1, width: '100%' } },
+            { '& .MuiTextField-root': { m: 1 } },
             { '& .MuiBox-root': { display: 'flex' } }
           ]
           }
@@ -101,15 +103,15 @@ export default function DialogNewProd(props) {
           autoComplete="off"
         >
           <Box component="div" sx={[
-            { '& .MuiTextField-root': { m: 0 } },
-            { '& > .MuiBox-root': { display: 'flex', flexDirection: 'column', m: 1, } },
-            { '& > .img_box': { m: 1, width: 'calc(50% - 16px)', paddingBottom: '50%' } }
+            { '& > .MuiBox-root': { display: 'flex', flexDirection: 'column', flex: 1, m: 1, alignItems: 'flex-start' } },
+            { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
           ]}>
-            <div className='img_box'><img src={formData.imageUrl} alt="" /></div>
+            <div className='img_box'><img src={formData.imageUrl} alt={formData.title} /></div>
+
             <Box component="div">
               <TextField
                 required
-                id="outlined-required"
+                fullWidth
                 label="輸入圖片網址"
                 placeholder='請輸入圖片網址'
                 name="imageUrl"
@@ -131,7 +133,7 @@ export default function DialogNewProd(props) {
           <Box component="div">
             <TextField
               required
-              id="outlined-required"
+              fullWidth
               label="商品名稱"
               placeholder='請輸入商品名稱'
               name="title"
@@ -140,7 +142,7 @@ export default function DialogNewProd(props) {
             />
             <TextField
               required
-              id="outlined-required"
+              fullWidth
               label="商品類別"
               placeholder='請輸入商品類別'
               name="category"
@@ -151,7 +153,7 @@ export default function DialogNewProd(props) {
           <Box component="div">
             <TextField
               required
-              id="outlined-required"
+              fullWidth
               label="單位"
               placeholder='請輸入商品單位'
               name="unit"
@@ -160,7 +162,7 @@ export default function DialogNewProd(props) {
             />
             <TextField
               required
-              id="outlined-required"
+              fullWidth
               label="原價"
               placeholder='請輸入原價'
               name="origin_price"
@@ -169,7 +171,7 @@ export default function DialogNewProd(props) {
             />
             <TextField
               required
-              id="outlined-required"
+              fullWidth
               label="商品售價"
               placeholder='請輸入商品售價'
               name="price"
@@ -179,9 +181,11 @@ export default function DialogNewProd(props) {
           </Box>
           <Box component="div">
             <TextField
-              id="outlined-required"
+              fullWidth
               label="商品描述"
               placeholder='請輸入商品描述'
+              multiline
+              rows={2}
               name="content"
               defaultValue={formData.content}
               onChange={handleInputChange}
@@ -189,9 +193,11 @@ export default function DialogNewProd(props) {
           </Box>
           <Box component="div">
             <TextField
-              id="outlined-required"
+              fullWidth
               label="商品說明"
               placeholder='請輸入商品說明'
+              multiline
+              rows={2}
               name="description"
               defaultValue={formData.description}
               onChange={handleInputChange}
