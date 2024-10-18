@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom';
+import DialogNewProds from './DialogNewProds';
 import {
   getBackendProducts,
 } from '../../../data/Apis'
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -51,7 +48,7 @@ export default function BackendProducts() {
     { field: 'tool', headerName: 'edit', width: 200, },
 
   ];
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleProdOpen = () => {
     setOpen(true);
   }
@@ -107,7 +104,7 @@ export default function BackendProducts() {
                           }}
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
                         <div className='img_box'><img src={row.imageUrl} alt="" /></div>
                       </TableCell>
                       {/* <TableCell component="th" scope="row">{row.id} </TableCell> */}
@@ -128,7 +125,7 @@ export default function BackendProducts() {
               </TableBody>
             </Table>
           </TableContainer>
-        </Paper>
+        </Paper >
 
         <nav className='page'>
           <ul className="page-box">
@@ -140,29 +137,12 @@ export default function BackendProducts() {
           </ul>
         </nav>
 
-      </Box>
-      <Dialog
+      </Box >
+      <DialogNewProds
         open={open}
-        onClose={handleProdClose}
-        ref={dialogRef}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          我的商品
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品我的商品
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleProdClose}>關閉</Button>
-          <Button onClick={handleProdSubmit} autoFocus>
-            新增
-          </Button>
-        </DialogActions>
-      </Dialog>
+        dialogRef={dialogRef}
+        handleProdClose={handleProdClose}
+      />
     </>
   )
 }
