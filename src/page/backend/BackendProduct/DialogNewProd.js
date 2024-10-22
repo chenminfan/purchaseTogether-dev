@@ -107,7 +107,7 @@ export default function DialogNewProd(props) {
       closeAfterTransition={false}
     >
       <DialogTitle sx={{ m: 0, p: 2 }} id="alert-dialog-title">
-        新增商品
+        {prodType === 'create' ? '新增商品' : `編輯${formData.title}`}
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -245,7 +245,7 @@ export default function DialogNewProd(props) {
           <FormControlLabel
             control={
               <Checkbox
-                checked={Boolean(formData.is_enabled)}
+                checked={!!formData.is_enabled}
                 name="is_enabled"
                 onChange={(e) => handleInputChange(e)}
               />
