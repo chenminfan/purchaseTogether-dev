@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -16,7 +16,7 @@ import {
 } from '../../../data/Apis'
 
 export default function DialogNewProd(props) {
-  const { open, dialogRef, getProds, handleProdClose } = props;
+  const { open, dialogRef, getProds, handleProdClose, prodType, tampData } = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   // const [imageUpdate, setImageUpdate] = useState('');
@@ -24,20 +24,27 @@ export default function DialogNewProd(props) {
     title: '',
     category: '',
     content: '',
-    origin_price: 3000,
-    price: 300,
-    unit: '個',
+    origin_price: 0,
+    price: 0,
+    unit: '',
     description: '',
-    is_enabled: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1525088553748-01d6e210e00b?q=80&w=1752&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    is_enabled: 0,
+    imageUrl: ''
   })
 
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === "e") e.preventDefault();
+  }
   const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
+    const replaceString = value.replace(/[^\d]/g, '');
+    e.preventDefault();
     if (['origin_price', 'price'].includes(name)) {
+      if (!/\d*/.test(value)) return
       setFormData({
         ...formData,
-        [name]: Number(value), //變數的方式帶入屬性
+        [name]: Number(replaceString), //變數的方式帶入屬性
       })
     } else if (name === 'is_enabled') {
       setFormData({
@@ -57,12 +64,39 @@ export default function DialogNewProd(props) {
   }
   const handleProdSubmit = async () => {
     try {
-      await postBackendProduct(formData)
+      if (prodType === 'create') {
+        await postBackendProduct(prodType, formData)
+      } else if (prodType === 'edit') {
+        await postBackendProduct(prodType, formData)
+      }
       handleProdClose();
       getProds();
     } catch (error) {
     }
+
   }
+
+
+  useEffect(() => {
+    if (prodType === 'create') {
+      setFormData({
+        title: '',
+        category: '',
+        content: '',
+        origin_price: 3000,
+        price: 300,
+        unit: '個',
+        description: '',
+        is_enabled: 1,
+        imageUrl: 'https://images.unsplash.com/photo-1525088553748-01d6e210e00b?q=80&w=1752&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+      })
+    } else if (prodType === 'edit') {
+      setFormData(tampData);
+    } else {
+
+    }
+
+  }, [prodType, tampData])
   return (
     <Dialog
       open={open}
@@ -115,8 +149,8 @@ export default function DialogNewProd(props) {
                 label="輸入圖片網址"
                 placeholder='請輸入圖片網址'
                 name="imageUrl"
-                defaultValue={formData.imageUrl}
-                onChange={handleInputChange}
+                value={formData.imageUrl}
+                onChange={(e) => handleInputChange(e)}
               />
               <Button
                 component="label"
@@ -125,7 +159,7 @@ export default function DialogNewProd(props) {
                 <input
                   type="file"
                   hidden
-                // onChange={handleInputChange}
+                // onChange={(e)=>handleInputChange(e)}
                 />
               </Button>
             </Box>
@@ -137,8 +171,8 @@ export default function DialogNewProd(props) {
               label="商品名稱"
               placeholder='請輸入商品名稱'
               name="title"
-              onChange={handleInputChange}
-              defaultValue={formData.title}
+              onChange={(e) => handleInputChange(e)}
+              value={formData.title}
             />
             <TextField
               required
@@ -146,8 +180,8 @@ export default function DialogNewProd(props) {
               label="商品類別"
               placeholder='請輸入商品類別'
               name="category"
-              defaultValue={formData.category}
-              onChange={handleInputChange}
+              value={formData.category}
+              onChange={(e) => handleInputChange(e)}
             />
           </Box>
           <Box component="div">
@@ -157,8 +191,8 @@ export default function DialogNewProd(props) {
               label="單位"
               placeholder='請輸入商品單位'
               name="unit"
-              defaultValue={formData.unit}
-              onChange={handleInputChange}
+              value={formData.unit}
+              onChange={(e) => handleInputChange(e)}
             />
             <TextField
               required
@@ -166,8 +200,10 @@ export default function DialogNewProd(props) {
               label="原價"
               placeholder='請輸入原價'
               name="origin_price"
-              defaultValue={formData.origin_price}
-              onChange={handleInputChange}
+              type="number"
+              value={formData.origin_price}
+              onChange={(e) => handleInputChange(e)}
+              onKeyDown={(e) => handleInputKeyDown(e)}
             />
             <TextField
               required
@@ -175,20 +211,23 @@ export default function DialogNewProd(props) {
               label="商品售價"
               placeholder='請輸入商品售價'
               name="price"
-              defaultValue={formData.price}
-              onChange={handleInputChange}
+              type="number"
+              value={formData.price}
+              onChange={(e) => handleInputChange(e)}
+              onKeyDown={(e) => handleInputKeyDown(e)}
             />
           </Box>
           <Box component="div">
             <TextField
+              required
               fullWidth
               label="商品描述"
               placeholder='請輸入商品描述'
               multiline
               rows={2}
               name="content"
-              defaultValue={formData.content}
-              onChange={handleInputChange}
+              value={formData.content}
+              onChange={(e) => handleInputChange(e)}
             />
           </Box>
           <Box component="div">
@@ -199,16 +238,16 @@ export default function DialogNewProd(props) {
               multiline
               rows={2}
               name="description"
-              defaultValue={formData.description}
-              onChange={handleInputChange}
+              value={formData.description}
+              onChange={(e) => handleInputChange(e)}
             />
           </Box>
           <FormControlLabel
             control={
               <Checkbox
-                defaultValue={formData.is_enabled}
+                checked={Boolean(formData.is_enabled)}
                 name="is_enabled"
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
               />
             }
             label="是否啟用"
@@ -219,7 +258,7 @@ export default function DialogNewProd(props) {
       <DialogActions>
         <Button onClick={handleProdClose}>關閉</Button>
         <Button onClick={handleProdSubmit} autoFocus>
-          新增
+          {prodType === 'edit' ? '儲存' : '新增'}
         </Button>
       </DialogActions>
     </Dialog >
