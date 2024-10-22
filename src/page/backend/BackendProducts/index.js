@@ -44,30 +44,35 @@ export default function BackendProducts() {
     { field: 'isEnabled', headerName: '狀態', width: 200, },
     { field: 'origin_price', headerName: '價格', width: 90, },
     { field: 'price', headerName: '售價', width: 90, },
-    { field: 'tool', headerName: 'edit', width: 200, },
+    { field: 'tool', headerName: '', width: 200, },
 
   ];
-  const [open, setOpen] = React.useState(true);
-  const handleProdOpen = () => {
+  const [open, setOpen] = React.useState(false);
+  const [type, setType] = useState('');
+  const [tamp, setTamp] = useState('');
+  const handleProdOpen = (type, prod) => {
+    setTamp(prod)
+    setType(type)
     setOpen(true);
   }
-  const handleProdClose = (e, reason) => {
+  const handleProdClose = (reason) => {
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
       setOpen(false);
     }
   };
 
   const dialogRef = useRef(null)
-  // console.log()
-  useEffect(() => {
-    // dialogRef.current
-  })
+
+
   return (
     <>
       <Box component="section" sx={{ p: 2 }}>
         <Typography variant="h4" component="div">產品列表</Typography>
         <Box component="div" sx={{ display: 'flex', marginBottom: '12px' }}>
-          <Button sx={{ marginLeft: 'auto' }} onClick={handleProdOpen}>新增商品</Button>
+          <Button
+            sx={{ marginLeft: 'auto' }}
+            onClick={() => handleProdOpen('create', {})}
+          >新增商品</Button>
         </Box>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer component={Paper} sx={{ maxHeight: 440, minWidth: '100%', }}>
@@ -114,8 +119,12 @@ export default function BackendProducts() {
                       <TableCell align="right">{row.origin_price}</TableCell>
                       <TableCell align="right">{row.price}</TableCell>
                       <TableCell>
-                        <Button>編輯</Button>
-                        <Button>刪除</Button>
+                        <Button
+                          onClick={() => handleProdOpen('edit', row)}
+                        >編輯</Button>
+                        {/* <Button
+                          onClick={() => handleProdOpen('del', prodData)}
+                        >刪除</Button> */}
                       </TableCell>
                     </TableRow>
                   )
@@ -141,6 +150,8 @@ export default function BackendProducts() {
         open={open}
         dialogRef={dialogRef}
         handleProdClose={handleProdClose}
+        prodType={type}
+        tampData={tamp}
       />
     </>
   )
