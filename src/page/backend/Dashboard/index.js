@@ -22,6 +22,7 @@ import '../../../assets/backend.scss'
 const DRAWER_WIDTH = 340;
 
 export default function Dashboard(props) {
+  const { window } = props;
   const navigate = useNavigate()
   const logout = () => {
     document.cookie = 'hexToken=;'
@@ -48,7 +49,7 @@ export default function Dashboard(props) {
     })()
   }, [token, navigate])
 
-  const { window } = props;
+  
   const CONTAINER =
     window !== undefined ? () => window().document.body : undefined;
   const navItems = [
