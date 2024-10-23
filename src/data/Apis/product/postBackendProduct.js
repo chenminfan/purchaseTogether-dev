@@ -8,6 +8,9 @@ async function postBackendProductApi(prodType, data) {
     if (prodType === 'edit') {
       api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/product/${data.id}`
       method = "put"
+    } else if (prodType === 'delete') {
+      api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/product/${data.id}`
+      method = "delete"
     }
     return await axios[method](api, { data: data })
 
