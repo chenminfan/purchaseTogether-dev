@@ -9,11 +9,11 @@ const token = () => {
     ?.split('=')[1];
 }
 token();
-async function getBackendProducts() {
+async function getBackendProductsApi() {
   try {
     return await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/products`)
   } catch (error) {
     throw error;
   }
 }
-export { getBackendProducts }
+export { getBackendProductsApi }
