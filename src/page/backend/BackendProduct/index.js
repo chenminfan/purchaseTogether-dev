@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import DialogNewProd from './DialogNewProd';
 import {
-  getBackendProducts,
-  // postBackendProducts,
+  getBackendProductsApi,
 } from '../../../data/Apis'
 
 
@@ -23,7 +22,7 @@ export default function BackendProduct() {
   const [page, setPage] = useState([]);
 
   const getProds = async () => {
-    const productRes = await getBackendProducts()
+    const productRes = await getBackendProductsApi()
     setProdData(productRes.data.products)
     setPage(productRes.data.pagination)
   }
