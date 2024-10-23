@@ -12,14 +12,15 @@ import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
-  postBackendProduct,
+  postBackendProductApi,
+  postUploadApi,
 } from '../../../data/Apis'
 
 export default function DialogNewProd(props) {
   const { open, dialogRef, getProds, handleProdClose, prodType, tampData } = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  // const [imageUpdate, setImageUpdate] = useState('');
+  const [imageUpdate, setImageUpdate] = useState({});
   const [formData, setFormData] = useState({
     title: '',
     category: '',
@@ -36,8 +37,26 @@ export default function DialogNewProd(props) {
   const handleInputKeyDown = (e) => {
     if (e.key === "e") e.preventDefault();
   }
+
+  const getUploadImage = async (e) => {
+    const { name, files } = e.target;
+    if (!files[0]) {
+      return
+    }
+    const fileData = new FormData();
+    fileData.append(name, files[0])
+    try {
+      const res = await postUploadApi(fileData)
+      setFormData({
+        ...formData,
+        ["imageUrl"]: res.data.imageUrl,//變數的方式帶入屬性
+      })
+    } catch (error) {
+
+    }
+  }
   const handleInputChange = (e) => {
-    const { name, value, checked } = e.target;
+    const { name, value, checked, files } = e.target;
     const replaceString = value.replace(/[^\d]/g, '');
     e.preventDefault();
     if (['origin_price', 'price'].includes(name)) {
@@ -52,9 +71,6 @@ export default function DialogNewProd(props) {
         [name]: Number(checked), //Number或＋
       })
     }
-    // else if (e.target.type === 'input') {
-    //   setImageUpdate(e.target.files)
-    // } 
     else {
       setFormData({
         ...formData,
@@ -65,9 +81,9 @@ export default function DialogNewProd(props) {
   const handleProdSubmit = async () => {
     try {
       if (prodType === 'create') {
-        await postBackendProduct(prodType, formData)
+        await postBackendProductApi(prodType, formData)
       } else if (prodType === 'edit') {
-        await postBackendProduct(prodType, formData)
+        await postBackendProductApi(prodType, formData)
       }
       handleProdClose();
       getProds();
@@ -75,7 +91,6 @@ export default function DialogNewProd(props) {
     }
 
   }
-
 
   useEffect(() => {
     if (prodType === 'create') {
@@ -97,6 +112,7 @@ export default function DialogNewProd(props) {
     }
 
   }, [prodType, tampData])
+
   return (
     <Dialog
       open={open}
@@ -158,10 +174,18 @@ export default function DialogNewProd(props) {
                 上傳圖片
                 <input
                   type="file"
+                  name="file"
                   hidden
-                // onChange={(e)=>handleInputChange(e)}
+                  accept="image/*"
+                  onChange={
+                    (e) => {
+                      getUploadImage(e)
+                    }
+                  }
                 />
+
               </Button>
+              {imageUpdate.name}
             </Box>
           </Box>
           <Box component="div">
