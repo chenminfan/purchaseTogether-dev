@@ -7,10 +7,11 @@ import { postCouponApi } from './coupon/postCoupon'
 import { getOrderApi } from './order/getOrder'
 import { getPayApi } from './pay/getPay'
 import { getProductsApi } from './product/getProducts'
-import { postBackendProduct } from './product/postBackendProduct'
-import { getBackendProducts } from './product/getBackendProducts'
+import { postBackendProductApi } from './product/postBackendProduct'
+import { getBackendProductsApi } from './product/getBackendProducts'
 import { postLoginApi } from './login/postLogin'
 import { postUserCheckApi } from './login/postUserCheck'
+import { postUploadApi } from './upload/postUpload'
 
 export {
   getArticleApi,
@@ -20,8 +21,9 @@ export {
   getOrderApi,
   getPayApi,
   getProductsApi,
-  postBackendProduct,
-  getBackendProducts,
+  postBackendProductApi,
+  getBackendProductsApi,
   postLoginApi,
-  postUserCheckApi
+  postUserCheckApi,
+  postUploadApi
 };
