@@ -1,8 +1,6 @@
 import axios from 'axios';
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
-// 取出token
-
 async function getBackendProductsApi() {
   const token = document.cookie
     .split("; ")
@@ -14,4 +12,4 @@ async function getBackendProductsApi() {
     throw error;
   }
 }
-export { getBackendProducts }
+export { getBackendProductsApi }
