@@ -36,6 +36,11 @@
         margin-left: 52px;
       }
     }
+    &:only-child {
+      &:not(.page-item-left) {
+        margin: 0;
+      }
+    }
   }
   a {
     text-decoration: none;
