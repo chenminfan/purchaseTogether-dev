@@ -47,7 +47,6 @@ export default function Dashboard(props) {
     })()
   }, [token, navigate])
 
-  
   const CONTAINER =
     window !== undefined ? () => window().document.body : undefined;
   const navItems = [
