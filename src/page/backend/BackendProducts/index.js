@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom';
+import PaginationComponents from '../../../components/Pagination';
 import DialogNewProds from './DialogNewProds';
 import DialogDeleteProd from './DialogDeleteProd';
 import {
@@ -18,18 +18,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
+
 export default function BackendProducts() {
   const [prodData, setProdData] = useState([]);
   const [page, setPage] = useState([]);
-
-  const getProds = async () => {
-    const productRes = await getBackendProductsApi()
-    setProdData(productRes.data.products)
-    setPage(productRes.data.pagination)
-  }
-  useEffect(() => {
-    getProds();
-  }, [])
   const columns = [
     {
       field: 'imageUrl',
@@ -64,7 +56,6 @@ export default function BackendProducts() {
       setOpen(false);
     }
   };
-
   const dialogRef = useRef(null)
   const theme = createTheme({
     palette: {
@@ -73,6 +64,14 @@ export default function BackendProducts() {
       },
     },
   });
+  const getProds = async (page = 1) => {
+    const productRes = await getBackendProductsApi(page)
+    setProdData(productRes.data.products)
+    setPage(productRes.data.pagination)
+  }
+  useEffect(() => {
+    getProds();
+  }, [])
   return (
     <>
       <Box component="section">
@@ -84,7 +83,7 @@ export default function BackendProducts() {
           >新增商品</Button>
         </Box>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer component={Paper} sx={{ maxHeight: 540, minWidth: '100%', }}>
+          <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead >
                 <TableRow>
@@ -142,15 +141,8 @@ export default function BackendProducts() {
           </TableContainer>
         </Paper >
 
-        <nav className='page'>
-          <ul className="page-box">
-            <li className="page-item"><NavLink to={`/backend/product/`}><i className="bi bi-caret-left-fill"></i></NavLink></li>
-            {[...Array(page.total_pages)].map((item, index) => (
-              <li className="page-item" key={`item_${index}`}><NavLink to={`/backend/product/#${index + 1}`}>{index + 1}</NavLink></li>
-            ))}
-            <li className="page-item"><NavLink to={`/backend/product/`}><i className="bi bi-caret-right-fill"></i></NavLink></li>
-          </ul>
-        </nav>
+
+        <PaginationComponents page={page} getProds={getProds} />
 
       </Box >
       {type === 'delete' ? (
