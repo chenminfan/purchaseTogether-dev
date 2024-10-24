@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PaginationComponents from '../../../components/Pagination';
+import SnackbarComponents from '../../../components/Snackbar';
 import DialogNewCoupon from './DialogNewCoupon';
 import DialogDeleteCoupon from './DialogDeleteCoupon';
 import {
@@ -18,6 +19,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
+
 
 
 export default function BackendCoupons() {
@@ -150,6 +152,7 @@ export default function BackendCoupons() {
         <DialogDeleteCoupon
           open={type === 'delete' && open}
           getCoupons={getCoupons}
+          snackbarSuccess={getSuccessDelete}
           couponType={type}
           tampData={tamp}
           handleClose={handleCouponClose}
@@ -159,6 +162,7 @@ export default function BackendCoupons() {
       ) : (<DialogNewCoupon
         handleClose={handleCouponClose}
         getCoupons={getCoupons}
+        snackbarSuccess={getSuccessOpen}
         couponType={type}
         tampData={tamp}
         open={type !== 'delete' && open}
@@ -166,6 +170,14 @@ export default function BackendCoupons() {
         dialogTitle={type === 'create' ? '新增優惠券' : `編輯${tamp.title}`}
         dialogSubmitBtnText={type === 'edit' ? '儲存' : '新增'}
       />)}
+      <SnackbarComponents
+        handleClose={handleSnackbarClose}
+        snackbarOpen={snackbar.snackbarOpen}
+        type={snackbar.type}
+        message={snackbar.message}
+        autoHideDuration={5000}
+      />
+
     </>
   )
 }
