@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom';
+import SnackbarComponents from '../../../components/Snackbar';
 import DialogNewCoupon from './DialogNewCoupon';
 import DialogDeleteCoupon from './DialogDeleteCoupon';
 import {
@@ -20,14 +21,46 @@ import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 
+
 export default function BackendCoupons() {
   const [couponData, setCouponData] = useState([]);
   const [page, setPage] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [snackbar, setSnackbar] = useState({
+    snackbarOpen: false,
+    message: '',
+  })
+  const getSuccessOpen = (snackbar) => {
+    setSnackbar({
+      ...snackbar,
+      type: 'success',
+      snackbarOpen: true,
+      message: `已成功${type === 'edit' ? '編輯' : '新增'}折價券`,
+    })
+  }
+  const getSuccessDelete = (snackbar) => {
+    setSnackbar({
+      ...snackbar,
+      type: 'error',
+      snackbarOpen: true,
+      message: '已刪除折價券',
+    })
+  }
+  const handleSnackbarClose = (newStet, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({
+      ...newStet,
+      snackbarOpen: false,
+    })
+  }
   const getCoupons = async (page = 1) => {
     const couponRes = await getBackendCouponApi()
     setCouponData(couponRes.data.coupons)
+    setPage(couponRes.data.pagination)
   }
+
   useEffect(() => {
     getCoupons();
   }, [])
@@ -209,6 +242,7 @@ export default function BackendCoupons() {
         <DialogDeleteCoupon
           open={type === 'delete' && open}
           getCoupons={getCoupons}
+          snackbarSuccess={getSuccessDelete}
           couponType={type}
           tampData={tamp}
           handleClose={handleCouponClose}
@@ -218,6 +252,7 @@ export default function BackendCoupons() {
       ) : (<DialogNewCoupon
         handleClose={handleCouponClose}
         getCoupons={getCoupons}
+        snackbarSuccess={getSuccessOpen}
         couponType={type}
         tampData={tamp}
         open={type !== 'delete' && open}
@@ -225,6 +260,14 @@ export default function BackendCoupons() {
         dialogTitle={type === 'create' ? '新增優惠券' : `編輯${tamp.title}`}
         dialogSubmitBtnText={type === 'edit' ? '儲存' : '新增'}
       />)}
+      <SnackbarComponents
+        handleClose={handleSnackbarClose}
+        snackbarOpen={snackbar.snackbarOpen}
+        type={snackbar.type}
+        message={snackbar.message}
+        autoHideDuration={5000}
+      />
+
     </>
   )
 }
