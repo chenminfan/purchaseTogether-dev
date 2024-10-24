@@ -56,7 +56,7 @@ export default function Dashboard(props) {
     { nameId: 2, name: '登出', icon: 'bi-ticket-perforated', link: '/', handleClick: logout }];
   const navLeftItems = [
     { nameId: 1, name: '產品列表', icon: 'bi-box-seam', link: '/backend/product' },
-    { nameId: 2, name: '折價券列表', icon: 'bi-ticket-perforated', link: '/backend' },
+    { nameId: 2, name: '優惠券列表', icon: 'bi-ticket-perforated', link: '/backend/coupon' },
     { nameId: 3, name: '訂單列表', icon: 'bi-folder-check', link: '/backend' },];
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);

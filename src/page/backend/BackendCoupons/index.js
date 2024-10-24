@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom';
-import DialogNewProd from './DialogNewProd';
-import DialogDeleteProd from './DialogDeleteProd';
+import DialogNewCoupon from './DialogNewCoupon';
+import DialogDeleteCoupon from './DialogDeleteCoupon';
 import {
-  getBackendProductsApi,
+  getBackendCouponApi,
 } from '../../../data/Apis'
 
 import { createTheme } from '@mui/material/styles';
@@ -20,49 +20,41 @@ import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 
-export default function BackendProduct() {
-  const [prodData, setProdData] = useState([]);
+export default function BackendCoupons() {
+  const [couponData, setCouponData] = useState([]);
   const [page, setPage] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const getProds = async (page = 1) => {
-    const productRes = await getBackendProductsApi(page)
-    setProdData(productRes.data.products)
-    setPage(productRes.data.pagination)
+  const getCoupons = async (page = 1) => {
+    const couponRes = await getBackendCouponApi()
+    setCouponData(couponRes.data.coupons)
   }
   useEffect(() => {
-    getProds(currentPage);
-  }, [currentPage])
+    getCoupons();
+  }, [])
 
   const columns = [
-    {
-      field: 'imageUrl',
-      headerName: '圖片',
-      width: 90,
-      valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-    },
-    { field: 'title', headerName: '品名', width: 120 },
-    { field: 'category', headerName: '分類', width: 120 },
-    { field: 'content', headerName: '內容', width: 150 },
+    { field: 'title', headerName: '品名', width: 180 },
     { field: 'isEnabled', headerName: '狀態', width: 80, },
-    { field: 'origin_price', headerName: '價格', width: 100, },
     { field: 'price', headerName: '售價', width: 100, },
+    { field: 'date', headerName: '使用期限', width: 100, },
+    { field: 'code', headerName: '優惠碼', width: 100, },
     { field: 'tool', headerName: '', width: 180, },
 
   ];
   const [open, setOpen] = React.useState(false);
   const [type, setType] = useState('');
   const [tamp, setTamp] = useState('');
-  const handleProdOpen = (type, prod) => {
-    setTamp(prod);
+  const handleCouponOpen = (type, coupon) => {
+    setTamp(coupon);
     setType(type);
     setOpen(true);
   }
-  const handleProdDeleteOpen = (type, prod) => {
-    setTamp(prod);
+  const handleCouponDeleteOpen = (type, coupon) => {
+    setTamp(coupon);
     setType(type);
     setOpen(true);
   }
-  const handleProdClose = (reason) => {
+  const handleCouponClose = (reason) => {
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
       setOpen(false);
     }
@@ -73,7 +65,7 @@ export default function BackendProduct() {
     } else {
       setCurrentPage(page)
     }
-    getProds(page)
+    getCoupons(page)
   }
   const handleClickRight = (page) => {
     if (currentPage >= page.total_pages) {
@@ -81,15 +73,15 @@ export default function BackendProduct() {
     } else {
       setCurrentPage(page)
     }
-    getProds(page)
+    getCoupons(page)
   }
   const handleClickPage = (page) => {
     setCurrentPage(page)
-    getProds(page)
+    getCoupons(page)
   }
   const handleChangePage = (e, value) => {
     setCurrentPage(value)
-    getProds(value)
+    getCoupons(value)
   }
   const dialogRef = useRef(null)
   const theme = createTheme({
@@ -102,12 +94,12 @@ export default function BackendProduct() {
   return (
     <>
       <Box component="section">
-        <Typography variant="h4" component="div">產品列表</Typography>
+        <Typography variant="h4" component="div">優惠券列表</Typography>
         <Box component="div" sx={{ display: 'flex', marginBottom: '12px' }}>
           <Button
             sx={{ marginLeft: 'auto' }}
-            onClick={() => handleProdOpen('create', {})}
-          >新增商品</Button>
+            onClick={() => handleCouponOpen('create', {})}
+          >新增優惠券</Button>
         </Box>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
@@ -128,7 +120,7 @@ export default function BackendProduct() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {prodData.map((row) => {
+                {couponData.map((row) => {
                   const labelId = `enhanced-table-checkbox-${row.id}`;
                   return (
                     <TableRow key={row.id} onClick={() => { }}>
@@ -141,22 +133,18 @@ export default function BackendProduct() {
                           }}
                         />
                       </TableCell>
-                      <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
-                        <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
-                      </TableCell>
                       <TableCell>{row.title}</TableCell>
-                      <TableCell>{row.category}</TableCell>
-                      <TableCell><div className="text">{row.content}</div></TableCell>
+                      <TableCell>{row.due_date}</TableCell>
+                      <TableCell>{row.code}</TableCell>
                       <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                      <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
                       <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
                       <TableCell>
                         <Button
-                          onClick={() => handleProdOpen('edit', row)}
+                          onClick={() => handleCouponOpen('edit', row)}
                         >編輯</Button>
                         <Button
                           color="error"
-                          onClick={() => handleProdDeleteOpen('delete', row)}
+                          onClick={() => handleCouponDeleteOpen('delete', row)}
                         >刪除</Button>
                       </TableCell>
                     </TableRow>
@@ -205,23 +193,23 @@ export default function BackendProduct() {
 
       </Box >
       {type === 'delete' ? (
-        <DialogDeleteProd
+        <DialogDeleteCoupon
           open={type === 'delete' && open}
-          getProds={getProds}
-          prodType={type}
+          getCoupons={getCoupons}
+          couponType={type}
           tampData={tamp}
-          handleClose={handleProdClose}
+          handleClose={handleCouponClose}
           theme={theme}
           color="primary"
         />
-      ) : (<DialogNewProd
-        handleClose={handleProdClose}
-        getProds={getProds}
-        prodType={type}
+      ) : (<DialogNewCoupon
+        handleClose={handleCouponClose}
+        getCoupons={getCoupons}
+        couponType={type}
         tampData={tamp}
         open={type !== 'delete' && open}
         dialogRef={dialogRef}
-        dialogTitle={type === 'create' ? '新增商品' : `編輯${tamp.title}`}
+        dialogTitle={type === 'create' ? '新增優惠券' : `編輯${tamp.title}`}
         dialogSubmitBtnText={type === 'edit' ? '儲存' : '新增'}
       />)}
     </>
