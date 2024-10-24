@@ -12,7 +12,7 @@ import {
 } from '../../../data/Apis'
 
 export default function DialogNewCoupon(props) {
-  const { open, dialogRef, getCoupons, handleClose, couponType, tampData } = props;
+  const { open, dialogRef, getCoupons, handleClose, couponType, tampData, snackbarSuccess } = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [newDate, setNewDate] = useState(new Date())
@@ -70,6 +70,7 @@ export default function DialogNewCoupon(props) {
       })
     }
   }
+
   const handleCouponSubmit = async () => {
     try {
       if (couponType === 'create') {
@@ -79,9 +80,9 @@ export default function DialogNewCoupon(props) {
       }
       handleClose();
       getCoupons();
+      snackbarSuccess();
     } catch (error) {
     }
-
   }
   useEffect(() => {
     if (couponType === 'create') {
@@ -99,7 +100,6 @@ export default function DialogNewCoupon(props) {
     }
 
   }, [couponType, tampData])
-
   return (
     <Dialog
       open={open}

@@ -7,7 +7,7 @@ import {
 } from '../../../data/Apis'
 
 export default function DialogDeleteCoupon(props) {
-  const { open, tampData, dialogRef, handleClose, getCoupons, theme, color, couponType } = props;
+  const { open, tampData, dialogRef, handleClose, getCoupons, theme, color, couponType, snackbarSuccess } = props;
   const dataValue = (value) => {
     const DATE = new Date(value)
     let date = DATE.getDate(); //15
@@ -29,6 +29,7 @@ export default function DialogDeleteCoupon(props) {
     }
     handleClose();
     getCoupons();
+    snackbarSuccess();
   }
   return (
     <Dialog
