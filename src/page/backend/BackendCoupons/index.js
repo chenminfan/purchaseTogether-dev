@@ -24,17 +24,30 @@ export default function BackendCoupons() {
   const [couponData, setCouponData] = useState([]);
   const [page, setPage] = useState([]);
   const columns = [
-    { field: 'title', headerName: '品名', width: 180 },
-    { field: 'isEnabled', headerName: '狀態', width: 80, },
-    { field: 'price', headerName: '售價', width: 100, },
-    { field: 'date', headerName: '使用期限', width: 100, },
+    { field: 'title', headerName: '優惠券名稱', width: 200 },
+    { field: 'percent', headerName: '折扣數', width: 80, },
+    { field: 'date', headerName: '使用期限', width: 80, },
     { field: 'code', headerName: '優惠碼', width: 100, },
+    { field: 'isEnabled', headerName: '狀態', width: 80, },
     { field: 'tool', headerName: '', width: 180, },
 
   ];
   const [open, setOpen] = React.useState(false);
   const [type, setType] = useState('');
   const [tamp, setTamp] = useState('');
+  const dataValue = (value) => {
+    const DATE = new Date(value)
+    let date = DATE.getDate(); //15
+    let month = (DATE.getMonth() + 1)  //6
+    let year = DATE.getFullYear();  //2016
+    if (month.length < 2) {
+      month = '0' + month
+    }
+    if (date.length < 2) {
+      date = '0' + date
+    }
+    return [year, month, date].join('/')
+  }
   const handleCouponOpen = (type, coupon) => {
     setTamp(coupon);
     setType(type);
@@ -109,18 +122,18 @@ export default function BackendCoupons() {
                         />
                       </TableCell>
                       <TableCell>{row.title}</TableCell>
-                      <TableCell>{row.due_date}</TableCell>
+                      <TableCell>{row.percent}</TableCell>
+                      <TableCell>{dataValue(row.due_date)}</TableCell>
                       <TableCell>{row.code}</TableCell>
                       <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                      <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
                       <TableCell>
-                        <Button
-                          onClick={() => handleCouponOpen('edit', row)}
-                        >編輯</Button>
-                        <Button
-                          color="error"
-                          onClick={() => handleCouponDeleteOpen('delete', row)}
-                        >刪除</Button>
+                        <Button onClick={() => handleCouponOpen('edit', row)}>
+                          編輯
+                        </Button>
+                        <Button color="error"
+                          onClick={() => handleCouponDeleteOpen('delete', row)}>
+                          刪除
+                        </Button>
                       </TableCell>
                     </TableRow>
                   )

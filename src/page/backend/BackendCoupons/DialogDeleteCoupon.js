@@ -8,7 +8,19 @@ import {
 
 export default function DialogDeleteCoupon(props) {
   const { open, tampData, dialogRef, handleClose, getCoupons, theme, color, couponType } = props;
-
+  const dataValue = (value) => {
+    const DATE = new Date(value)
+    let date = DATE.getDate(); //15
+    let month = (DATE.getMonth() + 1)  //6
+    let year = DATE.getFullYear();  //2016
+    if (month.length < 2) {
+      month = '0' + month
+    }
+    if (date.length < 2) {
+      date = '0' + date
+    }
+    return [year, month, date].join('/')
+  }
   const handleCouponDelete = async () => {
     try {
       await postBackendCouponApi(couponType, tampData)
@@ -43,12 +55,9 @@ export default function DialogDeleteCoupon(props) {
         autoComplete="off"
       >
         {tampData.title}
-        <Box component="div">
-          <div className='img_box'><img src={tampData.imageUrl} alt={tampData.title} /></div>
-        </Box>
-        <Box component="div">商品類別：{tampData.category}</Box>
-        <Box component="div">商品描述：{tampData.content}</Box>
-        <Box component="div">商品說明：{tampData.description}</Box>
+        <Box component="div">優惠券到期日：{dataValue(tampData.due_date)}</Box>
+        <Box component="div">折扣數：{tampData.percent}</Box>
+        <Box component="div">優惠碼：{tampData.code}</Box>
 
       </Box>
     </Dialog>
