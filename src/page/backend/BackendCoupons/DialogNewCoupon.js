@@ -18,11 +18,25 @@ export default function DialogNewCoupon(props) {
   const [newDate, setNewDate] = useState(new Date())
   const [formData, setFormData] = useState({
     title: '',
-    price: 0,
+    percent: 0,
     is_enabled: 0,
-    due_date: 6547658,
-    code: "testCode"
+    due_date: 0,
+    code: ""
   })
+
+  const dataValue = (value) => {
+    const DATE = value
+    let date = DATE.getDate().toString(); //15
+    let month = (DATE.getMonth() + 1).toString()  //6
+    let year = DATE.getFullYear().toString();  //2016
+    if (month.length < 2) {
+      month = '0' + month
+    }
+    if (date.length < 2) {
+      date = '0' + date
+    }
+    return [year, month, date].join('-')
+  }
 
   const handleInputKeyDown = (e) => {
     if (e.key === "e") e.preventDefault();
@@ -32,7 +46,7 @@ export default function DialogNewCoupon(props) {
     const { name, value, checked } = e.target;
     const replaceString = value.replace(/[^\d]/g, '');
     e.preventDefault();
-    if (['price'].includes(name)) {
+    if (['percent'].includes(name)) {
       if (!/\d*/.test(value)) return
       setFormData({
         ...formData,
@@ -43,8 +57,13 @@ export default function DialogNewCoupon(props) {
         ...formData,
         [name]: Number(checked), //Number或＋
       })
-    }
-    else {
+    } else if (name === 'due_date') {
+      setNewDate(new Date(value))
+      setFormData({
+        ...formData,
+        [name]: new Date(value).getTime(),
+      })
+    } else {
       setFormData({
         ...formData,
         [name]: value,//變數的方式帶入屬性
@@ -68,13 +87,15 @@ export default function DialogNewCoupon(props) {
     if (couponType === 'create') {
       setFormData({
         title: '',
-        price: 0,
+        percent: 80,
         is_enabled: 0,
-        due_date: '',
-        code: "testCode"
+        due_date: new Date().getTime(),
+        code: "frost"
       })
+      setNewDate(new Date());
     } else if (couponType === 'edit' || couponType === 'delete') {
       setFormData(tampData);
+      setNewDate(new Date(tampData.due_date));
     }
 
   }, [couponType, tampData])
@@ -86,7 +107,7 @@ export default function DialogNewCoupon(props) {
       dialogRef={dialogRef}
       fullScreen={fullScreen}
       maxWidth="xl"
-      dialogTitle={couponType === 'create' ? '新增商品' : `編輯${formData.title}`}
+      dialogTitle={couponType === 'create' ? '新增優惠券' : `編輯${formData.title}`}
       handleSubmit={handleCouponSubmit}
       dialogSubmitBtnText={couponType === 'edit' ? '儲存' : '新增'}
     >
@@ -105,8 +126,8 @@ export default function DialogNewCoupon(props) {
           <TextField
             required
             fullWidth
-            label="商品名稱"
-            placeholder='請輸入商品名稱'
+            label="優惠券名稱"
+            placeholder='請輸入優惠券名稱'
             name="title"
             onChange={(e) => handleInputChange(e)}
             value={formData.title}
@@ -118,7 +139,7 @@ export default function DialogNewCoupon(props) {
             placeholder='請輸入使用期限'
             name="due_date"
             type="date"
-            value={formData.due_date}
+            value={dataValue(newDate)}
             onChange={(e) => handleInputChange(e)}
             onKeyDown={(e) => handleInputKeyDown(e)}
           />
@@ -127,12 +148,11 @@ export default function DialogNewCoupon(props) {
           <TextField
             required
             fullWidth
-            label="優惠券價格"
-            placeholder='請輸入優惠券價格'
-            name="price"
+            label="折扣數"
+            placeholder='請輸入折扣數'
+            name="percent"
             type="number"
-            value={formData.price}
-            views={["year", "month", "day"]}
+            value={formData.percent}
             onChange={(e) => handleInputChange(e)}
             onKeyDown={(e) => handleInputKeyDown(e)}
           />
@@ -140,7 +160,7 @@ export default function DialogNewCoupon(props) {
             required
             fullWidth
             label="優惠碼"
-            placeholder='code'
+            placeholder='請輸入優惠碼'
             name="code"
             value={formData.code}
             onChange={(e) => handleInputChange(e)}
