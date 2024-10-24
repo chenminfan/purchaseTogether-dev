@@ -9,6 +9,8 @@ import { getPayApi } from './pay/getPay'
 import { getProductsApi } from './product/getProducts'
 import { postBackendProductApi } from './product/postBackendProduct'
 import { getBackendProductsApi } from './product/getBackendProducts'
+import { getBackendCouponApi } from './coupon/getBackendCoupon'
+import { postBackendCouponApi } from './coupon/postBackendCoupon.js'
 import { postLoginApi } from './login/postLogin'
 import { postUserCheckApi } from './login/postUserCheck'
 import { postUploadApi } from './upload/postUpload'
@@ -23,6 +25,8 @@ export {
   getProductsApi,
   postBackendProductApi,
   getBackendProductsApi,
+  getBackendCouponApi,
+  postBackendCouponApi,
   postLoginApi,
   postUserCheckApi,
   postUploadApi

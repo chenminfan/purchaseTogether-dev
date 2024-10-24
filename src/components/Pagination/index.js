@@ -4,7 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import Box from '@mui/material/Box';
 
 export default function PaginationComponents(props) {
-  const { page, getProds } = props
+  const { page, getPagination } = props
   const [currentPage, setCurrentPage] = useState(1);
   const handleClickLeft = (page) => {
     if (currentPage <= 1) {
@@ -12,7 +12,7 @@ export default function PaginationComponents(props) {
     } else {
       setCurrentPage(page)
     }
-    getProds(page)
+    getPagination(page)
   }
   const handleClickRight = (page) => {
     if (currentPage >= page.total_pages) {
@@ -20,15 +20,15 @@ export default function PaginationComponents(props) {
     } else {
       setCurrentPage(page)
     }
-    getProds(page)
+    getPagination(page)
   }
   const handleClickPage = (page) => {
     setCurrentPage(page)
-    getProds(page)
+    getPagination(page)
   }
   const handleChangePage = (e, value) => {
     setCurrentPage(value)
-    getProds(value)
+    getPagination(value)
   }
   return (
     <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
