@@ -78,6 +78,7 @@ export default function BackendProduct() {
         <Typography variant="h4" component="div">產品列表</Typography>
         <Box component="div" sx={{ display: 'flex', marginBottom: '12px' }}>
           <Button
+            variant="contained"
             sx={{ marginLeft: 'auto' }}
             onClick={() => handleProdOpen('create', {})}
           >新增商品</Button>
