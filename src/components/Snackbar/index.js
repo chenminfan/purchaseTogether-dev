@@ -1,8 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, forwardRef } from 'react'
 import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import MuiAlert from '@mui/material/Alert';
 import { DialogContent } from '../../provider/DialogProvider/DialogContent'
 
+export const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export default function SnackbarComponents() {
   const [state, dispatch] = useContext(DialogContent);
   const handleClose = (reason) => {
@@ -13,7 +16,7 @@ export default function SnackbarComponents() {
       type: 'DIALOG_CLOSE',
     })
   }
-  // const { snackbarOpen, message, type, autoHideDuration } = props
+
   return (
     <Snackbar
       anchorOrigin={{
@@ -22,6 +25,7 @@ export default function SnackbarComponents() {
       }}
       autoHideDuration={state.autoHideDuration}
       open={state.snackbarOpen}
+      onClose={!state.snackbarState ? () => { } : handleClose}
     >
       <Alert
         onClose={handleClose}
