@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Dialog from '../../../components/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-// import { DialogContent } from '../DialogProvider/DialogContent'
 import {
   postBackendCouponApi,
 } from '../../../data/Apis'
+import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
+
 
 export default function DialogNewCoupon(props) {
-  const { open, dialogRef, getCoupons, handleClose, couponType, tampData, snackbarSuccess } = props;
+  const { open, dialogRef, getCoupons, handleClose, couponType, tampData } = props;
+  const [state, dispatch] = useContext(DialogContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [newDate, setNewDate] = useState(new Date())
@@ -24,7 +25,6 @@ export default function DialogNewCoupon(props) {
     due_date: 0,
     code: ""
   })
-  // const [state, dispatch] = useContext(DialogContent);
   const dataValue = (value) => {
     const DATE = value
     let date = DATE.getDate().toString(); //15
@@ -75,14 +75,38 @@ export default function DialogNewCoupon(props) {
   const handleCouponSubmit = async () => {
     try {
       if (couponType === 'create') {
-        await postBackendCouponApi(couponType, formData)
+        const res = await postBackendCouponApi(couponType, formData)
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            type: 'success',
+            message: res.data.message,
+            snackbarState: res.data.success,
+          }
+        })
       } else if (couponType === 'edit') {
-        await postBackendCouponApi(couponType, formData)
+        const res = await postBackendCouponApi(couponType, formData)
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            type: 'success',
+            message: res.data.message,
+            snackbarState: res.data.success,
+            autoHideDuration: 3000,
+          }
+        })
       }
       handleClose();
       getCoupons();
-      snackbarSuccess();
     } catch (error) {
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'error',
+          message: error?.response?.data?.message,
+          snackbarState: error?.response?.data?.success,
+        }
+      })
     }
   }
   useEffect(() => {

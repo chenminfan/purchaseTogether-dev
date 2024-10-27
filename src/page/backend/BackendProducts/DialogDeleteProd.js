@@ -1,19 +1,37 @@
 
-import React from 'react'
+import React, { useContext } from 'react'
 import Dialog from '../../../components/Dialog'
 import Box from '@mui/material/Box';
 import {
   postBackendProductApi
 } from '../../../data/Apis'
+import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
 
 export default function DialogDeleteProd(props) {
   const { open, tampData, dialogRef, handleClose, getProds, theme, color, prodType } = props;
+  const [state, dispatch] = useContext(DialogContent);
 
   const handleProdDelete = async () => {
     try {
-      await postBackendProductApi(prodType, tampData)
+      const res = await postBackendProductApi(prodType, tampData)
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'success',
+          message: res.data.message,
+          snackbarState: res.data.success,
+        }
+      })
     } catch (error) {
-
+      console.log(error)
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'error',
+          message: error?.response?.data?.message,
+          snackbarState: error?.response?.data?.success,
+        }
+      })
     }
     handleClose();
     getProds();
