@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PaginationComponents from '../../../components/Pagination';
 import DialogNewCoupon from './DialogNewCoupon';
 import DialogDeleteCoupon from './DialogDeleteCoupon';
@@ -19,25 +19,7 @@ import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 
-
-import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
-
 export default function BackendCoupons() {
-
-  const [state, dispatch] = useContext(DialogContent);
-  const getSuccessDelete = () => {
-    dispatch({
-      type: 'DIALOG_DELETE',
-      autoHideDuration: 3000
-    })
-  }
-  const getSuccessOpen = () => {
-    dispatch({
-      type: 'DIALOG_OPEN_SUCCESS',
-      dialogType: dialogType,
-      autoHideDuration: 3000
-    })
-  }
   const [couponData, setCouponData] = useState([]);
   const [page, setPage] = useState([]);
   const columns = [
@@ -102,6 +84,7 @@ export default function BackendCoupons() {
         <Typography variant="h4" component="div">優惠券列表</Typography>
         <Box component="div" sx={{ display: 'flex', marginBottom: '12px' }}>
           <Button
+            variant="contained"
             sx={{ marginLeft: 'auto' }}
             onClick={() => handleCouponOpen('create', {})}
           >新增優惠券</Button>
@@ -167,7 +150,6 @@ export default function BackendCoupons() {
         <DialogDeleteCoupon
           open={dialogType === 'delete' && open}
           getCoupons={getCoupons}
-          snackbarSuccess={getSuccessDelete}
           couponType={dialogType}
           tampData={tamp}
           handleClose={handleCouponClose}
@@ -177,7 +159,6 @@ export default function BackendCoupons() {
       ) : (<DialogNewCoupon
         handleClose={handleCouponClose}
         getCoupons={getCoupons}
-        snackbarSuccess={getSuccessOpen}
         couponType={dialogType}
         tampData={tamp}
         open={dialogType !== 'delete' && open}
