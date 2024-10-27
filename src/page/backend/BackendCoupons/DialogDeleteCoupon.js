@@ -1,13 +1,16 @@
 
-import React from 'react'
+import React, { useContext } from 'react'
 import Dialog from '../../../components/Dialog'
 import Box from '@mui/material/Box';
 import {
   postBackendCouponApi
 } from '../../../data/Apis'
+import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
 
 export default function DialogDeleteCoupon(props) {
-  const { open, tampData, dialogRef, handleClose, getCoupons, theme, color, couponType, snackbarSuccess } = props;
+  const { open, tampData, dialogRef, handleClose, getCoupons, theme, color, couponType } = props;
+  const [state, dispatch] = useContext(DialogContent);
+
   const dataValue = (value) => {
     const DATE = new Date(value)
     let date = DATE.getDate(); //15
@@ -21,15 +24,31 @@ export default function DialogDeleteCoupon(props) {
     }
     return [year, month, date].join('/')
   }
+
+
   const handleCouponDelete = async () => {
     try {
-      await postBackendCouponApi(couponType, tampData)
+      const res = await postBackendCouponApi(couponType, tampData)
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'success',
+          message: res.data.message,
+          snackbarState: res.data.success,
+        }
+      })
     } catch (error) {
-
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'error',
+          message: error?.response?.data?.message,
+          snackbarState: error?.response?.data?.success,
+        }
+      })
     }
     handleClose();
     getCoupons();
-    snackbarSuccess();
   }
   return (
     <Dialog
