@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import PaginationComponents from '../../../components/Pagination';
-import SnackbarComponents from '../../../components/Snackbar';
 import DialogNewCoupon from './DialogNewCoupon';
 import DialogDeleteCoupon from './DialogDeleteCoupon';
 import {
@@ -21,8 +20,24 @@ import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 
 
+import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
 
 export default function BackendCoupons() {
+
+  const [state, dispatch] = useContext(DialogContent);
+  const getSuccessDelete = () => {
+    dispatch({
+      type: 'DIALOG_DELETE',
+      autoHideDuration: 3000
+    })
+  }
+  const getSuccessOpen = () => {
+    dispatch({
+      type: 'DIALOG_OPEN_SUCCESS',
+      dialogType: dialogType,
+      autoHideDuration: 3000
+    })
+  }
   const [couponData, setCouponData] = useState([]);
   const [page, setPage] = useState([]);
   const columns = [
@@ -35,7 +50,7 @@ export default function BackendCoupons() {
 
   ];
   const [open, setOpen] = React.useState(false);
-  const [type, setType] = useState('');
+  const [dialogType, setDialogType] = useState('');
   const [tamp, setTamp] = useState('');
   const dataValue = (value) => {
     const DATE = new Date(value)
@@ -50,14 +65,14 @@ export default function BackendCoupons() {
     }
     return [year, month, date].join('/')
   }
-  const handleCouponOpen = (type, coupon) => {
+  const handleCouponOpen = (dialogType, coupon) => {
     setTamp(coupon);
-    setType(type);
+    setDialogType(dialogType);
     setOpen(true);
   }
-  const handleCouponDeleteOpen = (type, coupon) => {
+  const handleCouponDeleteOpen = (dialogType, coupon) => {
     setTamp(coupon);
-    setType(type);
+    setDialogType(dialogType);
     setOpen(true);
   }
   const handleCouponClose = (reason) => {
@@ -148,12 +163,12 @@ export default function BackendCoupons() {
         <PaginationComponents page={page} getPagination={getCoupons} />
 
       </Box >
-      {type === 'delete' ? (
+      {dialogType === 'delete' ? (
         <DialogDeleteCoupon
-          open={type === 'delete' && open}
+          open={dialogType === 'delete' && open}
           getCoupons={getCoupons}
           snackbarSuccess={getSuccessDelete}
-          couponType={type}
+          couponType={dialogType}
           tampData={tamp}
           handleClose={handleCouponClose}
           theme={theme}
@@ -163,21 +178,13 @@ export default function BackendCoupons() {
         handleClose={handleCouponClose}
         getCoupons={getCoupons}
         snackbarSuccess={getSuccessOpen}
-        couponType={type}
+        couponType={dialogType}
         tampData={tamp}
-        open={type !== 'delete' && open}
+        open={dialogType !== 'delete' && open}
         dialogRef={dialogRef}
-        dialogTitle={type === 'create' ? '新增優惠券' : `編輯${tamp.title}`}
-        dialogSubmitBtnText={type === 'edit' ? '儲存' : '新增'}
+        dialogTitle={dialogType === 'create' ? '新增優惠券' : `編輯${tamp.title}`}
+        dialogSubmitBtnText={dialogType === 'edit' ? '儲存' : '新增'}
       />)}
-      <SnackbarComponents
-        handleClose={handleSnackbarClose}
-        snackbarOpen={snackbar.snackbarOpen}
-        type={snackbar.type}
-        message={snackbar.message}
-        autoHideDuration={5000}
-      />
-
     </>
   )
 }

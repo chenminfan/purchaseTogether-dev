@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+// import { DialogContent } from '../DialogProvider/DialogContent'
 import {
   postBackendCouponApi,
 } from '../../../data/Apis'
@@ -23,7 +24,7 @@ export default function DialogNewCoupon(props) {
     due_date: 0,
     code: ""
   })
-
+  // const [state, dispatch] = useContext(DialogContent);
   const dataValue = (value) => {
     const DATE = value
     let date = DATE.getDate().toString(); //15
