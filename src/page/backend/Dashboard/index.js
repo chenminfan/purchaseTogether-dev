@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import DialogProvider from '../../../provider/DialogProvider'
 import { Outlet, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AppBar from '@mui/material/AppBar';
@@ -16,6 +17,7 @@ import {
 } from '../../../data/Apis'
 import '../../../assets/backend.scss'
 import HeaderNav from '../../../components/HeaderNav'
+import SnackbarComponents from '../../../components/Snackbar';
 
 const DRAWER_WIDTH = 340;
 
@@ -80,106 +82,79 @@ export default function Dashboard(props) {
       }
     },
   });
-
   return (
-    <Box sx={{ display: 'flex' }}>
-      <ThemeProvider theme={darkTheme}>
-        <AppBar component="nav"
-          enableColorOnDark
-          sx={{
-            color: 'primary.main',
-            width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-            ml: { sm: `${DRAWER_WIDTH}px` },
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { xs: 'block', sm: 'none', width: '52px', } }}>
-              <ListItemIcon sx={{ color: '#000', maxWidth: '52px', minWidth: 'inherit' }}><i className="bi bi-list"></i></ListItemIcon>
-            </IconButton>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ color: '#000', flexGrow: 1, display: { xs: 'block', sm: 'none' } }}
-            >
-              後台管理
-            </Typography>
-            <Box sx={{ ml: 'auto' }}>
-              {navItems.map((navItem) => (
-                <Button
-                  key={navItem.nameId}
-                  href={`#${navItem.link}`}
-                  variant="outlined"
-                  sx={{ color: '#000' }}
-                  onClick={navItem.handleClick}>
-                  {navItem.name}
-                </Button>
-              ))}
-            </Box>
-          </Toolbar>
-
-        </AppBar>
-      </ThemeProvider>
-
-      <Box
-        component="div"
-        sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={CONTAINER}
-          variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: DRAWER_WIDTH,
-            },
-          }}
-        >
-          <div>
+    <DialogProvider>
+      <Box sx={{ display: 'flex' }}>
+        <ThemeProvider theme={darkTheme}>
+          <AppBar component="nav"
+            enableColorOnDark
+            sx={{
+              color: 'primary.main',
+              width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+              ml: { sm: `${DRAWER_WIDTH}px` },
+            }}
+          >
             <Toolbar>
+              <IconButton
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2, display: { xs: 'block', sm: 'none', width: '52px', } }}>
+                <ListItemIcon sx={{ color: '#000', maxWidth: '52px', minWidth: 'inherit' }}><i className="bi bi-list"></i></ListItemIcon>
+              </IconButton>
               <Typography
+                variant="h6"
                 component="div"
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-              >後台管理
+                sx={{ color: '#000', flexGrow: 1, display: { xs: 'block', sm: 'none' } }}
+              >
+                後台管理
               </Typography>
+              <Box sx={{ ml: 'auto' }}>
+                {navItems.map((navItem) => (
+                  <Button
+                    key={navItem.nameId}
+                    href={`#${navItem.link}`}
+                    variant="outlined"
+                    sx={{ color: '#000' }}
+                    onClick={navItem.handleClick}>
+                    {navItem.name}
+                  </Button>
+                ))}
+              </Box>
             </Toolbar>
 
-            <Divider />
-            <HeaderNav />
-          </div >
-        </Drawer >
-        <nav>
+          </AppBar>
+        </ThemeProvider>
+
+        <Box
+          component="div"
+          sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
+          aria-label="mailbox folders"
+        >
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Drawer
-            variant="permanent"
+            container={CONTAINER}
+            variant="temporary"
+            open={mobileOpen}
+            onTransitionEnd={handleDrawerTransitionEnd}
+            onClose={handleDrawerClose}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
             sx={{
-              display: { xs: 'none', sm: 'block' },
+              display: { xs: 'block', sm: 'none' },
               '& .MuiDrawer-paper': {
                 boxSizing: 'border-box',
                 width: DRAWER_WIDTH,
-                background: '#f5f6fa',
               },
             }}
-            open
           >
             <div>
               <Toolbar>
                 <Typography
                   component="div"
                   sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-                >
-                  後台管理
+                >後台管理
                 </Typography>
               </Toolbar>
 
@@ -187,23 +162,51 @@ export default function Dashboard(props) {
               <HeaderNav />
             </div>
           </Drawer>
-        </nav>
-      </Box >
-      {
-        token && (
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              p: 3,
-              width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-            }}
-          >
-            <Outlet />
-          </Box>
-        )
-      }
-    </Box >
+          <nav>
+            <Drawer
+              variant="permanent"
+              sx={{
+                display: { xs: 'none', sm: 'block' },
+                '& .MuiDrawer-paper': {
+                  boxSizing: 'border-box',
+                  width: DRAWER_WIDTH,
+                  background: '#f5f6fa',
+                },
+              }}
+              open
+            >
+              <div>
+                <Toolbar>
+                  <Typography
+                    component="div"
+                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                  >
+                    後台管理
+                  </Typography>
+                </Toolbar>
 
+                <Divider />
+                <HeaderNav />
+              </div>
+            </Drawer>
+          </nav>
+        </Box>
+        {
+          token && (
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                p: 3,
+                width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+              }}
+            >
+              <Outlet />
+            </Box>
+          )
+        }
+        <SnackbarComponents />
+      </Box >
+    </DialogProvider>
   )
 }
