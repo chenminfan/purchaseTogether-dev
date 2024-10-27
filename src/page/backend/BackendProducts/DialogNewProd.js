@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Dialog from '../../../components/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -11,9 +11,11 @@ import {
   postBackendProductApi,
   postUploadApi,
 } from '../../../data/Apis'
+import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
 
 export default function DialogNewProd(props) {
   const { open, dialogRef, getProds, handleClose, prodType, tampData } = props;
+  const [state, dispatch] = useContext(DialogContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [imageUpdate, setImageUpdate] = useState({});
@@ -47,6 +49,7 @@ export default function DialogNewProd(props) {
         ...formData,
         imageUrl: res.data.imageUrl,//變數的方式帶入屬性
       })
+      console.log(res)
     } catch (error) {
 
     }
@@ -77,13 +80,38 @@ export default function DialogNewProd(props) {
   const handleProdSubmit = async () => {
     try {
       if (prodType === 'create') {
-        await postBackendProductApi(prodType, formData)
+        const res = await postBackendProductApi(prodType, formData)
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            type: 'success',
+            message: res.data.message,
+            snackbarState: res.data.success,
+          }
+        })
+
       } else if (prodType === 'edit') {
-        await postBackendProductApi(prodType, formData)
+        const res = await postBackendProductApi(prodType, formData)
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            type: 'success',
+            message: res.data.message,
+            snackbarState: res.data.success,
+          }
+        })
       }
       handleClose();
       getProds();
     } catch (error) {
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'error',
+          message: error?.response?.data?.message,
+          snackbarState: error?.response?.data?.success,
+        }
+      })
     }
 
   }
@@ -167,9 +195,8 @@ export default function DialogNewProd(props) {
         </Box>
         <Box component="div">
           <TextField
-            required
             fullWidth
-            label="商品名稱"
+            label="商品名稱title"
             placeholder='請輸入商品名稱'
             name="title"
             onChange={(e) => handleInputChange(e)}
@@ -178,7 +205,7 @@ export default function DialogNewProd(props) {
           <TextField
             required
             fullWidth
-            label="商品類別"
+            label="商品類別category"
             placeholder='請輸入商品類別'
             name="category"
             value={formData.category}
@@ -189,7 +216,7 @@ export default function DialogNewProd(props) {
           <TextField
             required
             fullWidth
-            label="單位"
+            label="單位unit"
             placeholder='請輸入商品單位'
             name="unit"
             value={formData.unit}
