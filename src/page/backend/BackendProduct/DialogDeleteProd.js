@@ -13,17 +13,33 @@ export default function DialogDeleteProd(props) {
 
   const handleProdDelete = async () => {
     try {
-      const res = await postBackendProductApi(prodType, tampData)
-      dispatch({
-        type: 'DIALOG_MESSAGE',
-        snackbar: {
-          type: 'success',
-          message: res.data.message,
-          snackbarState: res.data.success,
-        }
-      })
+      if (tampData.length === 1) {
+        const res = await postBackendProductApi(prodType, tampData)
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            type: 'success',
+            message: res.data.message,
+            snackbarState: res.data.success,
+          }
+        })
+
+      }
+      else {
+        const res = await Promise.all(
+          tampData.map((item) => postBackendProductApi(prodType, item))
+        )
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            type: 'success',
+            message: `成功刪除${tampData.length}筆資料`,
+            snackbarState: true,
+          }
+        })
+        console.log(res)
+      }
     } catch (error) {
-      console.log(error)
       dispatch({
         type: 'DIALOG_MESSAGE',
         snackbar: {
@@ -32,6 +48,7 @@ export default function DialogDeleteProd(props) {
           snackbarState: error?.response?.data?.success,
         }
       })
+
     }
     handleClose();
     getProds();
@@ -43,14 +60,14 @@ export default function DialogDeleteProd(props) {
       dialogRef={dialogRef}
       maxWidth="sm"
       fullWidth
-      dialogTitle={`${tampData.title} - 確認刪除`}
+      dialogTitle={tampData.length < 0 ? `${tampData.title} - 確認刪除` : '當前頁商品全部刪除'}
       handleSubmit={handleProdDelete}
       dialogSubmitBtnText="確認刪除"
       dialogSubmitColor="error"
       theme={theme}
       color={color}
     >
-      <Box
+      {tampData.length === 1 ? <Box
         component="div"
         sx={[
 
@@ -61,6 +78,7 @@ export default function DialogDeleteProd(props) {
         autoComplete="off"
       >
         {tampData.title}
+
         <Box component="div">
           <div className='img_box'><img src={tampData.imageUrl} alt={tampData.title} /></div>
         </Box>
@@ -68,8 +86,14 @@ export default function DialogDeleteProd(props) {
         <Box component="div">商品描述：{tampData.content}</Box>
         <Box component="div">商品說明：{tampData.description}</Box>
 
-      </Box>
-    </Dialog>
+      </Box> : (
+        <div>
+          {tampData.map((item) => (
+            <div key={item.id}>{item.title}</div>
+          ))}
+        </div>
+      )}
+    </Dialog >
 
   )
 }
