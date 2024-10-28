@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { LoginContentProvider } from '../../../components/module/LoginProvider';
-import Header from '../../../components/Header';
+import Header from '../../../components/frontend/Header';
 
 const Home = () => {
 
