@@ -18,6 +18,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
+import { sassTrue } from 'sass';
 
 export default function BackendProducts() {
   const [prodData, setProdData] = useState([]);
@@ -26,21 +27,21 @@ export default function BackendProducts() {
     {
       field: 'imageUrl',
       headerName: '圖片',
-      width: 90,
+      width: 85,
       valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
     },
     { field: 'title', headerName: '品名', width: 120 },
-    { field: 'category', headerName: '分類', width: 120 },
-    { field: 'content', headerName: '內容', width: 150 },
+    { field: 'category', headerName: '分類', width: 180 },
+    { field: 'content', headerName: '內容', width: 200 },
     { field: 'isEnabled', headerName: '狀態', width: 80, },
     { field: 'origin_price', headerName: '價格', width: 100, },
     { field: 'price', headerName: '售價', width: 100, },
-    { field: 'tool', headerName: '', width: 180, },
 
   ];
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [type, setType] = useState('');
   const [tamp, setTamp] = useState('');
+  const [checkData, setCheckData] = useState([]);
   const handleProdOpen = (type, prod) => {
     setTamp(prod);
     setType(type);
@@ -64,24 +65,67 @@ export default function BackendProducts() {
       },
     },
   });
+
+  const getAllDele = () => {
+    setType('allDelete');
+    setOpen(true);
+  }
+  // 當畫面有觸發其他function，useCallback避免被其他function re render
+  const handleChangeCheck = (e, data) => {
+    const { checked } = e.target;
+    if (checked) {
+      setCheckData([...checkData, data])
+    } else {
+      setCheckData(checkData.filter((item) => item !== data))
+    }
+    setNewIndexCheck(data === checkData)
+  }
+  const INDEX_CHECK = (newData) => checkData.includes(newData)
+  const [newIndexCheck, setNewIndexCheck] = useState(INDEX_CHECK(prodData));
+  const handleChangeCheckAll = (e, data) => {
+    const { checked } = e.target
+    if (checked) {
+      const newSelected = data.map((item) => item)
+      setCheckData(newSelected)
+      setNewIndexCheck(data === prodData)
+    } else {
+      setCheckData([])
+      setNewIndexCheck(false)
+    }
+  }
   const getProds = async (page = 1) => {
     const productRes = await getBackendProductsApi(page)
     setProdData(productRes.data.products)
     setPage(productRes.data.pagination)
+    setNewIndexCheck(productRes.data.products === prodData)
   }
+
   useEffect(() => {
     getProds();
   }, [])
+  console.log(checkData)
+  console.log(newIndexCheck)
+  const checkDataLength = checkData.length > 1;
   return (
     <>
       <Box component="section">
         <Typography variant="h4" component="div">產品列表</Typography>
-        <Box component="div" sx={{ display: 'flex', marginBottom: '12px' }}>
+        <Box component="div" sx={{ display: 'flex', justifyContent: 'flex-End', marginBottom: '12px' }}>
+          {checkDataLength && <Button
+            variant="contained"
+            color="error"
+            onClick={() => getAllDele()}
+          >
+            {checkData.length === prodData.length ? '全部刪除' : '刪除'}
+          </Button>}
           <Button
             variant="contained"
-            sx={{ marginLeft: 'auto' }}
+            sx={{ marginLeft: checkDataLength ? '12px' : '' }}
             onClick={() => handleProdOpen('create', {})}
-          >新增商品</Button>
+          >
+            新增商品
+          </Button>
+
         </Box>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
@@ -90,29 +134,36 @@ export default function BackendProducts() {
                 <TableRow>
                   <TableCell padding="checkbox">
                     <Checkbox
+                      name="checkAll"
                       color="primary"
-                      inputProps={{
-                        'aria-label': 'select all desserts',
+                      checked={newIndexCheck}
+                      onChange={(e) => {
+                        handleChangeCheckAll(e, prodData)
                       }}
                     />
                   </TableCell>
-                  {columns.map((col) => (
-                    <TableCell key={col.field} style={{ minWidth: col.width }}>{col.headerName}</TableCell>
-                  ))}
+                  {columns.map((col) => {
+                    return (
+                      <TableCell key={col.field} style={{ minWidth: col.width }}>{col.headerName}</TableCell>
+                    )
+                  })}
+                  {!checkDataLength && <TableCell style={{ minWidth: 160 }}>
+
+                  </TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {prodData.map((row) => {
-                  const labelId = `enhanced-table-checkbox-${row.id}`;
                   return (
-                    <TableRow key={row.id} onClick={() => { }}>
+                    <TableRow key={row.id}>
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
-                          // checked={ }
-                          inputProps={{
-                            'aria-labelledby': labelId,
+                          checked={INDEX_CHECK(row)}
+                          onChange={(e) => {
+                            handleChangeCheck(e, row)
                           }}
+
                         />
                       </TableCell>
                       <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
@@ -124,15 +175,18 @@ export default function BackendProducts() {
                       <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
                       <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
                       <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
-                      <TableCell>
-                        <Button
-                          onClick={() => handleProdOpen('edit', row)}
-                        >編輯</Button>
-                        <Button
-                          color="error"
-                          onClick={() => handleProdDeleteOpen('delete', row)}
-                        >刪除</Button>
-                      </TableCell>
+                      {!checkDataLength && (
+                        <TableCell>
+                          <Button
+                            onClick={() => handleProdOpen('edit', row)}
+                          >編輯</Button>
+                          <Button
+                            color="error"
+                            onClick={() => handleProdDeleteOpen('delete', row)}
+                          >刪除</Button>
+                        </TableCell>
+                      )}
+
                     </TableRow>
                   )
                 })}
@@ -145,7 +199,7 @@ export default function BackendProducts() {
         <PaginationComponents page={page} getPagination={getProds} />
 
       </Box >
-      {type === 'delete' ? (
+      {type === 'delete' && (
         <DialogNewProds
           open={type === 'delete' && open}
           getProds={getProds}
@@ -155,17 +209,30 @@ export default function BackendProducts() {
           theme={theme}
           color="primary"
         />
-      ) : (<DialogNewProds
-        handleClose={handleProdClose}
-        getProds={getProds}
-        prodType={type}
-        tampData={tamp}
-        open={type !== 'delete' && open}
-        dialogRef={dialogRef}
-        dialogTitle={type === 'create' ? '新增商品' : `編輯${tamp.title}`}
-        dialogSubmitBtnText={type === 'edit' ? '儲存' : '新增'}
-      />)
-      }
+      )}
+      {(type === 'edit ' || type === 'create') && (
+        (<DialogNewProds
+          handleClose={handleProdClose}
+          getProds={getProds}
+          prodType={type}
+          tampData={tamp}
+          open={(type === 'edit ' || type === 'create') && open}
+          dialogRef={dialogRef}
+          dialogTitle={type === 'create' ? '新增商品' : `編輯${tamp.title}`}
+          dialogSubmitBtnText={type === 'edit' ? '儲存' : '新增'}
+        />)
+      )}
+      {type === 'allDelete' && (
+        <DialogNewProds
+          open={type === 'allDelete' && open}
+          getProds={getProds}
+          prodType={type}
+          tampData={checkData}
+          handleClose={handleProdClose}
+          theme={theme}
+          color="primary"
+        />
+      )}
     </>
   )
 }
