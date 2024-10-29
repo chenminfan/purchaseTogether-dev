@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
-  postBackendProductApi,
+  postBackendProductsApi,
   postUploadApi,
 } from '../../../data/Apis'
 import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
@@ -80,7 +80,7 @@ export default function DialogNewProds(props) {
   const handleProdSubmit = async () => {
     try {
       if (prodType === 'create') {
-        const res = await postBackendProductApi(prodType, formData)
+        const res = await postBackendProductsApi(prodType, formData)
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {
@@ -91,7 +91,7 @@ export default function DialogNewProds(props) {
         })
 
       } else if (prodType === 'edit') {
-        const res = await postBackendProductApi(prodType, formData)
+        const res = await postBackendProductsApi(prodType, formData)
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
-async function postBackendProductApi(prodType, data) {
+async function postBackendProductsApi(prodType, data) {
   console.log(data)
   let api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/product`
   let method = 'post'
@@ -19,4 +19,4 @@ async function postBackendProductApi(prodType, data) {
     throw error;
   }
 }
-export { postBackendProductApi }
+export { postBackendProductsApi }

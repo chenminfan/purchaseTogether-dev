@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useRef, useState, useContext } from 'react'
 import PaginationComponents from '../../../components/Pagination';
 import { TableContent } from '../../../provider/TableProvider/TableContent'
 import DialogNewProds from './DialogNewProds';
-import DialogDeleteProd from './DialogDeleteProd';
+import DialogDeleteProds from './DialogDeleteProds';
 import {
   getBackendProductsApi,
 } from '../../../data/Apis'
@@ -243,7 +243,7 @@ export default function BackendProducts() {
 
       </Box >
       {tableType === 'delete' && (
-        <DialogDeleteProd
+        <DialogDeleteProds
           open={open}
           getProds={getProds}
           prodType={tableType}
@@ -255,7 +255,7 @@ export default function BackendProducts() {
       )
       }
       {tableType === "allDelete" && (
-        <DialogDeleteProd
+        <DialogDeleteProds
           open={open}
           getProds={getProds}
           prodType={tableType}

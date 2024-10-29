@@ -21,7 +21,7 @@ import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 
-export default function BackendCoupons() {
+export default function BackendCoupon() {
   const [couponData, setCouponData] = useState([]);
   const [page, setPage] = useState([]);
   const [state, dispatch] = useContext(TableContent);
@@ -39,7 +39,7 @@ export default function BackendCoupons() {
   const [sortOrderID, setSortOrderID] = useState('title');
   const [tableType, setTableType] = useState('');
   const [tamp, setTamp] = useState(state.dataTamp);
-  const getCoupons = async (page = 1) => {
+  const getCoupon = async (page = 1) => {
     const couponRes = await getBackendCouponApi(page)
     setCouponData(couponRes.data.coupons)
     setPage(couponRes.data.pagination)
@@ -76,7 +76,7 @@ export default function BackendCoupons() {
   }, [couponData, sortOrder, sortOrderID])
   // 排序 end
   useEffect(() => {
-    getCoupons();
+    getCoupon();
   }, [])
 
 
@@ -234,13 +234,13 @@ export default function BackendCoupons() {
           </TableContainer>
         </Paper >
 
-        <PaginationComponents page={page} getPagination={getCoupons} />
+        <PaginationComponents page={page} getPagination={getCoupon} />
 
       </Box >
       {tableType === 'delete' && (
         <DialogDeleteCoupon
           open={open}
-          getCoupons={getCoupons}
+          getCoupon={getCoupon}
           couponType={tableType}
           tampData={tamp}
           handleClose={handleCouponClose}
@@ -251,7 +251,7 @@ export default function BackendCoupons() {
       {tableType === 'allDelete' && (
         <DialogDeleteCoupon
           open={open}
-          getCoupons={getCoupons}
+          getCoupon={getCoupon}
           couponType={tableType}
           tampData={state.dataTamp}
           handleClose={handleCouponClose}
@@ -262,7 +262,7 @@ export default function BackendCoupons() {
       {(tableType === 'edit' || tableType === 'create') && (
         (<DialogNewCoupon
           open={open}
-          getCoupons={getCoupons}
+          getCoupon={getCoupon}
           prodType={tableType}
           tampData={tamp}
           handleClose={handleCouponClose}
