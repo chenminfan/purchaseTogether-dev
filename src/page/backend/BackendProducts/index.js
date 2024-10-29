@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useMemo, useEffect, useRef, useState, useContext } from 'react'
 import PaginationComponents from '../../../components/Pagination';
 import { TableContent } from '../../../provider/TableProvider/TableContent'
 import DialogNewProds from './DialogNewProds';
@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import TableSortLabel from '@mui/material/TableSortLabel';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -28,18 +29,20 @@ export default function BackendProducts() {
     {
       field: 'imageUrl',
       headerName: '圖片',
-      width: 85,
+      width: 90,
       valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
     },
-    { field: 'title', headerName: '品名', width: 120 },
+    { field: 'title', align: 'center', headerName: '品名', width: 120 },
     { field: 'category', headerName: '分類', width: 180 },
-    { field: 'content', headerName: '內容', width: 200 },
-    { field: 'isEnabled', headerName: '狀態', width: 80, },
-    { field: 'origin_price', headerName: '價格', width: 100, },
-    { field: 'price', headerName: '售價', width: 100, },
+    // { field: 'content', headerName: '內容', width: 200 },
+    { field: 'is_enabled', headerName: '狀態', width: 90, },
+    { field: 'origin_price', align: 'right', headerName: '價格', width: 120, },
+    { field: 'price', align: 'right', headerName: '售價', width: 120, },
 
   ];
   const [open, setOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrderID, setSortOrderID] = useState('title');
   const [tableType, setTableType] = useState('');
   const [tamp, setTamp] = useState(state.dataTamp);
   const getProds = async (page = 1) => {
@@ -52,6 +55,34 @@ export default function BackendProducts() {
       tableData: prodData,
     })
   }
+
+
+  // 排序 start
+  const handleSortOrder = (order) => {
+    const isAsc = sortOrderID === order && sortOrder === 'asc';
+    setSortOrder(isAsc ? 'desc' : 'asc')
+    setSortOrderID(order)
+  }
+  const newSortOrder = (a, b, sortOrderID) => {
+    if (a[sortOrderID] > b[sortOrderID]) {
+      return -1;
+    }
+    if (a[sortOrderID] < b[sortOrderID]) {
+      return 1;
+    }
+    return 0;
+  }
+  const getSort = (sortOrder, sortOrderID) => {
+    return sortOrder === 'desc' ?
+      (a, b) => newSortOrder(a, b, sortOrderID) :
+      (a, b) => -newSortOrder(a, b, sortOrderID)
+  }
+  const sortData = useMemo(() => {
+    return [...prodData]
+      .sort(getSort(sortOrder, sortOrderID))
+  }, [prodData, sortOrder, sortOrderID])
+  // 排序 end
+
   useEffect(() => {
     getProds();
   }, [])
@@ -145,7 +176,16 @@ export default function BackendProducts() {
                     />
                   </TableCell>
                   {columns.map((col) => (
-                    <TableCell key={col.field} style={{ minWidth: col.width }}>{col.headerName}</TableCell>
+                    <TableCell key={col.field} align={col.align} style={{ minWidth: col.width }}>
+                      <TableSortLabel
+                        active={sortOrderID === col.field}
+                        direction={sortOrder ? sortOrder : 'asc'}
+                        onClick={() => handleSortOrder(col.field)}
+                      >
+                        {col.headerName}
+                      </TableSortLabel>
+
+                    </TableCell>
                   ))}
                   {!CHECK_DATA_LENGTH && <TableCell style={{ minWidth: 160 }}>
 
@@ -153,7 +193,7 @@ export default function BackendProducts() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {prodData.map((row) => (
+                {sortData.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -167,9 +207,11 @@ export default function BackendProducts() {
                     <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
                       <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
                     </TableCell>
-                    <TableCell>{row.title}</TableCell>
+                    <TableCell>
+                      {row.title}
+                    </TableCell>
                     <TableCell>{row.category}</TableCell>
-                    <TableCell><div className="text">{row.content}</div></TableCell>
+                    {/* <TableCell><div className="text">{row.content}</div></TableCell> */}
                     <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
                     <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
                     <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
