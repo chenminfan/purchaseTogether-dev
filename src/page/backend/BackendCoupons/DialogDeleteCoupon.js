@@ -25,23 +25,36 @@ export default function DialogDeleteCoupon(props) {
     return [year, month, date].join('/')
   }
 
-
   const handleCouponDelete = async () => {
     try {
-      const res = await postBackendCouponApi(couponType, tampData)
-      dispatch({
-        type: 'DIALOG_MESSAGE',
-        snackbar: {
-          type: 'success',
-          message: res.data.message,
-          snackbarState: res.data.success,
-        }
-      })
+      if (couponType === 'delete') {
+        console.log(couponType)
+        const res = await postBackendCouponApi(couponType, tampData)
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            message: res.data.message,
+            snackbarState: res.data.success,
+          }
+        })
+
+      } else if (couponType === 'allDelete') {
+        console.log(couponType)
+        await Promise.all(
+          tampData.map((item) => postBackendCouponApi(couponType, item))
+        )
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            messageLength: tampData.length,
+            snackbarState: true,
+          }
+        })
+      }
     } catch (error) {
       dispatch({
         type: 'DIALOG_MESSAGE',
         snackbar: {
-          type: 'error',
           message: error?.response?.data?.message,
           snackbarState: error?.response?.data?.success,
         }
@@ -57,29 +70,34 @@ export default function DialogDeleteCoupon(props) {
       dialogRef={dialogRef}
       maxWidth="sm"
       fullWidth
-      dialogTitle={`${tampData.title} - 確認刪除`}
+      dialogTitle={couponType === 'delete' ? `${tampData.title} - 確認刪除` : '當前頁商品全部刪除'}
       handleSubmit={handleCouponDelete}
       dialogSubmitBtnText="確認刪除"
       dialogSubmitColor="error"
       theme={theme}
       color={color}
     >
-      <Box
-        component="div"
-        sx={[
-
-          { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
-        ]
-        }
-        noValidate
-        autoComplete="off"
-      >
-        {tampData.title}
-        <Box component="div">優惠券到期日：{dataValue(tampData.due_date)}</Box>
-        <Box component="div">折扣數：{tampData.percent}</Box>
-        <Box component="div">優惠碼：{tampData.code}</Box>
-
-      </Box>
+      {couponType === 'delete' ? (
+        <Box
+          component="div"
+          sx={[
+            { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
+          ]}
+          noValidate
+          autoComplete="off"
+        >
+          {tampData.title}
+          <Box component="div">優惠券到期日：{dataValue(tampData.due_date)}</Box>
+          <Box component="div">折扣數：{tampData.percent}</Box>
+          <Box component="div">優惠碼：{tampData.code}</Box>
+        </Box>
+      ) : (
+        <div>
+          {tampData.map((item) => (
+            <div key={item.id}>{item.title}</div>
+          ))}
+        </div>
+      )}
     </Dialog>
 
   )
