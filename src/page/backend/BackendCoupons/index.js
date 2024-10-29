@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useMemo, useEffect, useRef, useState, useContext } from 'react'
 import PaginationComponents from '../../../components/Pagination';
 import { TableContent } from '../../../provider/TableProvider/TableContent'
 import DialogNewCoupon from './DialogNewCoupon';
@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import TableSortLabel from '@mui/material/TableSortLabel';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -26,14 +27,16 @@ export default function BackendCoupons() {
   const [state, dispatch] = useContext(TableContent);
   const columns = [
     { field: 'title', headerName: '優惠券名稱', width: 200 },
-    { field: 'percent', headerName: '折扣數', width: 80, },
-    { field: 'date', headerName: '使用期限', width: 80, },
-    { field: 'code', headerName: '優惠碼', width: 100, },
-    { field: 'isEnabled', headerName: '狀態', width: 80, },
+    { field: 'percent', align: 'center', headerName: '折扣數', width: 100, },
+    { field: 'due_date', align: 'center', headerName: '使用期限', width: 120, },
+    { field: 'code', align: 'center', headerName: '優惠碼', width: 100, },
+    { field: 'is_enabled', align: 'center', headerName: '狀態', width: 80, },
     { field: 'tool', headerName: '', width: 180, },
 
   ];
   const [open, setOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrderID, setSortOrderID] = useState('title');
   const [tableType, setTableType] = useState('');
   const [tamp, setTamp] = useState(state.dataTamp);
   const getCoupons = async (page = 1) => {
@@ -46,9 +49,37 @@ export default function BackendCoupons() {
       tableData: couponData,
     })
   }
+
+  // 排序 start
+  const handleSortOrder = (order) => {
+    const isAsc = sortOrderID === order && sortOrder === 'asc';
+    setSortOrder(isAsc ? 'desc' : 'asc')
+    setSortOrderID(order)
+  }
+  const newSortOrder = (a, b, sortOrderID) => {
+    if (b[sortOrderID] < a[sortOrderID]) {
+      return -1;
+    }
+    if (b[sortOrderID] > a[sortOrderID]) {
+      return 1;
+    }
+    return 0;
+  }
+  const getSort = (sortOrder, sortOrderID) => {
+    return sortOrder === 'desc' ?
+      (a, b) => newSortOrder(a, b, sortOrderID) :
+      (a, b) => -newSortOrder(a, b, sortOrderID)
+  }
+  const sortData = useMemo(() => {
+    return [...couponData]
+      .sort(getSort(sortOrder, sortOrderID))
+  }, [couponData, sortOrder, sortOrderID])
+  // 排序 end
   useEffect(() => {
     getCoupons();
   }, [])
+
+
   const dataValue = (value) => {
     const DATE = new Date(value)
     let date = DATE.getDate(); //15
@@ -113,7 +144,6 @@ export default function BackendCoupons() {
     })
   }
   const CHECK_DATA_LENGTH = state.dataTamp.length > 1;
-
   return (
     <>
       <Box component="section">
@@ -152,12 +182,20 @@ export default function BackendCoupons() {
                     />
                   </TableCell>
                   {columns.map((col) => (
-                    <TableCell key={col.field} style={{ minWidth: col.width }}>{col.headerName}</TableCell>
+                    <TableCell key={col.field} align={col.align} style={{ minWidth: col.width }}>
+                      <TableSortLabel
+                        active={sortOrderID === col.field}
+                        direction={sortOrder ? sortOrder : 'asc'}
+                        onClick={() => handleSortOrder(col.field)}
+                      >
+                        {col.headerName}
+                      </TableSortLabel>
+                    </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {couponData.map((row) => (
+                {sortData.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell padding="checkbox">
                       <Checkbox
