@@ -10,7 +10,6 @@ const snackbarState = {
   autoHideDuration: 6000
 }
 const dialogReducer = (state, action) => {
-  console.log(action)
   switch (action.type) {
     case "DIALOG_CLOSE":
       return {
@@ -20,7 +19,7 @@ const dialogReducer = (state, action) => {
       if (action.snackbar.snackbarState) {
         return {
           ...action.snackbar,
-          message: `通知：${action.snackbar.messageLength ? `成功刪除${action.snackbar.message}筆資料` : action.snackbar.message}`,
+          message: `通知：${action.snackbar.messageLength > 1 ? `成功刪除 ${action.snackbar.messageLength}筆 資料` : action.snackbar.message}`,
           autoHideDuration: action.snackbar.autoHideDuration ? action.snackbar.autoHideDuration : state.autoHideDuration,
           snackbarOpen: true,
         }

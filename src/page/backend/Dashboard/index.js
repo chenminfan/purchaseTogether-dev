@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DialogProvider from '../../../provider/DialogProvider'
+import TableProvider from '../../../provider/TableProvider'
 import { Outlet, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AppBar from '@mui/material/AppBar';
@@ -18,6 +19,7 @@ import {
 import '../../../assets/backend.scss'
 import HeaderNav from '../../../components/HeaderNav'
 import SnackbarComponents from '../../../components/Snackbar';
+
 
 const DRAWER_WIDTH = 340;
 
@@ -201,7 +203,9 @@ export default function Dashboard(props) {
                 width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
               }}
             >
-              <Outlet />
+              <TableProvider>
+                <Outlet />
+              </TableProvider>
             </Box>
           )
         }
