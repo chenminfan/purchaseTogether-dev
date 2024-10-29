@@ -139,7 +139,7 @@ export default function BackendProducts() {
   const CHECK_DATA_LENGTH = state.dataTamp.length > 1;
   return (
     <>
-      <Box component="section">
+      <Box component="section" sx={{ height: '100%' }}>
         <Typography variant="h4" component="div">產品列表</Typography>
         <Box component="div" sx={{ display: 'flex', justifyContent: 'flex-End', marginBottom: '12px' }}>
           {CHECK_DATA_LENGTH && (
@@ -160,86 +160,93 @@ export default function BackendProducts() {
           </Button>
 
         </Box>
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead >
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      name="checkAll"
-                      color="primary"
-                      checked={state.checkBool}
-                      onChange={(e) => {
-                        handleChangeCheckAll(e, prodData)
-                      }}
-                    />
-                  </TableCell>
-                  {columns.map((col) => (
-                    <TableCell key={col.field} align={col.align} style={{ minWidth: col.width }}>
-                      <TableSortLabel
-                        active={sortOrderID === col.field}
-                        direction={sortOrder ? sortOrder : 'asc'}
-                        onClick={() => handleSortOrder(col.field)}
-                      >
-                        {col.headerName}
-                      </TableSortLabel>
-
-                    </TableCell>
-                  ))}
-                  {!CHECK_DATA_LENGTH && <TableCell style={{ minWidth: 160 }}>
-
-                  </TableCell>}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortData.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={CHECK_STATE(row)}
-                        onChange={(e) => {
-                          handleChangeCheck(e, row)
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
-                      <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
-                    </TableCell>
-                    <TableCell>
-                      {row.title}
-                    </TableCell>
-                    <TableCell>{row.category}</TableCell>
-                    {/* <TableCell><div className="text">{row.content}</div></TableCell> */}
-                    <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                    <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
-                    <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
-                    {!CHECK_DATA_LENGTH && (
-                      <TableCell>
-                        <Button
-                          onClick={() => handleProdOpen('edit', row)}
-                        >
-                          編輯
-                        </Button>
-                        <Button
-                          color="error"
-                          onClick={() => handleProdDeleteOpen('delete', row)}
-                        >
-                          刪除
-                        </Button>
+        {sortData.length !== 0 ? (
+          <>
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+              <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead >
+                    <TableRow>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          name="checkAll"
+                          color="primary"
+                          checked={state.checkBool}
+                          onChange={(e) => {
+                            handleChangeCheckAll(e, prodData)
+                          }}
+                        />
                       </TableCell>
-                    )}
+                      {columns.map((col) => (
+                        <TableCell key={col.field} align={col.align} style={{ minWidth: col.width }}>
+                          <TableSortLabel
+                            active={sortOrderID === col.field}
+                            direction={sortOrder ? sortOrder : 'asc'}
+                            onClick={() => handleSortOrder(col.field)}
+                          >
+                            {col.headerName}
+                          </TableSortLabel>
 
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper >
+                        </TableCell>
+                      ))}
+                      {!CHECK_DATA_LENGTH && <TableCell style={{ minWidth: 160 }}>
 
+                      </TableCell>}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {sortData.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={CHECK_STATE(row)}
+                            onChange={(e) => {
+                              handleChangeCheck(e, row)
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
+                          <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
+                        </TableCell>
+                        <TableCell>
+                          {row.title}
+                        </TableCell>
+                        <TableCell>{row.category}</TableCell>
+                        {/* <TableCell><div className="text">{row.content}</div></TableCell> */}
+                        <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
+                        <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
+                        <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
+                        {!CHECK_DATA_LENGTH && (
+                          <TableCell>
+                            <Button
+                              onClick={() => handleProdOpen('edit', row)}
+                            >
+                              編輯
+                            </Button>
+                            <Button
+                              color="error"
+                              onClick={() => handleProdDeleteOpen('delete', row)}
+                            >
+                              刪除
+                            </Button>
+                          </TableCell>
+                        )}
 
-        <PaginationComponents page={page} getPagination={getProds} />
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+            <PaginationComponents page={page} getPagination={getProds} />
+          </>
+        ) : (
+          <Box component="div"
+            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', maxHeight: '350px' }}>
+            暫無資料
+          </Box>
+        )}
 
       </Box >
       {tableType === 'delete' && (
