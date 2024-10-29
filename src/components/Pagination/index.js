@@ -63,7 +63,7 @@ export default function PaginationComponents(props) {
           </li>}
         </ul>
       </nav>
-      <Pagination count={page.total_pages} onChange={handleChangePage} color="primary" />
+      {/* <Pagination count={page.total_pages} onChange={handleChangePage} color="primary" /> */}
     </Box>
   )
 }
