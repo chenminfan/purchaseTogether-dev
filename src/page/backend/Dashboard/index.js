@@ -86,7 +86,7 @@ export default function Dashboard(props) {
   });
   return (
     <DialogProvider>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', height: '100vh', mxaHeight: '100%' }}>
         <ThemeProvider theme={darkTheme}>
           <AppBar component="nav"
             enableColorOnDark
