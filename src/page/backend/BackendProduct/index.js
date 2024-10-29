@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import PaginationComponents from '../../../components/Pagination';
+import { TableContent } from '../../../provider/TableProvider/TableContent'
 import DialogNewProd from './DialogNewProd';
 import DialogDeleteProd from './DialogDeleteProd';
 import {
@@ -18,11 +19,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
-import { sassTrue } from 'sass';
 
 export default function BackendProduct() {
   const [prodData, setProdData] = useState([]);
   const [page, setPage] = useState([]);
+  const [state, dispatch] = useContext(TableContent);
   const columns = [
     {
       field: 'imageUrl',
@@ -39,18 +40,30 @@ export default function BackendProduct() {
 
   ];
   const [open, setOpen] = useState(false);
-  const [type, setType] = useState('');
-  const [tamp, setTamp] = useState('');
-  const [checkData, setCheckData] = useState([]);
+  const [tableType, setTableType] = useState('');
+  const [tamp, setTamp] = useState(state.dataTamp);
+  const getProds = async (page = 1) => {
+    const productRes = await getBackendProductsApi(page)
+    setProdData(productRes.data.products)
+    setPage(productRes.data.pagination)
+    dispatch({
+      type: 'RE_RENDER_CHECKBOX',
+      table: { dataTamp: productRes.data.pagination },
+      tableData: prodData,
+    })
+  }
+  useEffect(() => {
+    getProds();
+  }, [])
   const handleProdOpen = (type, prod) => {
     setTamp(prod);
-    setType(type);
     setOpen(true);
+    setTableType(type)
   }
   const handleProdDeleteOpen = (type, prod) => {
     setTamp(prod);
-    setType(type);
     setOpen(true);
+    setTableType(type);
   }
   const handleProdClose = (reason) => {
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
@@ -66,61 +79,50 @@ export default function BackendProduct() {
     },
   });
 
-  const getAllDele = () => {
-    setType('allDelete');
+  const handleClickDelete = (type) => {
     setOpen(true);
-  }
-  // 當畫面有觸發其他function，useCallback避免被其他function re render
-  const handleChangeCheck = (e, data) => {
-    const { checked } = e.target;
-    if (checked) {
-      setCheckData([...checkData, data])
-    } else {
-      setCheckData(checkData.filter((item) => item !== data))
-    }
-    setNewIndexCheck(data === checkData)
-  }
-  const INDEX_CHECK = (newData) => checkData.includes(newData)
-  const [newIndexCheck, setNewIndexCheck] = useState(INDEX_CHECK(prodData));
-  const handleChangeCheckAll = (e, data) => {
-    const { checked } = e.target
-    if (checked) {
-      const newSelected = data.map((item) => item)
-      setCheckData(newSelected)
-      setNewIndexCheck(data === prodData)
-    } else {
-      setCheckData([])
-      setNewIndexCheck(false)
-    }
-  }
-  const getProds = async (page = 1) => {
-    const productRes = await getBackendProductsApi(page)
-    setProdData(productRes.data.products)
-    setPage(productRes.data.pagination)
-    setNewIndexCheck(productRes.data.products === prodData)
+    setTableType(type)
   }
 
-  useEffect(() => {
-    getProds();
-  }, [])
-  console.log(checkData)
-  console.log(newIndexCheck)
-  const checkDataLength = checkData.length > 1;
+  const CHECK_STATE = (newData) => state.dataTamp.includes(newData)
+  // 當畫面有觸發其他function，useCallback避免被其他function re render
+  const handleChangeCheck = (e, data) => {
+    dispatch({
+      type: 'TABLE_CHECKBOX',
+      table: {
+        target: e.target,
+        dataTamp: data,
+      }
+    })
+  }
+  const handleChangeCheckAll = (e, data) => {
+    dispatch({
+      type: 'TABLE_CHECKBOX_ALL',
+      table: {
+        target: e.target,
+        dataTamp: data,
+      },
+      tableData: prodData
+    })
+  }
+  const CHECK_DATA_LENGTH = state.dataTamp.length > 1;
   return (
     <>
       <Box component="section">
         <Typography variant="h4" component="div">產品列表</Typography>
         <Box component="div" sx={{ display: 'flex', justifyContent: 'flex-End', marginBottom: '12px' }}>
-          {checkDataLength && <Button
-            variant="contained"
-            color="error"
-            onClick={() => getAllDele()}
-          >
-            {checkData.length === prodData.length ? '全部刪除' : '刪除'}
-          </Button>}
+          {CHECK_DATA_LENGTH && (
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleClickDelete('allDelete')}
+            >
+              {state.dataTamp.length === prodData.length ? '全部刪除' : '刪除'}
+            </Button>
+          )}
           <Button
             variant="contained"
-            sx={{ marginLeft: checkDataLength ? '12px' : '' }}
+            sx={{ marginLeft: CHECK_DATA_LENGTH ? '12px' : '' }}
             onClick={() => handleProdOpen('create', {})}
           >
             新增商品
@@ -136,60 +138,59 @@ export default function BackendProduct() {
                     <Checkbox
                       name="checkAll"
                       color="primary"
-                      checked={newIndexCheck}
+                      checked={state.checkBool}
                       onChange={(e) => {
                         handleChangeCheckAll(e, prodData)
                       }}
                     />
                   </TableCell>
-                  {columns.map((col) => {
-                    return (
-                      <TableCell key={col.field} style={{ minWidth: col.width }}>{col.headerName}</TableCell>
-                    )
-                  })}
-                  {!checkDataLength && <TableCell style={{ minWidth: 160 }}>
+                  {columns.map((col) => (
+                    <TableCell key={col.field} style={{ minWidth: col.width }}>{col.headerName}</TableCell>
+                  ))}
+                  {!CHECK_DATA_LENGTH && <TableCell style={{ minWidth: 160 }}>
 
                   </TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {prodData.map((row) => {
-                  return (
-                    <TableRow key={row.id}>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={INDEX_CHECK(row)}
-                          onChange={(e) => {
-                            handleChangeCheck(e, row)
-                          }}
-
-                        />
+                {prodData.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={CHECK_STATE(row)}
+                        onChange={(e) => {
+                          handleChangeCheck(e, row)
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
+                      <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
+                    </TableCell>
+                    <TableCell>{row.title}</TableCell>
+                    <TableCell>{row.category}</TableCell>
+                    <TableCell><div className="text">{row.content}</div></TableCell>
+                    <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
+                    <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
+                    <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
+                    {!CHECK_DATA_LENGTH && (
+                      <TableCell>
+                        <Button
+                          onClick={() => handleProdOpen('edit', row)}
+                        >
+                          編輯
+                        </Button>
+                        <Button
+                          color="error"
+                          onClick={() => handleProdDeleteOpen('delete', row)}
+                        >
+                          刪除
+                        </Button>
                       </TableCell>
-                      <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
-                        <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
-                      </TableCell>
-                      <TableCell>{row.title}</TableCell>
-                      <TableCell>{row.category}</TableCell>
-                      <TableCell><div className="text">{row.content}</div></TableCell>
-                      <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                      <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
-                      <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
-                      {!checkDataLength && (
-                        <TableCell>
-                          <Button
-                            onClick={() => handleProdOpen('edit', row)}
-                          >編輯</Button>
-                          <Button
-                            color="error"
-                            onClick={() => handleProdDeleteOpen('delete', row)}
-                          >刪除</Button>
-                        </TableCell>
-                      )}
+                    )}
 
-                    </TableRow>
-                  )
-                })}
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -199,39 +200,40 @@ export default function BackendProduct() {
         <PaginationComponents page={page} getPagination={getProds} />
 
       </Box >
-      {type === 'delete' && (
+      {tableType === 'delete' && (
         <DialogDeleteProd
-          open={type === 'delete' && open}
+          open={open}
           getProds={getProds}
-          prodType={type}
+          prodType={tableType}
           tampData={tamp}
           handleClose={handleProdClose}
           theme={theme}
           color="primary"
         />
       )}
-      {(type === 'edit ' || type === 'create') && (
+      {tableType === "allDelete" && (
+        <DialogDeleteProd
+          open={open}
+          getProds={getProds}
+          prodType={tableType}
+          tampData={state.dataTamp}
+          handleClose={handleProdClose}
+          theme={theme}
+          color="primary"
+        />
+      )}
+
+      {(tableType === 'edit' || tableType === 'create') && (
         (<DialogNewProd
-          handleClose={handleProdClose}
+          open={open}
           getProds={getProds}
-          prodType={type}
+          prodType={tableType}
           tampData={tamp}
-          open={(type === 'edit ' || type === 'create') && open}
-          dialogRef={dialogRef}
-          dialogTitle={type === 'create' ? '新增商品' : `編輯${tamp.title}`}
-          dialogSubmitBtnText={type === 'edit' ? '儲存' : '新增'}
-        />)
-      )}
-      {type === 'allDelete' && (
-        <DialogDeleteProd
-          open={type === 'allDelete' && open}
-          getProds={getProds}
-          prodType={type}
-          tampData={checkData}
           handleClose={handleProdClose}
-          theme={theme}
-          color="primary"
-        />
+          dialogRef={dialogRef}
+          dialogTitle={tableType === 'create' ? '新增商品' : `編輯${tamp.title}`}
+          dialogSubmitBtnText={tableType === 'edit' ? '儲存' : '新增'}
+        />)
       )}
     </>
   )

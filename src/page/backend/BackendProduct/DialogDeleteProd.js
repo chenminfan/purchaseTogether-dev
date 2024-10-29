@@ -13,42 +13,36 @@ export default function DialogDeleteProd(props) {
 
   const handleProdDelete = async () => {
     try {
-      if (tampData.length === 1) {
+      if (prodType === 'delete') {
         const res = await postBackendProductApi(prodType, tampData)
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {
-            type: 'success',
             message: res.data.message,
             snackbarState: res.data.success,
           }
         })
 
-      }
-      else {
-        const res = await Promise.all(
+      } else if (prodType === 'allDelete') {
+        await Promise.all(
           tampData.map((item) => postBackendProductApi(prodType, item))
         )
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {
-            type: 'success',
-            message: `成功刪除${tampData.length}筆資料`,
+            messageLength: tampData.length,
             snackbarState: true,
           }
         })
-        console.log(res)
       }
     } catch (error) {
       dispatch({
         type: 'DIALOG_MESSAGE',
         snackbar: {
-          type: 'error',
           message: error?.response?.data?.message,
           snackbarState: error?.response?.data?.success,
         }
       })
-
     }
     handleClose();
     getProds();
@@ -60,33 +54,32 @@ export default function DialogDeleteProd(props) {
       dialogRef={dialogRef}
       maxWidth="sm"
       fullWidth
-      dialogTitle={tampData.length < 0 ? `${tampData.title} - 確認刪除` : '當前頁商品全部刪除'}
+      dialogTitle={prodType === 'delete' ? `${tampData.title} - 確認刪除` : '當前頁商品全部刪除'}
       handleSubmit={handleProdDelete}
       dialogSubmitBtnText="確認刪除"
       dialogSubmitColor="error"
       theme={theme}
       color={color}
     >
-      {tampData.length === 1 ? <Box
-        component="div"
-        sx={[
+      {prodType === 'delete' ? (
+        <Box
+          component="div"
+          sx={[
+            { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
+          ]}
+          noValidate
+          autoComplete="off"
+        >
+          {tampData.title}
 
-          { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
-        ]
-        }
-        noValidate
-        autoComplete="off"
-      >
-        {tampData.title}
-
-        <Box component="div">
-          <div className='img_box'><img src={tampData.imageUrl} alt={tampData.title} /></div>
+          <Box component="div">
+            <div className='img_box'><img src={tampData.imageUrl} alt={tampData.title} /></div>
+          </Box>
+          <Box component="div">商品類別：{tampData.category}</Box>
+          <Box component="div">商品描述：{tampData.content}</Box>
+          <Box component="div">商品說明：{tampData.description}</Box>
         </Box>
-        <Box component="div">商品類別：{tampData.category}</Box>
-        <Box component="div">商品描述：{tampData.content}</Box>
-        <Box component="div">商品說明：{tampData.description}</Box>
-
-      </Box> : (
+      ) : (
         <div>
           {tampData.map((item) => (
             <div key={item.id}>{item.title}</div>
