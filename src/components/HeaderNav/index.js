@@ -8,7 +8,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 const navLeftItems = [
   { nameId: 1, name: '產品列表', icon: 'bi-box-seam', link: '/backend/product' },
   { nameId: 2, name: '優惠券列表', icon: 'bi-ticket-perforated', link: '/backend/coupon' },
-  { nameId: 3, name: '訂單列表', icon: 'bi-folder-check', link: '/backend' },];
+  { nameId: 3, name: '訂單列表', icon: 'bi-folder-check', link: '/backend/order' },];
 
 const RouterLink = forwardRef(({ item }, ref) => {
   const location = useLocation();

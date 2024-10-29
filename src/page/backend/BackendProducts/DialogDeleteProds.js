@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import Dialog from '../../../components/Dialog'
 import Box from '@mui/material/Box';
 import {
-  postBackendProductApi
+  postBackendProductsApi
 } from '../../../data/Apis'
 import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
 
@@ -14,7 +14,7 @@ export default function DialogDeleteProd(props) {
   const handleProdDelete = async () => {
     try {
       if (prodType === 'delete') {
-        const res = await postBackendProductApi(prodType, tampData)
+        const res = await postBackendProductsApi(prodType, tampData)
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {
@@ -25,7 +25,7 @@ export default function DialogDeleteProd(props) {
 
       } else if (prodType === 'allDelete') {
         await Promise.all(
-          tampData.map((item) => postBackendProductApi(prodType, item))
+          tampData.map((item) => postBackendProductsApi(prodType, item))
         )
         dispatch({
           type: 'DIALOG_MESSAGE',
