@@ -8,7 +8,7 @@ async function postBackendCouponApi(couponType, data) {
     if (couponType === 'edit') {
       api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/coupon/${data.id}`
       method = "put"
-    } else if (couponType === 'delete') {
+    } else if (couponType === 'delete' || couponType === 'allDelete') {
       api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/coupon/${data.id}`
       method = "delete"
     }
