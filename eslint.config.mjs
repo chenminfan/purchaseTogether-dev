@@ -34,6 +34,7 @@ export default [
       "max-len": ["error", { code: 800 }],
       "no-shadow": "off",
       "react/require-default-props": "off",
+      "react/react-in-jsx-scope": 0,
     },
   },
   pluginJs.configs.recommended,
