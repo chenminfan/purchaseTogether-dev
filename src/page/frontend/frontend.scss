@@ -1,0 +1,12 @@
+$main-color: #ccc;
+$frontendHeader: 56px;
+
+main {
+  &.frontend {
+    margin-top: $frontendHeader;
+    padding-top: 24px;
+    color: $main-color;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - $frontendHeader);
+  }
+}
