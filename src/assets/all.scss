@@ -1,19 +1,10 @@
-// 自定義
-@import 'mixins/text-line-truncate';
-@import './reset';
-@import 'bootstrap/scss/functions';
-@import './variables';
-
-@import 'bootstrap/scss/mixins';
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-icons/font/bootstrap-icons';
-$main-color: #ccc;
 i {
   display: flex;
 }
 a {
   text-decoration: none;
 }
+
 .img_box {
   position: relative;
   width: 100%;
@@ -32,8 +23,7 @@ img {
   object-fit: cover;
   background: #ddd;
 }
+
 main {
-  margin-top: 56px;
   padding: 24px 0;
-  color: $main-color;
 }
