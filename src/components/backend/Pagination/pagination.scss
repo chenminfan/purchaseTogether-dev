@@ -1,0 +1,27 @@
+.page {
+  &-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+    padding: 32px 0 16px;
+    width: 100%;
+  }
+  &-item {
+    cursor: pointer;
+    & + &:last-child {
+      &:not(.page-item-right) {
+        margin-right: 52px;
+      }
+    }
+    &:first-child {
+      &:not(.page-item-left) {
+        margin-left: 52px;
+      }
+    }
+    &:only-child {
+      &:not(.page-item-left) {
+        margin: 0;
+      }
+    }
+  }
+}
