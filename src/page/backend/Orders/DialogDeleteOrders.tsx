@@ -8,7 +8,7 @@ import {
 import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
 
 export default function DialogDeleteOrders(props) {
-  const { open, tampData, dialogRef, handleClose, getOrders, theme, color, couponType } = props;
+  const { open, page, tampData, dialogRef, handleClose, getOrders, theme, color, couponType } = props;
   const [state, dispatch] = useContext<any>(DialogContent);
 
   const dataValue = (value) => {
@@ -59,7 +59,7 @@ export default function DialogDeleteOrders(props) {
       })
     }
     handleClose();
-    getOrders();
+    getOrders(page, '');
   }
   return (
     <Dialog
