@@ -6,9 +6,30 @@ import {
   postBackendProductsApi
 } from '../../../data/Apis'
 import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
+import { BackendProductsType } from '@typeTS/backend/BProducts'
 
-export default function DialogDeleteProd(props) {
-  const { open, dialogTitle, dialogSubmitBtnText, tampData, dialogRef, handleClose, getProds, theme, color, prodType } = props;
+type DialogDeleteProdsType = {
+  open: boolean,
+  getProds;
+  handleClose;
+  prodType: string,
+  color: string,
+  tampData?: BackendProductsType,
+  tampDataALL?: BackendProductsType[],
+  theme: object,
+}
+export default function DialogDeleteProds(props: DialogDeleteProdsType) {
+  const { open, tampData = {
+    title: '',
+    category: '',
+    content: '',
+    origin_price: 0,
+    price: 0,
+    unit: '',
+    description: '',
+    is_enabled: 0,
+    imageUrl: ''
+  }, tampDataALL = [], handleClose, getProds, theme, color, prodType } = props;
   const [state, dispatch] = useContext<any>(DialogContent);
 
   const handleProdDelete = async () => {
@@ -25,12 +46,12 @@ export default function DialogDeleteProd(props) {
 
       } else if (prodType === 'allDelete') {
         await Promise.all(
-          tampData.map((item) => postBackendProductsApi(prodType, item))
+          tampDataALL.map((item) => postBackendProductsApi(prodType, item))
         )
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {
-            messageLength: tampData.length,
+            messageLength: tampDataALL.length,
             snackbarState: true,
           }
         })
@@ -51,25 +72,21 @@ export default function DialogDeleteProd(props) {
     <Dialog
       open={open}
       handleClose={handleClose}
-      dialogRef={dialogRef}
       maxWidth="sm"
       fullWidth
-      dialogTitle={prodType === 'delete' ? `${tampData.title} - 確認刪除` : '當前頁商品全部刪除'}
+      dialogTitle={prodType === 'delete' ? `${tampData.title} - 確認刪除` : '刪除多筆資料'}
+      dialogSubmitBtnText={prodType === 'delete' ? '確認刪除' : '確認刪除多筆資料'}
       handleSubmit={handleProdDelete}
-      dialogSubmitBtnText={dialogSubmitBtnText}
       dialogSubmitColor="error"
       theme={theme}
       color={color}
     >
       {prodType === 'delete' ? (
         <Box
-          {...props}
           component="div"
           sx={[
             { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
           ]}
-          noValidate
-          autoComplete="off"
         >
           {tampData.title}
 
@@ -82,7 +99,7 @@ export default function DialogDeleteProd(props) {
         </Box>
       ) : (
         <div>
-          {tampData.map((item) => (
+          {tampDataALL.map((item) => (
             <div key={item.id}>{item.title}</div>
           ))}
         </div>
