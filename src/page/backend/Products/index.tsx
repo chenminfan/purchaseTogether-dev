@@ -189,7 +189,7 @@ export default function BackendProducts() {
 
   if (loadingPage) {
     return (
-      <Box component="div"
+      <Box ref={isLoadingRef} component="div"
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', maxHeight: '350px' }}>
         <CircularProgress />
       </Box>
