@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef, useState, useContext } from 'react'
+import React, { useMemo, useEffect, useRef, useState, useContext, useCallback } from 'react'
 import Pagination from '@components/backend/Pagination';
 import CTableFrom from '@components/backend/paper/TableFrom';
 import { TableContent } from '@provider/TableProvider/TableContent'
@@ -6,6 +6,7 @@ import DialogNewProds from './DialogNewProds';
 import DialogDeleteProds from './DialogDeleteProds';
 import {
   getBackendProductsApi,
+  getBackendProductsCategoryApi
 } from '@api/Apis'
 
 import { createTheme } from '@mui/material/styles';
@@ -27,11 +28,13 @@ import { BackendProductsType } from '@typeTS/backend/BProducts'
 type CloseReason = 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick';
 export default function BackendProducts() {
   const [prodData, setProdData] = useState<BackendProductsType[]>([]);
+  const [prodDataALL, setProdDataALL] = useState<BackendProductsType[]>([]);
   const [page, setPage] = useState<PaginationType>({
     total_pages: 0,
     current_page: 1,
     has_pre: false,
     has_next: false,
+    category: ''
   });
   const [state, dispatch] = useContext<any>(TableContent);
   const isLoadingRef = useRef(true)
@@ -49,26 +52,22 @@ export default function BackendProducts() {
       width: 90,
       // valueGetter: (value, row) => `${prodData.firstName || ''} ${prodData.lastName || ''}`,
     },
-    { field: 'title', headerName: '品名', width: 120 },
-    { field: 'category', headerName: '分類', width: 120 },
+    { field: 'title', headerName: '品名', width: 180 },
+    // { field: 'category', headerName: '分類', width: 120 },
     // { field: 'content', headerName: '內容', width: 200 },
     { field: 'is_enabled', headerName: '狀態', width: 90, },
     { field: 'origin_price', headerName: '價格', width: 120, },
     { field: 'price', headerName: '售價', width: 120, },
 
   ];
-  const getProds = async (getPage = 1) => {
-    const productRes = await getBackendProductsApi(getPage)
-    setProdData(productRes.data.products)
-    isLoadingRef.current = false;
-    setLoadingPage(false)
-    setPage(productRes.data.pagination)
-    dispatch({
-      type: 'RE_RENDER_CHECKBOX',
-      table: { dataTamp: productRes.data.pagination },
-      tableData: prodData,
-    })
-  }
+
+
+  // 搜尋
+  const [search, setSearch] = useState('')
+  const [searchBTN, setSearchBTN] = useState('')
+  // const FILTER_PRODS: BackendProductsType[] = Object.values(prodDataALL).map(item => item)
+
+  // 搜尋
 
   // 排序 start
   const handleSortOrder = (order: string) => {
@@ -90,15 +89,48 @@ export default function BackendProducts() {
       (a: any, b: any) => newSortOrder(a, b, sortOrderID) :
       (a: any, b: any) => -newSortOrder(a, b, sortOrderID)
   }
-  const SORT_DATA = useMemo(() => {
-    return [...prodData]
-      .sort(getSort(sortOrder, sortOrderID))
-  }, [prodData, sortOrder, sortOrderID])
   // 排序 end
 
+  const getProds = async (getPage = 1, category = searchBTN) => {
+    if (category !== '') {
+      const productRes = await getBackendProductsCategoryApi(getPage, category)
+      setProdData(productRes.data.products)
+      setPage(productRes.data.pagination)
+    } else {
+      const productRes = await getBackendProductsApi(getPage)
+      setProdData(productRes.data.products)
+      isLoadingRef.current = false;
+      setLoadingPage(false)
+      setPage(productRes.data.pagination)
+      dispatch({
+        type: 'RE_RENDER_CHECKBOX',
+        table: { dataTamp: productRes.data.pagination },
+        tableData: prodData,
+      })
+    }
+  }
+
   useEffect(() => {
-    getProds();
-  }, [])
+    getProds(1, searchBTN);
+  }, [searchBTN])
+
+  const SEARCH_DATA = useMemo(() => {
+    return [...prodData
+      .filter((item) => item.category.match(searchBTN))]
+      .sort(getSort(sortOrder, sortOrderID))
+  }, [searchBTN, prodData, sortOrder, sortOrderID])
+  const handleChangeInput = (e: any) => {
+    setSearch(e.target.value)
+    return
+  }
+
+  const handleChangeInputBtn = () => {
+    setSearchBTN(search)
+    getProds()
+  }
+
+  console.log(page)
+
 
   const handleProdOpen = (type: string, prod) => {
     setTamp(prod);
@@ -148,6 +180,8 @@ export default function BackendProducts() {
     })
   }
   const CHECK_DATA_LENGTH = state.dataTamp.length > 1;
+
+
   if (loadingPage) {
     return (
       <Box component="div"
@@ -171,9 +205,13 @@ export default function BackendProducts() {
         checkboxAllSelection={prodData.length}
         checkboxSelection={state.dataTamp.length}
         handleCheckboxDelete={() => { handleClickDelete('allDelete') }}
-        handleProdOpen={() => { handleProdOpen('create', {}) }}>
+        handleProdOpen={() => { handleProdOpen('create', {}) }}
+        search={search}
+        handleChangeInput={(e) => { handleChangeInput(e) }}
+        handleChangeInputBtn={() => { handleChangeInputBtn() }}
+      >
         <>
-          <TableContainer sx={{ maxHeight: 'calc(100% - 154px)', minWidth: '100%' }}>
+          <TableContainer sx={{ height: 'calc(100% - 182px)', minWidth: '100%' }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
@@ -205,7 +243,7 @@ export default function BackendProducts() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {SORT_DATA.map((row) => (
+                {SEARCH_DATA.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -222,7 +260,7 @@ export default function BackendProducts() {
                     <TableCell>
                       {row.title}
                     </TableCell>
-                    <TableCell>{row.category}</TableCell>
+                    {/* <TableCell>{row.category}</TableCell> */}
                     {/* <TableCell><div className="text">{row.content}</div></TableCell> */}
                     <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
                     <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
