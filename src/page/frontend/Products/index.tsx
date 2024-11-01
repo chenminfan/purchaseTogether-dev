@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import Prods from '@components/frontend/Prods'
 import { getProductsApi, getProductsAllApi } from '@api/Apis/product/getProducts'
 import { ProductsType } from '@typeTS/Products'
@@ -16,6 +16,8 @@ export default function Products() {
     has_next: false,
     category: ''
   })
+  const isLoadingRef = useRef(true)
+  const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<string>('')
   const getProds = async (getPage = 1, category = '') => {
     const prodRes = await getProductsApi(getPage, category);
@@ -28,13 +30,14 @@ export default function Products() {
   const Id = category.find((item) => item)
   useEffect(() => {
     getProds()
+    isLoadingRef.current = false
+    setLoadingPage(false)
   }, [])
 
   const handleClick = (item) => {
     getProds(1, item)
     setCategoryId(item)
   }
-
   return (
     <div className="prods_page">
       <nav className="navbar navbar-expand-lg">
@@ -57,7 +60,7 @@ export default function Products() {
             <div className="prods_box">
               {prods.map((item) => {
                 return (
-                  <Prods key={item.id} prod={item} />
+                  <Prods key={item.id} prod={item} isLoading={loadingPage} />
                 )
               })}
             </div>
