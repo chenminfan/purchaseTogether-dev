@@ -2,7 +2,7 @@ import React from 'react';
 import './header.scss';
 
 export default function Header(props) {
-  const { headerLink = '/', headerTitle } = props;
+  const { headerLink = '#', headerTitle } = props;
 
   return (
     <header>

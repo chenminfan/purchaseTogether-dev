@@ -1,5 +1,4 @@
 import React, { Outlet } from 'react-router-dom'
-import 'bootstrap'
 import { LoginContentProvider } from '@provider/LoginProvider';
 import Header from '@components/frontend/Header';
 import 'bootstrap'
