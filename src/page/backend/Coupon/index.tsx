@@ -252,7 +252,10 @@ export default function BackendCoupon() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Pagination page={page} getPagination={getCoupon} pageLink="#/backend/product" />
+          <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Pagination page={page} getPagination={getCoupon} pageLink="#/backend/product" />
+          </Box>
+
         </>
       </CTableFrom>
       {tableType === 'delete' && (

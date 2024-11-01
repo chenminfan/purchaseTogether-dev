@@ -181,78 +181,78 @@ export default function BackendOrders() {
         checkboxSelection={state.dataTamp.length}
         handleCheckboxDelete={() => { handleClickDelete('allDelete') }}>
         <>
-          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead >
-                  <TableRow>
+          <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead >
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      name="checkAll"
+                      color="primary"
+                      checked={state.checkBool}
+                      onChange={(e) => {
+                        handleChangeCheckAll(e, ordersData)
+                      }}
+                    />
+                  </TableCell>
+                  {columns.map((col) => (
+                    <TableCell
+                      key={col.field}
+                      style={{ minWidth: col.width }}>
+                      <TableSortLabel
+                        active={sortOrderID === col.field}
+                        // direction={sortOrder ? sortOrder : 'asc'}
+                        onClick={() => handleSortOrder(col.field)}
+                      >
+                        {col.headerName}
+                      </TableSortLabel>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {SORT_DATA.map((row) => (
+                  <TableRow key={row.id}>
                     <TableCell padding="checkbox">
                       <Checkbox
-                        name="checkAll"
                         color="primary"
-                        checked={state.checkBool}
+                        checked={CHECK_STATE(row)}
                         onChange={(e) => {
-                          handleChangeCheckAll(e, ordersData)
+                          handleChangeCheck(e, row)
                         }}
                       />
                     </TableCell>
-                    {columns.map((col) => (
-                      <TableCell
-                        key={col.field}
-                        style={{ minWidth: col.width }}>
-                        <TableSortLabel
-                          active={sortOrderID === col.field}
-                          // direction={sortOrder ? sortOrder : 'asc'}
-                          onClick={() => handleSortOrder(col.field)}
-                        >
-                          {col.headerName}
-                        </TableSortLabel>
-                      </TableCell>
-                    ))}
+                    <TableCell>{dataValue(row.due_date)}</TableCell>
+                    <TableCell>{row.title}</TableCell>
+                    <TableCell>{row.percent}</TableCell>
+                    <TableCell>{dataValue(row.due_date)}</TableCell>
+                    <TableCell>{row.code}</TableCell>
+                    <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
+                    <TableCell>
+                      <Button
+                        disabled={CHECK_DATA_LENGTH}
+                        onClick={() => handleOrderOpen('edit', row)}
+                      >
+                        編輯
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        color="error"
+                        disabled={CHECK_DATA_LENGTH}
+                        onClick={() => handleOrderDeleteOpen('delete', row)}
+                      >
+                        刪除
+                      </Button>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {SORT_DATA.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={CHECK_STATE(row)}
-                          onChange={(e) => {
-                            handleChangeCheck(e, row)
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>{dataValue(row.due_date)}</TableCell>
-                      <TableCell>{row.title}</TableCell>
-                      <TableCell>{row.percent}</TableCell>
-                      <TableCell>{dataValue(row.due_date)}</TableCell>
-                      <TableCell>{row.code}</TableCell>
-                      <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                      <TableCell>
-                        <Button
-                          disabled={CHECK_DATA_LENGTH}
-                          onClick={() => handleOrderOpen('edit', row)}
-                        >
-                          編輯
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          color="error"
-                          disabled={CHECK_DATA_LENGTH}
-                          onClick={() => handleOrderDeleteOpen('delete', row)}
-                        >
-                          刪除
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-          <Pagination page={page} getPagination={getOrders} pageLink="#/backend/product" />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Pagination page={page} getPagination={getOrders} pageLink="#/backend/product" />
+          </Box>
         </>
       </CTableFrom>
       {tableType === 'delete' && (

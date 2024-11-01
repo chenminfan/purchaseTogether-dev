@@ -10,5 +10,5 @@ export type ProductsType = {
   description: string,
   is_enabled: number,
   imageUrl: string,
-  imagesUrl?: [],
+  imagesUrl?: string[] | null
 }
