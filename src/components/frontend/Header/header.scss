@@ -4,95 +4,96 @@ header {
   left: 0;
   right: 0;
   z-index: 999;
-  border-bottom: 1px solid $gray-600;
-  box-shadow: 0px 0px 3px #ddd;
+  box-shadow: 0px 0px 3px #555;
   background-color: $white;
   .navbar {
     display: flex;
     justify-content: space-between;
-    padding: 8px;
+    padding: 8px 0;
   }
-}
-.navbar {
-  @include media-breakpoint-down(md) {
-    position: relative;
-  }
-  &-carIcon {
-    display: flex;
-    align-items: center;
-    position: relative;
-    margin-right: 36px;
+  .navbar {
+    @include media-breakpoint-down(md) {
+      position: relative;
+    }
+    &-carIcon {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-right: 36px;
 
-    &-number.badge {
+      &-number.badge {
+        position: absolute;
+        top: 50%;
+        left: 26px;
+        font-size: 12px;
+        border-radius: 4px;
+        padding: 4px 8px;
+        transform: translate(0, -50%);
+      }
+    }
+    &-brand {
+      margin-right: 0;
       position: absolute;
       top: 50%;
-      left: 26px;
-      font-size: 12px;
-      border-radius: 4px;
-      padding: 4px 8px;
-      transform: translate(0, -50%);
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-  }
-  &-brand {
-    margin-right: 0;
-  }
-  &-box {
-    flex-basis: auto;
-    flex-grow: inherit;
-    width: auto;
-    margin: 0;
-    padding: 0 16px;
-    @include media-breakpoint-down(md) {
-      position: absolute;
-      top: 56px;
-      left: 0;
-      right: 0;
-      padding: 0 16px;
-      width: 100%;
+    &-box {
+      flex-basis: auto;
+      flex-grow: inherit;
       width: auto;
-      background: #fff;
-      border-bottom: 1px solid #6c757d;
+      margin: 0;
+      @include media-breakpoint-down(md) {
+        position: absolute;
+        top: 56px;
+        left: 0;
+        right: 0;
+        padding: 0 16px;
+        width: 100%;
+        width: auto;
+        background: #fff;
+        border-bottom: 1px solid #6c757d;
+      }
+      .nav {
+        &-item {
+          @include media-breakpoint-down(md) {
+            margin: 0;
+          }
+          > a {
+            width: 100%;
+            margin: 0;
+          }
+        }
+      }
+    }
+    &-box & {
+      &-collapse {
+        flex-grow: inherit;
+        flex-basis: auto;
+      }
+      &-nav {
+        @include media-breakpoint-down(md) {
+          flex-direction: column;
+        }
+      }
+    }
+    &-icon {
+      flex-basis: auto;
+      flex-grow: inherit;
+      width: auto;
+      margin: 0;
+    }
+
+    &-nav {
+      display: flex;
+      flex-direction: row;
     }
     .nav {
       &-item {
-        @include media-breakpoint-down(md) {
-          margin: 0;
-        }
-        > a {
-          width: 100%;
-          margin: 0;
-        }
+        display: flex;
+        align-items: center;
+        margin: 0 8px;
       }
-    }
-  }
-  &-box & {
-    &-collapse {
-      flex-grow: inherit;
-      flex-basis: auto;
-    }
-    &-nav {
-      @include media-breakpoint-down(md) {
-        flex-direction: column;
-      }
-    }
-  }
-  &-icon {
-    flex-basis: auto;
-    flex-grow: inherit;
-    width: auto;
-    margin: 0;
-    padding: 0 16px;
-  }
-
-  &-nav {
-    display: flex;
-    flex-direction: row;
-  }
-  .nav {
-    &-item {
-      display: flex;
-      align-items: center;
-      margin: 0 8px;
     }
   }
 }
