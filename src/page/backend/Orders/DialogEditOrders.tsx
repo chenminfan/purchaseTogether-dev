@@ -19,7 +19,7 @@ type FormDataType = {
   code: string
 }
 export default function DialogNewOrder(props) {
-  const { open, getOrders, dialogTitle, handleClose, couponType, tampData } = props;
+  const { open, page, getOrders, dialogTitle, handleClose, couponType, tampData } = props;
   const [, dispatch] = useContext<any>(DialogContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -93,7 +93,7 @@ export default function DialogNewOrder(props) {
         })
       }
       handleClose();
-      getOrders();
+      getOrders(page, '');
     } catch (error: any) {
       dispatch({
         type: 'DIALOG_MESSAGE',
