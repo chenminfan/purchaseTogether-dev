@@ -252,12 +252,16 @@ export default function BackendCoupon() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Pagination page={page} getPagination={getCoupon} pageLink="#/backend/product" />
+          <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Pagination page={page} getPagination={getCoupon} pageLink="#/backend/product" />
+          </Box>
+
         </>
       </CTableFrom>
       {tableType === 'delete' && (
         <DialogDeleteCoupon
           open={open}
+          page={page.current_page}
           getCoupon={getCoupon}
           couponType={tableType}
           tampData={tamp}
@@ -269,6 +273,7 @@ export default function BackendCoupon() {
       {tableType === 'allDelete' && (
         <DialogDeleteCoupon
           open={open}
+          page={page.current_page}
           getCoupon={getCoupon}
           couponType={tableType}
           tampDataALL={state.dataTamp}
@@ -280,6 +285,7 @@ export default function BackendCoupon() {
       {(tableType === 'edit' || tableType === 'create') && (
         (<DialogNewCoupon
           open={open}
+          page={page.current_page}
           getCoupon={getCoupon}
           couponType={tableType}
           tampData={tamp}

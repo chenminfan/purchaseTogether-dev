@@ -22,11 +22,13 @@ type DialogNewProdsType = {
   getProds;
   handleClose;
   prodType: string,
-  tampData: ProductsType
+  tampData: ProductsType,
+  page: number,
+
 }
 
 export default function DialogNewProds(props: DialogNewProdsType) {
-  const { open, dialogTitle, dialogSubmitBtnText, getProds, handleClose = () => { }, prodType, tampData } = props;
+  const { open, page, dialogTitle, dialogSubmitBtnText, getProds, handleClose = () => { }, prodType, tampData } = props;
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -38,11 +40,12 @@ export default function DialogNewProds(props: DialogNewProdsType) {
     origin_price: 0,
     price: 0,
     unit: '',
+    num: 0,
     description: '',
     is_enabled: 0,
-    imageUrl: ''
+    imageUrl: '',
+    imagesUrl: ['', '', '', '', ''],
   })
-
   const handleInputKeyDown = (e) => {
     if (e.key === "e") e.preventDefault();
   }
@@ -61,7 +64,6 @@ export default function DialogNewProds(props: DialogNewProdsType) {
         ...formData,
         imageUrl: res.data.imageUrl,//變數的方式帶入屬性
       })
-      console.log(res)
     } catch (error: any) {
 
     }
@@ -80,6 +82,15 @@ export default function DialogNewProds(props: DialogNewProdsType) {
       setFormData({
         ...formData,
         [name]: Number(checked), //Number或＋
+      })
+
+    } else if (name.substring(0, 9) === 'imagesUrl') {
+      const inputArray = ({ ...formData.imagesUrl, [name.substring(9, 10)]: value })
+      const inputArrayIndex = Object.values(inputArray).map((item) => item ? item : '')
+
+      setFormData({
+        ...formData,
+        imagesUrl: inputArrayIndex
       })
     }
     else {
@@ -100,11 +111,10 @@ export default function DialogNewProds(props: DialogNewProdsType) {
         handleSnackbarSuccess(dispatch, res);
       }
       handleClose();
-      getProds();
+      getProds(page, '');
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }
-
   }
 
   useEffect(() => {
@@ -115,15 +125,16 @@ export default function DialogNewProds(props: DialogNewProdsType) {
         content: 'DialogNewProds',
         origin_price: 3000,
         price: 300,
+        num: 5000,
         unit: '個',
         description: 'DialogNewProds',
         is_enabled: 1,
-        imageUrl: 'https://images.unsplash.com/photo-1525088553748-01d6e210e00b?q=80&w=1752&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        imageUrl: 'https://images.unsplash.com/photo-1525088553748-01d6e210e00b?q=80&w=1752&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imagesUrl: ['', '', '', '', ''],
       })
     } else if (prodType === 'edit') {
       setFormData(tampData);
     }
-
   }, [prodType, tampData])
 
   return (
@@ -145,7 +156,8 @@ export default function DialogNewProds(props: DialogNewProdsType) {
       >
         <Box component="div" sx={[
           { '& > .MuiBox-root': { display: 'flex', flexDirection: 'column', flex: 1, m: 1, alignItems: 'flex-start' } },
-          { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
+          { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } },
+
         ]}>
           <div className='img_box'><img src={formData.imageUrl} alt={formData.title} /></div>
 
@@ -153,7 +165,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
             <TextField
               required
               fullWidth
-              label="輸入圖片網址"
+              label="輸入主圖圖片網址"
               placeholder='請輸入圖片網址'
               name="imageUrl"
               value={formData.imageUrl}
@@ -177,7 +189,34 @@ export default function DialogNewProds(props: DialogNewProdsType) {
 
             </Button>
             {imageUpdate}
+
           </Box>
+        </Box>
+        <Box component="div" sx={[
+          { '& > .imagesUrl_box': { width: '100%', padding: '8px' } },
+        ]}>
+          {formData.imagesUrl && formData.imagesUrl?.map((item, index) => (
+            <Box component="div" key={`imagesUrl${index}`} className='imagesUrl_box' sx={[
+              { '&.MuiBox-root': { padding: '8px', display: 'flex', flexDirection: 'column', height: `${item.length !== 0 ? '220px' : 'auto'}` }, }
+            ]}>
+              <TextField
+                required
+                fullWidth
+                label={`輸入圖片${index + 1}網址`}
+                placeholder='請輸入圖片網址'
+                name={`imagesUrl${index}`}
+                value={item}
+                onChange={(e) => handleInputChange(e)}
+              />
+              {item.length !== 0 && <div className='img_box'><img src={item} alt={formData.title} /></div>}
+            </Box>
+          ))}
+        </Box>
+        <Box component="div" sx={[
+          { '& > .imagesUrl_box': { width: '100%', padding: '8px' } },
+          { '.img_box': { padding: '8px' } },
+        ]}>
+
         </Box>
         <Box component="div">
           <TextField
@@ -199,6 +238,16 @@ export default function DialogNewProds(props: DialogNewProdsType) {
           />
         </Box>
         <Box component="div">
+          <TextField
+            required
+            fullWidth
+            type="number"
+            label="數量unit"
+            placeholder='請輸入商品數量'
+            name="num"
+            value={formData.num}
+            onChange={(e) => handleInputChange(e)}
+          />
           <TextField
             required
             fullWidth
@@ -267,6 +316,6 @@ export default function DialogNewProds(props: DialogNewProdsType) {
           label="是否啟用"
         />
       </Box>
-    </Dialog>
+    </Dialog >
   )
 }
