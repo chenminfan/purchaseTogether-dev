@@ -6,7 +6,7 @@ import { getCartApi } from './cart/getCart'
 import { postCouponApi } from './coupon/postCoupon'
 import { getOrdersApi } from './order/getOrders'
 import { getPayApi } from './pay/getPay'
-import { getProductsApi } from './product/getProducts'
+import { getProductsApi,getProductsAllApi } from './product/getProducts'
 import { postBackendProductsApi } from './product/postBackendProducts'
 import { getBackendProductsApi, getBackendProductsCategoryApi } from './product/getBackendProducts'
 import { getBackendCouponApi } from './coupon/getBackendCoupon'
@@ -25,6 +25,7 @@ export {
   getOrdersApi,
   getPayApi,
   getProductsApi,
+  getProductsAllApi,
   postBackendProductsApi,
   getBackendProductsApi,
   getBackendProductsCategoryApi,
