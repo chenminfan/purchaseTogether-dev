@@ -15,6 +15,7 @@ import { CouponType } from '@typeTS/Coupon'
 
 type DialogNewCouponType = {
   open: boolean,
+  page: number,
   dialogTitle: string,
   dialogSubmitBtnText: string,
   getCoupon;
@@ -23,7 +24,7 @@ type DialogNewCouponType = {
   tampData: CouponType,
 }
 export default function DialogNewCoupon(props: DialogNewCouponType) {
-  const { open, getCoupon, dialogTitle, dialogSubmitBtnText, handleClose, couponType, tampData } = props;
+  const { open, page, getCoupon, dialogTitle, dialogSubmitBtnText, handleClose, couponType, tampData } = props;
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -92,7 +93,7 @@ export default function DialogNewCoupon(props: DialogNewCouponType) {
         handleSnackbarSuccess(dispatch, res);
       }
       handleClose();
-      getCoupon();
+      getCoupon(page, '');
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }

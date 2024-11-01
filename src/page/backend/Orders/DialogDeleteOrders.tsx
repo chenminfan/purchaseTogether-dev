@@ -42,7 +42,7 @@ export default function DialogDeleteOrders(props) {
       handleClose();
     }
     handleClose();
-    getOrders();
+    getOrders(page, '');
   }
   return (
     <Dialog
