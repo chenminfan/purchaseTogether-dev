@@ -14,17 +14,17 @@ export default function Header(props) {
           <div className="collapse navbar-collapse navbar-box" id="navbarTogglerDemo01">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="navbar-brand" href="#">
+                <a className="nav-link" href="#">
                   商品分類
                 </a>
               </li>
               <li className="nav-item">
-                <a className="navbar-brand" href="#">
+                <a className="nav-link" href="#">
                   商品分類
                 </a>
               </li>
               <li className="nav-item">
-                <a className="navbar-brand" href="#">
+                <a className="nav-link" href="#">
                   商品分類
                 </a>
               </li>
@@ -34,12 +34,12 @@ export default function Header(props) {
           <div className="navbar-collapse navbar-icon">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="navbar-brand" href="#/login">
+                <a className="nav-link" href="#/login">
                   <i className="bi bi-window-sidebar"></i>
                 </a>
               </li>
               <li className="nav-item">
-                <a className="navbar-brand navbar-carIcon" href="#/cart">
+                <a className="nav-link navbar-carIcon" href="#/cart">
                   <i className="bi bi-cart-check-fill"></i>
                   <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">9</span>
                   <span className="visually-hidden">unread messages</span>
