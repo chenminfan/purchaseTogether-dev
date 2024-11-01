@@ -50,7 +50,7 @@ export default function PaginationComponents(props: PaginationComponentsType) {
               </a>
             </li>
           )}
-          {[...Array(page.total_pages)].map((item, index) => (
+          {page.total_pages > 1 && [...Array(page.total_pages)].map((item, index) => (
             <li
               className="page-item" key={`item_${index}`}
               onClick={() => {
