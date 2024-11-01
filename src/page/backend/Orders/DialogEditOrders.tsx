@@ -19,7 +19,7 @@ type FormDataType = {
   code: string
 }
 export default function DialogNewOrder(props) {
-  const { open, getOrders, dialogTitle, handleClose, couponType, tampData } = props;
+  const { open, page, getOrders, dialogTitle, handleClose, couponType, tampData } = props;
   const [, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -83,7 +83,7 @@ export default function DialogNewOrder(props) {
       const res = await postBackendOrdersApi('edit', formData)
       handleSnackbarSuccess(dispatch, res);
       handleClose();
-      getOrders();
+      getOrders(page, '');
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }
