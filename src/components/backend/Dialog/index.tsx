@@ -38,6 +38,7 @@ export default function DialogComponents(props) {
           right: 8,
           top: 8,
           color: theme.palette.grey[50],
+          padding: '0 6px',
         })}
       >
         <i className="bi bi-x"></i>
@@ -49,6 +50,7 @@ export default function DialogComponents(props) {
           right: 8,
           top: 8,
           color: theme.palette.grey[300],
+          padding: '0 6px',
         })}
       >
         <i className="bi bi-x"></i>

@@ -10,6 +10,7 @@ import { CouponType } from '@typeTS/Coupon'
 
 type DialogDeleteCouponType = {
   open: boolean,
+  page: number,
   getCoupon;
   handleClose;
   couponType: string,
@@ -19,7 +20,7 @@ type DialogDeleteCouponType = {
   theme: object,
 }
 export default function DialogDeleteCoupon(props: DialogDeleteCouponType) {
-  const { open, tampData = {
+  const { open, page, tampData = {
     id: '',
     title: '',
     percent: 0,
@@ -77,7 +78,7 @@ export default function DialogDeleteCoupon(props: DialogDeleteCouponType) {
       })
     }
     handleClose();
-    getCoupon();
+    getCoupon(page, '');
   }
 
   return (
