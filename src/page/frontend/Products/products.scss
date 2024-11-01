@@ -1,0 +1,24 @@
+.prods {
+  &_page {
+    .nav {
+      &bar {
+        border-bottom: 1px solid #333;
+        overflow-y: auto;
+        &-custom-scroll {
+          display: flex;
+          flex-wrap: nowrap;
+          flex-direction: row;
+        }
+      }
+      &-item {
+        min-width: 40px;
+        padding: 0 4px;
+        text-align: center;
+      }
+    }
+    .prods_box {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+}
