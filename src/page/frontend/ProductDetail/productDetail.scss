@@ -1,0 +1,27 @@
+.detail {
+  &_page {
+    padding: 1rem 0;
+    .carousel {
+      height: 500px;
+    }
+    h2 {
+      @include text-line-truncate(2, 100%, auto, 1.5);
+    }
+  }
+  &-image {
+    height: 500px;
+  }
+  &-carouselBox {
+    overflow-x: auto;
+    .carouselBox {
+      display: flex;
+      .prods {
+        max-width: auto;
+        min-width: 200px;
+      }
+    }
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 
 type CTableFromType = {
-  children: JSX.Element,
+  children: JSX.Element | JSX.Element[]
   title: string,
   checkboxAllSelection: number,
   checkboxSelection: number,
