@@ -40,7 +40,6 @@ export default function DialogNewProds(props: DialogNewProdsType) {
     origin_price: 0,
     price: 0,
     unit: '',
-    num: 0,
     description: '',
     is_enabled: 0,
     imageUrl: '',
@@ -146,7 +145,6 @@ export default function DialogNewProds(props: DialogNewProdsType) {
         content: 'DialogNewProds',
         origin_price: 3000,
         price: 300,
-        num: 5000,
         unit: '個',
         description: 'DialogNewProds',
         is_enabled: 1,
@@ -259,16 +257,6 @@ export default function DialogNewProds(props: DialogNewProdsType) {
           />
         </Box>
         <Box component="div">
-          <TextField
-            required
-            fullWidth
-            type="number"
-            label="數量unit"
-            placeholder='請輸入商品數量'
-            name="num"
-            value={formData.num}
-            onChange={(e) => handleInputChange(e)}
-          />
           <TextField
             required
             fullWidth

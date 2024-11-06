@@ -91,7 +91,7 @@ export default function ProductDetail() {
 
               <div className="row align-items-center">
                 <div className="col-6">
-                  <Stepper num={detail.num} />
+                  <Stepper num={10} />
                 </div>
                 <div className="col-6">
                   <a href="./checkout.html" className="text-nowrap btn btn-primary w-100 py-2"><i className="bi bi-cart-check-fill"></i></a>
