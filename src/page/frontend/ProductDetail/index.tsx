@@ -53,8 +53,8 @@ export default function ProductDetail() {
           <div className="col-md-7">
 
             <Carousel carouselName="prodCarousel"
-              carouselPre={IS_IMAGES.length !== 0}
-              carouselNext={IS_IMAGES.length !== 0}>
+              carouselPre={IS_IMAGES.length === 0}
+              carouselNext={IS_IMAGES.length === 0}>
               <div className="carousel-inner h-100">
                 {IS_IMAGES ? (
                   <div className="carousel-item h-100 active" data-bs-interval="5000">
