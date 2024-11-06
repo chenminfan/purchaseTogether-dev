@@ -18,8 +18,8 @@ export default function Header(props) {
                   商品分類
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
+              {/* <li className="nav-item">
+                <a className="nav-link" href="#/prods">
                   商品分類
                 </a>
               </li>
@@ -27,7 +27,7 @@ export default function Header(props) {
                 <a className="nav-link" href="#">
                   商品分類
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
           <a className="navbar-brand" href={headerLink}>{headerTitle}</a>
