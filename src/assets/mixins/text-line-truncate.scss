@@ -3,7 +3,16 @@
   -webkit-line-clamp: $line-value;
   -webkit-box-orient: vertical;
   width: $width;
+  height: $height;
+  line-height: $lineHeight;
+  overflow: hidden;
+}
+
+@mixin text-one-line-truncate($line-value, $width, $height, $lineHeight) {
+  width: $width;
   height: $height * 2;
   line-height: $lineHeight;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
