@@ -6,6 +6,7 @@ import Frontend from '@pageFrontend/Frontend';
 import Login from '@pageFrontend/Login';
 import Cart from '@pageFrontend/Cart';
 import Products from '@pageFrontend/Products';
+import ProductDetail from '@pageFrontend/ProductDetail';
 import Dashboard from '@pageBackend/Dashboard';
 import BackendProducts from '@pageBackend/Products';
 import BackendCoupon from '@pageBackend/Coupon';
@@ -18,8 +19,9 @@ export default function App() {
       <Route path='/' element={<Frontend />}>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/cart' element={<Cart />}></Route>
-        {/* <Route path='/prods' element={<Products />}></Route> */}
-        <Route index element={<Products />}></Route>
+        <Route index path='/prods' element={<Products />}></Route>
+        <Route path='prods/detail/:id' element={<ProductDetail />}></Route>
+
       </Route>
       <Route path='/backend' element={<Dashboard />}>
         <Route path='/backend' element={<BHome />}></Route>
