@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import LazyLoadImg from "@components/hook/LazyLoadImage";
 import { ProductsType } from '@typeTS/Products'
 import './prods.scss'
 
@@ -24,7 +25,7 @@ export default function Prods(props: ProdsType) {
           </p>
 
           <div className="img_box">
-            <img src="..." className="card-img-top" alt="..." />
+            <LazyLoadImg src="..." className="card-img-top" alt="..." />
           </div>
 
           <div className="prods-tool">
@@ -56,7 +57,7 @@ export default function Prods(props: ProdsType) {
         </div>
 
         <div className="img_box">
-          <a href={`#/prods/detail/${prod.id}`}><img className="card-img-top" src={prod.imageUrl} alt={prod.title} />
+          <a href={`#/prods/detail/${prod.id}`}><LazyLoadImg className="card-img-top" src={prod.imageUrl} alt={prod.title} />
           </a>
         </div>
 
