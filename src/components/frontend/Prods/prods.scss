@@ -56,7 +56,7 @@ $font-size-base: 16px;
       top: -20px;
       left: 50%;
       transform: translate(-50%, 0);
-      padding: 8px;
+      padding: 4px 8px;
       color: $white;
       border-radius: 100%;
       border: 7px solid $white;
@@ -83,7 +83,7 @@ $font-size-base: 16px;
     }
     &-title {
       color: $primary;
-      @include text-line-truncate(2, 100%, 32px, 1.5);
+      @include text-line-truncate(2, 100%, (32px * 2), 1.5);
     }
   }
 }

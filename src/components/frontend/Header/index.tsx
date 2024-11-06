@@ -2,7 +2,7 @@ import React from 'react';
 import './header.scss';
 
 export default function Header(props) {
-  const { headerLink = '#', headerTitle } = props;
+  const { headerLink = '/', headerTitle } = props;
 
   return (
     <header>
@@ -14,7 +14,12 @@ export default function Header(props) {
           <div className="collapse navbar-collapse navbar-box" id="navbarTogglerDemo01">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <a className="nav-link" href="#/prods">
+                  商品分類
+                </a>
+              </li>
+              {/* <li className="nav-item">
+                <a className="nav-link" href="#/prods">
                   商品分類
                 </a>
               </li>
@@ -22,12 +27,7 @@ export default function Header(props) {
                 <a className="nav-link" href="#">
                   商品分類
                 </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  商品分類
-                </a>
-              </li>
+              </li> */}
             </ul>
           </div>
           <a className="navbar-brand" href={headerLink}>{headerTitle}</a>
