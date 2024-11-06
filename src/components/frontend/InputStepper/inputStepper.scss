@@ -1,0 +1,12 @@
+.inputStepper {
+  display: flex;
+  align-items: center;
+  background-color: $gray-200;
+  height: 45px;
+  input[type='number']::-webkit-inner-spin-button {
+    opacity: 1;
+  }
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
