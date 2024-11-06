@@ -56,7 +56,6 @@ export default function BackendProducts() {
     // { field: 'content', headerName: '內容', width: 200 },
     { field: 'imagesUrl', headerName: '小圖', width: 200, },
     { field: 'is_enabled', headerName: '狀態', width: 90, },
-    { field: 'num', headerName: '數量', width: 90, },
     { field: 'origin_price', headerName: '價格', width: 90, },
     { field: 'price', headerName: '售價', width: 90, },
 
@@ -282,7 +281,6 @@ export default function BackendProducts() {
 
                       </TableCell>
                       <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                      <TableCell>{row.num}</TableCell>
                       <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
                       <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
                       <TableCell>
