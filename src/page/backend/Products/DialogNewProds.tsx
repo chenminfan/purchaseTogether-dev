@@ -217,7 +217,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
           { '& > .imagesUrl_box': { width: '100%', padding: '8px' } },
         ]}>
           {formData.imagesUrl && formData.imagesUrl?.map((item, index) => (
-            <Box component="div" key={`imagesUrl${index}`} className='imagesUrl_box' sx={[
+            <Box component="div" key={`${item}_imagesUrl${index}`} className='imagesUrl_box' sx={[
               { '&.MuiBox-root': { padding: '8px', display: 'flex', flexDirection: 'column', height: `${item.length !== 0 ? '220px' : 'auto'}` }, }
             ]}>
               <TextField
