@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/myHexschool-dev/static/css/main.1819293d.css",
-    "main.js": "/myHexschool-dev/static/js/main.31c8b3f9.js",
+    "main.js": "/myHexschool-dev/static/js/main.43b24beb.js",
     "static/js/453.a9c4eed8.chunk.js": "/myHexschool-dev/static/js/453.a9c4eed8.chunk.js",
     "static/media/bootstrap-icons.woff?": "/myHexschool-dev/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
     "static/media/bootstrap-icons.woff2?": "/myHexschool-dev/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
     "index.html": "/myHexschool-dev/index.html",
     "main.1819293d.css.map": "/myHexschool-dev/static/css/main.1819293d.css.map",
-    "main.31c8b3f9.js.map": "/myHexschool-dev/static/js/main.31c8b3f9.js.map",
+    "main.43b24beb.js.map": "/myHexschool-dev/static/js/main.43b24beb.js.map",
     "453.a9c4eed8.chunk.js.map": "/myHexschool-dev/static/js/453.a9c4eed8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1819293d.css",
-    "static/js/main.31c8b3f9.js"
+    "static/js/main.43b24beb.js"
   ]
 }
