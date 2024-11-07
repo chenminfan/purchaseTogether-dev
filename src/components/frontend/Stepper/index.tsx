@@ -5,10 +5,7 @@ export default function Stepper(props) {
   const { num } = props
   const [prodsNum, setProdsNum] = useState<number>(num)
   const handleAdd = (number) => {
-    if (0 < prodsNum && number < num) {
-      setProdsNum(++number)
-    }
-
+    setProdsNum(++number)
   }
   const handleCut = (number) => {
     if (prodsNum > 1 && prodsNum !== 0) {
@@ -31,9 +28,11 @@ export default function Stepper(props) {
           <i className="bi bi-dash-lg"></i>
         </button>
       </div>
-      <input type="number" className="form-control border-0 text-center my-auto shadow-none bg-transparent" value={prodsNum} onChange={(e) => {
-        handleChange(e)
-      }} />
+      <input type="number" className="form-control border-0 text-center my-auto shadow-none bg-transparent" value={prodsNum}
+        onChange={(e) => {
+          handleChange(e)
+        }}
+      />
       <div className="stepper-increase">
         <button className="btn btn-outline-dark border-0 py-2" type="button" id="button-addon2"
           onClick={() => {

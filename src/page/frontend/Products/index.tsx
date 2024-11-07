@@ -20,11 +20,16 @@ export default function Products() {
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<string>('')
   const getProds = async (getPage = 1, category = '') => {
-    const prodRes = await getProductsApi(getPage, category);
-    const prodAllRes = await getProductsAllApi();
-    setProds(prodRes.data.products)
-    setProdAll(prodAllRes.data.products)
-    setPage(prodRes.data.pagination)
+    try {
+      const prodRes = await getProductsApi(getPage, category);
+      const prodAllRes = await getProductsAllApi();
+      setProds(prodRes.data.products)
+      setProdAll(prodAllRes.data.products)
+      setPage(prodRes.data.pagination)
+    } catch (error) {
+      const errorRes = error
+      console.log(errorRes)
+    }
   }
   const category = Array.from(new Set(prodAll.map((item) => item.category)))
   const Id = category.find((item) => item)
@@ -48,7 +53,7 @@ export default function Products() {
               onClick={() => {
                 handleClick(item)
               }}>
-              <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} href="#" >{item}</a>
+              <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} role="link" aria-label="prods-link" href="#" >{item}</a>
             </li>
           ))}
         </ul>
