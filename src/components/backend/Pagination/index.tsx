@@ -45,7 +45,7 @@ export default function PaginationComponents(props: PaginationComponentsType) {
               onClick={() => {
                 handleClickLeft(page.current_page - 1)
               }}>
-              <a className="page-link" href={pageLink}>
+              <a className="page-link" href={pageLink} role="link" aria-label="page-link">
                 <i className="bi bi-caret-left-fill"></i>
               </a>
             </li>
@@ -56,7 +56,7 @@ export default function PaginationComponents(props: PaginationComponentsType) {
               onClick={() => {
                 handleClickPage(index + 1)
               }}>
-              <a className={`page-link${currentPage === index + 1 ? ' active' : ''}`} href={pageLink}>{index + 1}</a>
+              <a className={`page-link${currentPage === index + 1 ? ' active' : ''}`} href={pageLink} role="link" aria-label="page-link">{index + 1}</a>
             </li>
           ))}
           {page.has_next && (
@@ -65,7 +65,7 @@ export default function PaginationComponents(props: PaginationComponentsType) {
               onClick={() => {
                 handleClickRight(page.current_page + 1)
               }}>
-              <a className="page-link" href={pageLink}>
+              <a className="page-link" href={pageLink} role="link" aria-label="page-link">
                 <i className="bi bi-caret-right-fill"></i>
               </a>
             </li>
