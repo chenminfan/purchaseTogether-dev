@@ -27,10 +27,15 @@ export default function ProductDetail() {
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const getProds = async (prodId) => {
-    const prodRes = await getProductsIdApi(prodId);
-    const prodAllRes = await getProductsAllApi();
-    setDetail(prodRes.data.product)
-    setCategoryProds(prodAllRes.data.products)
+    try {
+      const prodRes = await getProductsIdApi(prodId);
+      const prodAllRes = await getProductsAllApi();
+      setDetail(prodRes.data.product)
+      setCategoryProds(prodAllRes.data.products)
+    } catch (error) {
+      const errorRes = error
+      console.log(errorRes)
+    }
   }
 
   useEffect(() => {
@@ -58,7 +63,7 @@ export default function ProductDetail() {
       <div className='container-fluid py-2'>
         <div className="row align-items-center">
           <div className="col-md-7">
-            <Carousel carouselName="prodCarousel" carouselPre={IS_IMAGES.length !== 1} carouselNext={IS_IMAGES.length !== 1}>
+            <Carousel carouselName="prodCarousel" carouselPre={IS_IMAGES.length > 1} carouselNext={IS_IMAGES.length > 1}>
               <div className="carousel-inner h-100">
                 <div className="carousel-item h-100 active" data-bs-interval="5000">
                   <div className="img_box">
@@ -105,8 +110,8 @@ export default function ProductDetail() {
               <div className="detail-info py-2">
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb px-0 mb-0 py-3">
-                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl}><i className="bi bi-shop"></i></a></li>
-                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl}>{breadcrumbData.ProdsName}</a></li>
+                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
+                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl} role="link" aria-label="breadcrumb-link">{breadcrumbData.ProdsName}</a></li>
                     <li className="breadcrumb-item active text-primary" aria-current="page">{detail.category}</li>
                   </ol>
                 </nav>
@@ -122,7 +127,7 @@ export default function ProductDetail() {
                     <Stepper num={10} />
                   </div>
                   <div className="col-6">
-                    <a href="./checkout.html" className="text-nowrap btn btn-primary w-100 py-2"><i className="bi bi-cart-check-fill"></i></a>
+                    <a href="./checkout.html" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"><i className="bi bi-cart-check-fill"></i></a>
                   </div>
                 </div>
               </div>

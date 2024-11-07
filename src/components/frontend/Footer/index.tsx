@@ -8,15 +8,15 @@ export default function Footer() {
           <a className="text-white h4" href="./index.html">LOGO</a>
           <ul className="d-flex list-unstyled mb-0 h4">
             <li>
-              <a href="#" className="text-white mx-3">
+              <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
                 <i className="bi bi-facebook"></i></a>
             </li>
             <li>
-              <a href="#" className="text-white mx-3">
+              <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
                 <i className="bi bi-instagram"></i></a>
             </li>
             <li>
-              <a href="#" className="text-white mx-3">
+              <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
                 <i className="bi bi-line"></i></a>
             </li>
           </ul>

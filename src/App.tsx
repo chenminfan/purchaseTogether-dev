@@ -4,7 +4,7 @@ import '@assets/all.scss'
 import BHome from '@pageBackend/Home';
 import Frontend from '@pageFrontend/Frontend';
 import Login from '@pageFrontend/Login';
-import Cart from '@pageFrontend/Cart';
+import CartCheckout from '@pageFrontend/CartCheckout';
 import Products from '@pageFrontend/Products';
 import ProductDetail from '@pageFrontend/ProductDetail';
 import Dashboard from '@pageBackend/Dashboard';
@@ -18,8 +18,8 @@ export default function App() {
     <Routes>
       <Route path='/' element={<Frontend />}>
         <Route path='/login' element={<Login />}></Route>
-        <Route path='/cart' element={<Cart />}></Route>
-        <Route index element={<Products />}></Route>
+        <Route index element={<CartCheckout />}></Route>
+        <Route path='/prods' element={<Products />}></Route>
         <Route path='prods/detail/:id' element={<ProductDetail />}></Route>
       </Route>
       <Route path='/backend' element={<Dashboard />}>
