@@ -6,95 +6,126 @@ header {
   z-index: 999;
   box-shadow: 0px 0px 3px #555;
   background-color: $white;
-  .navbar {
-    padding: 8px 0;
-  }
-  .navbar {
-    @include media-breakpoint-down(md) {
-      position: relative;
-    }
-    &-carIcon {
-      display: flex;
-      align-items: center;
-      position: relative;
-      margin-right: 36px;
-
-      &-number.badge {
-        position: absolute;
-        top: 50%;
-        left: 26px;
-        font-size: 12px;
-        border-radius: 4px;
-        padding: 4px 8px;
-        transform: translate(0, -50%);
-      }
-    }
-    &-brand {
-      margin-right: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &-box {
-      flex-basis: auto;
-      flex-grow: inherit;
-      width: auto;
-      margin: 0;
+  .nav {
+    &bar {
+      padding: 8px 0;
       @include media-breakpoint-down(md) {
+        position: relative;
+      }
+      &-carIcon {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-right: 36px;
+
+        &-number.badge {
+          position: absolute;
+          top: 50%;
+          left: 26px;
+          width: 25px;
+          height: 20px;
+          font-size: 12px;
+          border-radius: 4px;
+          padding: 4px 8px;
+          transform: translate(0, -50%);
+        }
+      }
+      &-brand {
+        display: flex;
+        align-items: center;
+        margin-right: 0;
+        margin-bottom: 8px;
+        height: calc(100% - 8px);
         position: absolute;
-        top: 56px;
-        left: 0;
-        right: 0;
-        padding: 0 16px;
-        width: 100%;
+        top: 0;
+        left: 50%;
+        color: $primary;
+        transform: translate(-50%, 0);
+        border-radius: 0 0 12px 12px;
+        background-color: $gray-200;
+        &:hover {
+          color: rgb(85 31 31);
+        }
+        .logo {
+          padding: 8px 32px;
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            display: block;
+            height: 100%;
+            width: 32px;
+          }
+          &::before {
+            border-radius: 0 16px 0 0;
+            left: -32px;
+            box-shadow: 0 -16px 0 0 $gray-200;
+          }
+          &::after {
+            border-radius: 16px 0 0 0;
+            right: -32px;
+            box-shadow: 0 -16px 0 0 $gray-200;
+          }
+        }
+      }
+      &-box {
+        flex-basis: auto;
         width: auto;
-        background: #fff;
-        border-bottom: 1px solid #6c757d;
+        margin: 0;
+        @include media-breakpoint-down(md) {
+          flex-grow: inherit;
+          position: absolute;
+          top: 56px;
+          left: 0;
+          right: 0;
+          padding: 0 16px;
+          width: 100%;
+          width: auto;
+          background: #fff;
+          border-bottom: 1px solid #6c757d;
+        }
+        .nav {
+          &-item {
+            @include media-breakpoint-down(md) {
+              margin: 0;
+            }
+            > a {
+              width: 100%;
+              margin: 0;
+            }
+          }
+        }
+      }
+      &-box & {
+        &-nav {
+          @include media-breakpoint-down(sm) {
+            flex-direction: column;
+          }
+        }
+      }
+      &-icon {
+        flex-basis: auto;
+        flex-grow: inherit;
+        width: auto;
+        margin: 0;
+      }
+
+      &-nav {
+        display: flex;
+        flex-direction: row;
       }
       .nav {
         &-item {
-          @include media-breakpoint-down(md) {
-            margin: 0;
-          }
-          > a {
-            width: 100%;
-            margin: 0;
-          }
+          display: flex;
+          align-items: center;
+          margin: 0 8px;
         }
       }
     }
-    &-box & {
-      &-collapse {
-        // flex-grow: inherit;
-        // flex-basis: auto;
-        @include media-breakpoint-down(sm) {
-          flex-grow: inherit;
-          flex-basis: auto;
-        }
-      }
-      &-nav {
-        @include media-breakpoint-down(sm) {
-          flex-direction: column;
-        }
-      }
-    }
-    &-icon {
-      flex-basis: auto;
-      flex-grow: inherit;
-      width: auto;
-      margin: 0;
-    }
-
-    &-nav {
-      display: flex;
-      flex-direction: row;
-    }
-    .nav {
-      &-item {
-        display: flex;
-        align-items: center;
-        margin: 0 8px;
+    &-link {
+      > i {
+        margin-right: 8px;
       }
     }
   }
