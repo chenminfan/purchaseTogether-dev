@@ -5,10 +5,7 @@ export default function InputStepper(props) {
   const { num } = props
   const [prodsNum, setProdsNum] = useState<number>(num)
   const handleAdd = (number) => {
-    if (0 < prodsNum && number < num) {
-      setProdsNum(++number)
-    }
-
+    setProdsNum(++number)
   }
   const handleCut = (number) => {
     if (prodsNum > 1 && prodsNum !== 0) {
