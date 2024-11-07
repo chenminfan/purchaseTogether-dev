@@ -48,7 +48,7 @@ export default function Products() {
               onClick={() => {
                 handleClick(item)
               }}>
-              <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} href="#" >{item}</a>
+              <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} role="link" aria-label="prods-link" href="#" >{item}</a>
             </li>
           ))}
         </ul>
