@@ -43,7 +43,7 @@ export default function Prods(props: ProdsType) {
     <div className="card prods">
       <div className="card-body">
         <div className="prods-content">
-          <h5 className="card-title"><a href={`#/prods/detail/${prod.id}`}>{prod.title}</a></h5>
+          <h5 className="card-title"><a href={`#/prods/detail/${prod.id}`} role="link" aria-label="prod-link">{prod.title}</a></h5>
           <div className="prods-price">
             <div className="prods-item">
               <div className="title">特價</div>
@@ -57,12 +57,13 @@ export default function Prods(props: ProdsType) {
         </div>
 
         <div className="img_box">
-          <a href={`#/prods/detail/${prod.id}`}><LazyLoadImg className="card-img-top" src={prod.imageUrl} alt={prod.title} />
+          <a href={`#/prods/detail/${prod.id}`} role="link" aria-label="img-link">
+            <LazyLoadImg className="card-img-top" src={prod.imageUrl} alt={prod.title} />
           </a>
         </div>
 
         <div className="prods-tool">
-          <button type="button" className="btn btn-primary prods-btn-add"><span className='prods-cart-icon'>
+          <button type="button" className="btn btn-primary prods-btn-add" role="button"><span className='prods-cart-icon'>
             <i className="bi bi-cart-check-fill"></i>
           </span></button>
         </div>
