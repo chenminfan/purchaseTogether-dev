@@ -20,11 +20,16 @@ export default function Products() {
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<string>('')
   const getProds = async (getPage = 1, category = '') => {
-    const prodRes = await getProductsApi(getPage, category);
-    const prodAllRes = await getProductsAllApi();
-    setProds(prodRes.data.products)
-    setProdAll(prodAllRes.data.products)
-    setPage(prodRes.data.pagination)
+    try {
+      const prodRes = await getProductsApi(getPage, category);
+      const prodAllRes = await getProductsAllApi();
+      setProds(prodRes.data.products)
+      setProdAll(prodAllRes.data.products)
+      setPage(prodRes.data.pagination)
+    } catch (error) {
+      const errorRes = error
+      console.log(errorRes)
+    }
   }
   const category = Array.from(new Set(prodAll.map((item) => item.category)))
   const Id = category.find((item) => item)
@@ -59,10 +64,11 @@ export default function Products() {
                 handleClick(item)
               }}>
               <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/prods" >{item}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+            </li >
+          ))
+          }
+        </ul >
+      </nav >
 
       <div className='container-fluid py-2'>
         <div className="row">
@@ -79,6 +85,6 @@ export default function Products() {
 
         <Pagination page={page} getPagination={getProds} pageLink="#" />
       </div>
-    </div>
+    </div >
   )
 }
