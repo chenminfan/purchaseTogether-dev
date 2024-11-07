@@ -105,8 +105,8 @@ export default function ProductDetail() {
               <div className="detail-info py-2">
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb px-0 mb-0 py-3">
-                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl}><i className="bi bi-shop"></i></a></li>
-                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl}>{breadcrumbData.ProdsName}</a></li>
+                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
+                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl} role="link" aria-label="breadcrumb-link">{breadcrumbData.ProdsName}</a></li>
                     <li className="breadcrumb-item active text-primary" aria-current="page">{detail.category}</li>
                   </ol>
                 </nav>
@@ -122,7 +122,7 @@ export default function ProductDetail() {
                     <Stepper num={10} />
                   </div>
                   <div className="col-6">
-                    <a href="./checkout.html" className="text-nowrap btn btn-primary w-100 py-2"><i className="bi bi-cart-check-fill"></i></a>
+                    <a href="./checkout.html" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"><i className="bi bi-cart-check-fill"></i></a>
                   </div>
                 </div>
               </div>

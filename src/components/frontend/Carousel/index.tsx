@@ -12,11 +12,11 @@ export default function Carousel(Props: Props) {
   return (
     <div id={carouselName} className="carousel rounded slide" data-bs-ride="carousel" data-bs-touch="true">
       {children}
-      {carouselPre && <button className="carousel-control-prev" type="button" data-bs-target={`#${carouselName}`} data-bs-slide="prev">
+      {carouselPre && <button className="carousel-control-prev" role="button" aria-label="carousel-button" type="button" data-bs-target={`#${carouselName}`} data-bs-slide="prev">
         <span className="carousel-control-prev-icon" aria-hidden="true"></span>
         <span className="visually-hidden">Previous</span>
       </button>}
-      {carouselNext && <button className="carousel-control-next" type="button" data-bs-target={`#${carouselName}`} data-bs-slide="next">
+      {carouselNext && <button className="carousel-control-next" role="button" aria-label="carousel-button" type="button" data-bs-target={`#${carouselName}`} data-bs-slide="next">
         <span className="carousel-control-next-icon" aria-hidden="true"></span>
         <span className="visually-hidden">Next</span>
       </button>}
