@@ -1,11 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useContext } from 'react'
 import LazyLoadImg from "@components/hook/LazyLoadImage";
 import { useParams } from 'react-router-dom'
 import Stepper from '@components/frontend/Stepper'
-import { getProductsIdApi, getProductsAllApi } from '@api/Apis/product/getProducts'
+import { getProductsIdApi, getProductsAllApi, postCartApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import Carousel from '@components/frontend/Carousel'
 import Prods from '@components/frontend/Prods'
+import { CartContent } from '@provider/CartProvider/CartContent'
 import './productDetail.scss'
 
 export default function ProductDetail() {
@@ -56,6 +57,27 @@ export default function ProductDetail() {
     // ProdsUrl: '#/prods',
   };
 
+  const [state, dispatch] = useContext<any>(CartContent);
+  const [toasts, setToasts] = useState<string>('')
+  const handleAddCart = (prod) => {
+    dispatch({
+      type: 'ADD_CART',
+      product_id: prod
+    })
+  }
+  const getCart = async (type = '', data = {}) => {
+    if (type !== '') {
+      const res = await postCartApi(type, data)
+      setToasts(res.data.message)
+    }
+
+    console.log(type)
+    console.log(data)
+  }
+  useEffect(() => {
+    getCart(state.cartType, state.data)
+  }, [state.cartType, state.data])
+  console.log(state)
 
 
   return (
@@ -127,7 +149,11 @@ export default function ProductDetail() {
                     <Stepper num={10} />
                   </div>
                   <div className="col-6">
-                    <a href="./checkout.html" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"><i className="bi bi-cart-check-fill"></i></a>
+                    <button type="button" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"
+                      onClick={() => {
+                        handleAddCart(detail.id)
+                      }}><i className="bi bi-cart-check-fill"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -159,7 +185,11 @@ export default function ProductDetail() {
           <div className="detail-carouselBox">
             <div className="carouselBox">
               {moreProds.map((more) => (
-                <Prods key={more.id} prod={more} isLoading={loadingPage} />
+                <Prods key={more.id} prod={more}
+                  isLoading={loadingPage}
+                  handleClick={() => {
+                    handleAddCart(more?.id)
+                  }} />
               ))}
             </div>
 
