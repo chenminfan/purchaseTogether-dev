@@ -2,7 +2,7 @@
 
 import { getArticleApi } from './article/getArticle'
 import { getCartApi } from './cart/getCart'
-// import { postCartApi } from './cart/postCart'
+import { postCartApi } from './cart/postCart'
 import { postCouponApi } from './coupon/postCoupon'
 import { getOrdersApi } from './order/getOrders'
 import { getPayApi } from './pay/getPay'
@@ -20,7 +20,7 @@ import { getBackendOrdersApi } from './order/getBackendOrders'
 export {
   getArticleApi,
   getCartApi,
-  // postCartApi,
+  postCartApi,
   postCouponApi,
   getOrdersApi,
   getPayApi,

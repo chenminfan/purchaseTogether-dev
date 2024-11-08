@@ -6,9 +6,10 @@ import './prods.scss'
 type ProdsType = {
   prod: ProductsType,
   isLoading: boolean,
+  handleClick?: () => void,
 }
 export default function Prods(props: ProdsType) {
-  const { prod, isLoading } = props;
+  const { prod, isLoading, handleClick } = props;
   if (isLoading) {
     return (
       <div className="card prods" aria-hidden="true">
@@ -43,7 +44,11 @@ export default function Prods(props: ProdsType) {
     <div className="card prods">
       <div className="card-body">
         <div className="prods-content">
-          <h5 className="card-title"><a href={`#/prods/detail/${prod.id}`} role="link" aria-label="prod-link">{prod.title}</a></h5>
+          <h5 className="card-title">
+            <a href={`#/prods/detail/${prod.id}`} role="link"
+              aria-label="prod-link"
+            >{prod.title}</a>
+          </h5>
           <div className="prods-price">
             <div className="prods-item">
               <div className="title">特價</div>
@@ -63,7 +68,7 @@ export default function Prods(props: ProdsType) {
         </a>
 
         <div className="prods-tool">
-          <button type="button" className="btn btn-primary prods-btn-add" role="button"><span className='prods-cart-icon'>
+          <button type="button" className="btn btn-primary prods-btn-add" role="button" onClick={handleClick}><span className='prods-cart-icon'>
             <i className="bi bi-cart-check-fill"></i>
           </span></button>
         </div>
