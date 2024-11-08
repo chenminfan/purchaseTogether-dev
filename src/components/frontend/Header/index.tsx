@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './header.scss';
-
+import { getCartApi } from '@api/Apis'
 export default function Header(props) {
   const { headerLink = '#', headerTitle } = props;
-
+  const [cartValue, setCartValue] = useState(0)
+  const checkout = async () => {
+    const carRes = await getCartApi()
+    setCartValue(carRes.data.data.carts.length)
+  }
+  useEffect(() => {
+    checkout()
+  }, [cartValue])
   return (
     <header>
       <nav className="navbar navbar-expand-lg">
@@ -32,7 +39,7 @@ export default function Header(props) {
               <li className="nav-item">
                 <a className="nav-link navbar-carIcon" href="#/cart" aria-label='shopping-cart' role="link">
                   <i className="bi bi-cart-check-fill"></i>
-                  <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">9</span>
+                  <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">{cartValue}</span>
                   <span className="visually-hidden">unread messages</span>
                 </a>
               </li>
