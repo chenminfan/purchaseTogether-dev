@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { DialogContent } from '@provider/DialogProvider/DialogContent'
 import './toast.scss'
 
@@ -9,8 +9,16 @@ export default function Toasts() {
       type: 'DIALOG_CLOSE',
     })
   }
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch({
+        type: 'DIALOG_CLOSE',
+      })
+    }, 8000)
+  }, [])
+
   return (
-    <div className={`toast ${state.type ? 'text-bg-primary' : 'text-bg-danger'} position-fixed p-1 ${state.snackbarOpen ? 'show' : ''}`} role="alert" aria-live="assertive" aria-atomic="true">
+    <div className={`toast fade ${state.snackbarState ? 'text-bg-primary' : 'text-bg-danger'} position-fixed p-1 ${state.snackbarOpen ? 'show' : ''}`} role="alert" aria-live="assertive" aria-atomic="true" >
       <div className="d-flex">
         <div className="toast-body">{state.message}</div>
         <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onClick={handleClose}></button>

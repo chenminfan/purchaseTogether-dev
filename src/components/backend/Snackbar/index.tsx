@@ -13,7 +13,6 @@ export default function CSnackbar() {
       type: 'DIALOG_CLOSE',
     })
   }
-
   return (
     <Snackbar
       anchorOrigin={{
@@ -26,7 +25,7 @@ export default function CSnackbar() {
     >
       <Alert
         onClose={handleClose}
-        severity={state.type}
+        severity={state.snackbarState === true ? 'success' : 'error'}
         variant="filled"
         sx={{ width: '100%' }}
       >

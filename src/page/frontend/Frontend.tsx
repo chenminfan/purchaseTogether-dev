@@ -5,7 +5,7 @@ import DialogProvider from '@provider/DialogProvider'
 import Header from '@components/frontend/Header';
 import Footer from '@components/frontend/Footer';
 import Toasts from '@components/frontend/Toasts';
-import { getCartApi, postCartApi } from '@api/Apis';
+import { getCartApi } from '@api/Apis';
 import 'bootstrap/dist/js/bootstrap.js'
 import './frontend.scss'
 export default function Frontend() {
@@ -28,12 +28,13 @@ export default function Frontend() {
     checkout()
   }, [])
 
+
   return (
     <LoginContentProvider>
       <DialogProvider>
         <Header headerTitle="react cart" cartData={cartData} />
         <main className='frontend'>
-          <Outlet context={{ checkout }} />
+          <Outlet context={{ checkout, cartData }} />
         </main>
         <Footer />
         <Toasts />

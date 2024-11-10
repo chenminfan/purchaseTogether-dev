@@ -1,8 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './stepper.scss'
 
-export default function Stepper(props) {
-  const { stepperNum, setStepperNum } = props
+
+type StepperType = {
+  stepperNum: number,
+  setStepperNum: (value: number) => void
+  stepperOnChange?: (e: any) => void
+  handleClickCut?: () => void
+  handleClickAdd?: () => void
+}
+export default function Stepper(props: StepperType) {
+  const { stepperNum, setStepperNum, stepperOnChange = () => { } } = props;
   const handleAdd = (number) => {
     setStepperNum(++number)
   }
@@ -15,9 +23,10 @@ export default function Stepper(props) {
   const handleChange = (e) => {
     if (!/\d*/.test(e.target.value)) return
     setStepperNum(e.target.value)
+    stepperOnChange(e.target.value)
   }
   return (
-    <div className="stepper rounded">
+    <div className="stepper rounded"  >
       <div className="stepper-reduce">
         <button className="btn btn-outline-dark border-0 py-2" type="button" id="button-addon1"
           onClick={() => {
