@@ -6,9 +6,10 @@ import './prods.scss'
 type ProdsType = {
   prod: ProductsType,
   isLoading: boolean,
+  handleClick: () => void
 }
 export default function Prods(props: ProdsType) {
-  const { prod, isLoading } = props;
+  const { prod, isLoading, handleClick } = props;
   if (isLoading) {
     return (
       <div className="card prods" aria-hidden="true">
@@ -62,7 +63,7 @@ export default function Prods(props: ProdsType) {
           </div>
         </a>
 
-        <div className="prods-tool">
+        <div className="prods-tool" onClick={handleClick}>
           <button type="button" className="btn btn-primary prods-btn-add" role="button"><span className='prods-cart-icon'>
             <i className="bi bi-cart-check-fill"></i>
           </span></button>
