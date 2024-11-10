@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import LazyLoadImg from "@components/hook/LazyLoadImage";
 import { useParams } from 'react-router-dom'
 import InputStepper from '@components/frontend/InputStepper'
@@ -9,6 +10,9 @@ import Prods from '@components/frontend/Prods'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './productDetail.scss'
 
+type contextType = {
+  checkout: () => void,
+}
 export default function ProductDetail() {
   const { id } = useParams();
   const [categoryProds, setCategoryProds] = useState<ProductsType[]>([])
@@ -29,6 +33,8 @@ export default function ProductDetail() {
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [, dispatch] = useContext<any>(SnackbarContent);
   const [cartQty, setCartQty] = useState(1)
+  const { checkout } = useOutletContext<contextType>();
+
   const getProds = async (prodId) => {
     try {
       const prodRes = await getProductsIdApi(prodId);

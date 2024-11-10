@@ -2,7 +2,7 @@ import React from 'react';
 import './header.scss';
 
 export default function Header(props) {
-  const { headerLink = '#', headerTitle } = props;
+  const { headerLink = '#', headerTitle, cartData } = props;
 
   return (
     <header>
@@ -32,8 +32,8 @@ export default function Header(props) {
               <li className="nav-item">
                 <a className="nav-link navbar-carIcon" href="#/cart" aria-label='shopping-cart' role="link">
                   <i className="bi bi-cart-check-fill"></i>
-                  <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">9</span>
-                  <span className="visually-hidden">unread messages</span>
+                  <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">{cartData.carts.length > 1 ? cartData.carts.length : 0}</span>
+                  <span className={cartData.carts.length === 0 ? "" : "visually-hidden"}>趕快下單啊</span>
                 </a>
               </li>
             </ul>
