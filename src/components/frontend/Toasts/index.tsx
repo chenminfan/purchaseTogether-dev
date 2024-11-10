@@ -10,7 +10,7 @@ export default function Toasts() {
     })
   }
   return (
-    <div className={`toast ${state.type ? 'text-bg-primary' : 'text-bg-danger'} position-fixed p-1 ${state.snackbarOpen ? 'show' : ''}`} role="alert" aria-live="assertive" aria-atomic="true">
+    <div className={`toast ${state.snackbarState ? 'text-bg-primary' : 'text-bg-danger'} position-fixed p-1 ${state.snackbarOpen ? 'show' : ''}`} role="alert" aria-live="assertive" aria-atomic="true">
       <div className="d-flex">
         <div className="toast-body">{state.message}</div>
         <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onClick={handleClose}></button>
