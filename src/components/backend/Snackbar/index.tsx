@@ -1,4 +1,4 @@
-import React, { useContext, forwardRef } from 'react'
+import React, { useContext } from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { SnackbarContent } from '@provider/SnackbarProvider/SnackbarContent'
@@ -22,7 +22,7 @@ export default function CSnackbar() {
     >
       <Alert
         onClose={handleClose}
-        severity={state.type}
+        severity={state.snackbarState === true ? 'success' : 'error'}
         variant="filled"
         sx={{ width: '100%' }}
       >
