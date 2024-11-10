@@ -1,12 +1,16 @@
 import React, { useRef, useEffect, useState, useContext } from 'react'
+import { useOutletContext } from 'react-router-dom'
+import { DialogContent } from '@provider/DialogProvider/DialogContent'
 import Prods from '@components/frontend/Prods'
 import { postCartApi, getProductsApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import { PaginationType } from '@typeTS/PaginationType'
 import Pagination from '@components/backend/Pagination';
-import { DialogContent } from '@provider/DialogProvider/DialogContent'
 import './products.scss'
 
+type contextType = {
+  checkout: () => void,
+}
 export default function Products() {
   const [prods, setProds] = useState<ProductsType[]>([])
   const [prodAll, setProdAll] = useState<ProductsType[]>([])
@@ -21,7 +25,7 @@ export default function Products() {
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<string>('all')
   const [state, dispatch] = useContext<any>(DialogContent);
-
+  const { checkout } = useOutletContext<contextType>();
   const getProds = async (getPage = 1, category = '') => {
     try {
       const prodRes = await getProductsApi(getPage, category);
@@ -58,6 +62,7 @@ export default function Products() {
     }
     try {
       const res = await postCartApi(type, addCart)
+      checkout();
       dispatch({
         type: 'DIALOG_MESSAGE',
         snackbar: {
