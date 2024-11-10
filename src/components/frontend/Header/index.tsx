@@ -25,17 +25,25 @@ export default function Header(props) {
           <div className="navbar-collapse navbar-icon">
             <ul className="navbar-nav">
               <li className="nav-item">
+                <a className="nav-link navbar-carIcon" href="#/cart" aria-label='shopping-cart' role="link">
+                  <i className="bi bi-cart-check-fill"></i>
+                  {cartData.carts.length ? (
+                    <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">
+                      {cartData.carts.length ? cartData.carts.length : 0}
+                    </span>
+                  ) : (
+                    <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">
+                      <span className={cartData.carts.length === 0 ? "" : "visually-hidden"}>趕快下單啊</span>
+                    </span>
+                  )}
+                </a>
+              </li>
+              <li className="nav-item">
                 <a className="nav-link" href="#/login" aria-label='backend-user' role="link">
                   <i className="bi bi-window-sidebar"></i>
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link navbar-carIcon" href="#/cart" aria-label='shopping-cart' role="link">
-                  <i className="bi bi-cart-check-fill"></i>
-                  <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">{cartData.carts.length > 1 ? cartData.carts.length : 0}</span>
-                  <span className={cartData.carts.length === 0 ? "" : "visually-hidden"}>趕快下單啊</span>
-                </a>
-              </li>
+
             </ul>
           </div>
         </div>

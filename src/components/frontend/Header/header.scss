@@ -15,19 +15,12 @@ header {
       &-carIcon {
         display: flex;
         align-items: center;
-        position: relative;
-        margin-right: 36px;
-
         &-number.badge {
-          position: absolute;
-          top: 50%;
-          left: 26px;
-          width: 25px;
+          min-width: 25px;
           height: 20px;
           font-size: 12px;
           border-radius: 4px;
           padding: 4px 8px;
-          transform: translate(0, -50%);
         }
       }
       &-brand {
@@ -119,13 +112,12 @@ header {
         &-item {
           display: flex;
           align-items: center;
-          margin: 0 8px;
         }
       }
     }
     &-link {
       > i {
-        margin-right: 8px;
+        margin: 0 4px;
       }
     }
   }
