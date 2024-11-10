@@ -33,7 +33,7 @@ export default function Frontend() {
       <DialogProvider>
         <Header headerTitle="react cart" cartData={cartData} />
         <main className='frontend'>
-          <Outlet context={{ checkout }} />
+          <Outlet context={{ checkout, cartData }} />
         </main>
         <Footer />
         <Toasts />
