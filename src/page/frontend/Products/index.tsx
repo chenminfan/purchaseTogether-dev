@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import Prods from '@components/frontend/Prods'
 import { postCartApi, getProductsApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
@@ -7,6 +8,9 @@ import Pagination from '@components/backend/Pagination';
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './products.scss'
 
+type contextType = {
+  checkout: () => void,
+}
 export default function Products() {
   const [prods, setProds] = useState<ProductsType[]>([])
   const [prodAll, setProdAll] = useState<ProductsType[]>([])
@@ -21,13 +25,21 @@ export default function Products() {
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<string>('all')
   const [state, dispatch] = useContext<any>(SnackbarContent);
-
+  const { checkout } = useOutletContext<contextType>();
   const getProds = async (getPage = 1, category = '') => {
     try {
       const prodRes = await getProductsApi(getPage, category);
       const prodAllRes = await getProductsAllApi();
-      setProds(prodRes.data.products)
-      setProdAll(prodAllRes.data.products)
+      if (category === '') {
+        setProds(prodRes.data.products.sort(() => {
+          return 0.5 - Math.random();
+        }))
+        setProdAll(prodAllRes.data.products)
+      } else {
+        setProds(prodRes.data.products)
+        setProdAll(prodAllRes.data.products)
+      }
+
       setPage(prodRes.data.pagination)
     } catch (error) {
       const errorRes = error
@@ -58,6 +70,7 @@ export default function Products() {
     }
     try {
       const res = await postCartApi(type, addCart)
+      checkout();
       handleSnackbarSuccess(dispatch, res);
 
     } catch (error: any) {
