@@ -1,11 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useContext } from 'react'
 import LazyLoadImg from "@components/hook/LazyLoadImage";
 import { useParams } from 'react-router-dom'
 import Stepper from '@components/frontend/Stepper'
-import { getProductsIdApi, getProductsAllApi } from '@api/Apis/product/getProducts'
+import { getProductsIdApi, getProductsAllApi, postCartApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import Carousel from '@components/frontend/Carousel'
 import Prods from '@components/frontend/Prods'
+import { DialogContent } from '@provider/DialogProvider/DialogContent'
 import './productDetail.scss'
 
 export default function ProductDetail() {
@@ -26,6 +27,8 @@ export default function ProductDetail() {
   })
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
+  const [, dispatch] = useContext<any>(DialogContent);
+  const [cartQty, setCartQty] = useState(1)
   const getProds = async (prodId) => {
     try {
       const prodRes = await getProductsIdApi(prodId);
@@ -56,8 +59,35 @@ export default function ProductDetail() {
     // ProdsUrl: '#/prods',
   };
 
+  const handleAddCart = async (prod, type = '') => {
+    const addCart = {
+      product_id: prod,
+      qty: type === 'addCartMore' ? cartQty : 1,
+    }
+    try {
+      if (type !== '') {
+        const res = await postCartApi(type, addCart)
+        dispatch({
+          type: 'DIALOG_MESSAGE',
+          snackbar: {
+            type: 'success',
+            message: res.data.message,
+            snackbarState: res.data.success,
+          }
+        })
+      }
 
-
+    } catch (error: any) {
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'error',
+          message: error?.response?.data?.message,
+          snackbarState: error?.response?.data?.success,
+        }
+      })
+    }
+  }
   return (
     <div className="detail_page">
       <div className='container-fluid py-2'>
@@ -124,10 +154,14 @@ export default function ProductDetail() {
 
                 <div className="row align-items-center">
                   <div className="col-6">
-                    <Stepper num={10} />
+                    <Stepper stepperNum={cartQty} setStepperNum={setCartQty} />
                   </div>
                   <div className="col-6">
-                    <a href="./checkout.html" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"><i className="bi bi-cart-check-fill"></i></a>
+                    <button type="button" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"
+                      onClick={() => {
+                        handleAddCart(detail.id, 'addCartMore')
+                      }}><i className="bi bi-cart-check-fill"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -159,7 +193,9 @@ export default function ProductDetail() {
           <div className="detail-carouselBox">
             <div className="carouselBox">
               {moreProds.map((more) => (
-                <Prods key={more.id} prod={more} isLoading={loadingPage} />
+                <Prods key={more.id} prod={more} isLoading={loadingPage} handleClick={() => {
+                  handleAddCart(more?.id, 'addCart')
+                }} />
               ))}
             </div>
 

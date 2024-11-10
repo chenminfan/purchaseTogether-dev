@@ -1,9 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useContext } from 'react'
 import Prods from '@components/frontend/Prods'
-import { getProductsApi, getProductsAllApi } from '@api/Apis/product/getProducts'
+import { postCartApi, getProductsApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import { PaginationType } from '@typeTS/PaginationType'
 import Pagination from '@components/backend/Pagination';
+import { DialogContent } from '@provider/DialogProvider/DialogContent'
 import './products.scss'
 
 export default function Products() {
@@ -18,7 +19,9 @@ export default function Products() {
   })
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
-  const [categoryId, setCategoryId] = useState<string>('')
+  const [categoryId, setCategoryId] = useState<string>('all')
+  const [state, dispatch] = useContext<any>(DialogContent);
+
   const getProds = async (getPage = 1, category = '') => {
     try {
       const prodRes = await getProductsApi(getPage, category);
@@ -46,6 +49,34 @@ export default function Products() {
       getProds(1, item)
     }
     setCategoryId(item)
+  }
+
+  const handleAddCart = async (prod, type = '') => {
+    const addCart = {
+      product_id: prod,
+      qty: 1,
+    }
+    try {
+      const res = await postCartApi(type, addCart)
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'success',
+          message: res.data.message,
+          snackbarState: res.data.success,
+        }
+      })
+
+    } catch (error: any) {
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'error',
+          message: error?.response?.data?.message,
+          snackbarState: error?.response?.data?.success,
+        }
+      })
+    }
   }
   return (
     <div className="prods_page">
@@ -76,7 +107,10 @@ export default function Products() {
             <div className="prods_box">
               {prods.map((item) => {
                 return (
-                  <Prods key={item.id} prod={item} isLoading={loadingPage} />
+                  <Prods key={item.id} prod={item} isLoading={loadingPage}
+                    handleClick={() => {
+                      handleAddCart(item?.id, 'addCart')
+                    }} />
                 )
               })}
             </div>
