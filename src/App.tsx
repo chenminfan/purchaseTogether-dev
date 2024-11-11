@@ -5,6 +5,7 @@ import BHome from '@pageBackend/Home';
 import Frontend from '@pageFrontend/Frontend';
 import Login from '@pageFrontend/Login';
 import CartCheckout from '@pageFrontend/CartCheckout';
+import CartCheckoutInfo from '@pageFrontend/CartCheckoutInfo';
 import Products from '@pageFrontend/Products';
 import ProductDetail from '@pageFrontend/ProductDetail';
 import Dashboard from '@pageBackend/Dashboard';
@@ -18,7 +19,9 @@ export default function App() {
     <Routes>
       <Route path='/' element={<Frontend />}>
         <Route path='/login' element={<Login />}></Route>
-        <Route path='/cart' element={<CartCheckout />}></Route>
+        <Route path='/cart' element={<CartCheckout />}>
+        </Route>
+        <Route path='/cart/info' element={<CartCheckoutInfo />}></Route>
         <Route index path='/prods' element={<Products />}></Route>
         <Route path='prods/detail/:id' element={<ProductDetail />}></Route>
       </Route>
