@@ -43,7 +43,6 @@ export default function Products() {
       setPage(prodRes.data.pagination)
     } catch (error) {
       const errorRes = error
-      console.log(errorRes)
     }
   }
   const category = Array.from(new Set(prodAll.map((item) => item.category)))
