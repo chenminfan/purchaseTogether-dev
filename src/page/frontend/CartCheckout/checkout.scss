@@ -69,7 +69,9 @@ $borderRadius: 18px;
     justify-content: space-between;
   }
   &-stepper {
-    max-width: 200px;
+    .stepper {
+      max-width: 200px;
+    }
   }
   &-price {
     white-space: nowrap;
