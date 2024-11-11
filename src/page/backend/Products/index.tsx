@@ -205,6 +205,7 @@ export default function BackendProducts() {
     <>
       {/* <>{JSON.stringify(sortData)}</> */}
       <CTableFrom
+        isSearch
         title="產品列表"
         checkboxAllSelection={prodData.length}
         checkboxSelection={state.dataTamp.length}
