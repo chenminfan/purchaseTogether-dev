@@ -1,0 +1,121 @@
+$borderRadius: 18px;
+.checkout {
+  &-card {
+    display: flex;
+    flex-direction: row;
+    margin: 8px 0;
+    border-radius: $borderRadius;
+    border: 0.5px solid $primary;
+    background-color: $white;
+    &:first-child {
+      margin-top: 0;
+    }
+    &.checkout {
+      &-tool {
+        margin: 16px 0;
+        box-shadow: 0px 0 9px $gray-300;
+      }
+    }
+  }
+  &-tool {
+    .card {
+      &-inputStepper {
+        .inputStepper:not(.inputStepper-edit) {
+          max-width: 200px;
+        }
+      }
+      &-image {
+        width: 120px;
+        height: 120px;
+      }
+      &-title {
+        padding-right: 72px;
+        font-size: 16px;
+      }
+      &-total {
+        flex-direction: column;
+        align-items: flex-end;
+        padding-right: 8px;
+      }
+      &-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include media-breakpoint-down(md) {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    }
+  }
+}
+.card {
+  &-title {
+    font-size: 14px;
+    @include text-line-truncate(2, 100%, auto, 1.5);
+  }
+  &-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    position: relative;
+    margin-left: 16px;
+    padding: 8px;
+  }
+  &-info {
+    .card {
+      &-btn {
+        top: 4px;
+        left: auto;
+        right: 8px;
+      }
+    }
+  }
+  &-image {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: $borderRadius 4px 4px $borderRadius;
+  }
+  &-image & {
+    &-btn {
+      left: 0;
+      border-radius: $borderRadius 0;
+    }
+  }
+  &-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    i {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+  &-total {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  &-price {
+    white-space: nowrap;
+    @include media-breakpoint-down(md) {
+      margin-top: 8px;
+    }
+    &:not(:only-child) {
+      color: $gray-600;
+      font-weight: 500;
+      text-decoration-line: line-through;
+      & + & {
+        text-decoration-line: unset;
+      }
+    }
+    & + & {
+      color: $danger;
+    }
+  }
+}
