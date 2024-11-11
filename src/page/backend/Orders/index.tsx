@@ -20,14 +20,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
 
 import { OrdersType } from '@typeTS/Orders'
 import { PaginationType } from '@typeTS/PaginationType'
 
-
+type CloseReason = 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick';
 export default function BackendOrders() {
   const [ordersData, setOrdersData] = useState<OrdersType[]>([]);
+  const [ordersProdData, setOrdersProdData] = useState([]);
   const [page, setPage] = useState<PaginationType>({
     total_pages: 0,
     current_page: 1,
@@ -38,14 +38,11 @@ export default function BackendOrders() {
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const columns = [
-    { field: 'create_at', headerName: '訂單日期', width: 120 },
-    { field: 'id', headerName: '訂單編號', width: 120 },
-    { field: 'is_paid', align: 'center', headerName: '付款', width: 100, },
-    { field: 'message', align: 'center', headerName: '備註', width: 100, },
-    { field: 'products', align: 'center', headerName: '產品資訊', width: 150, },
-    { field: 'user', align: 'center', headerName: '訂單人', width: 150, },
-    { field: 'tool', headerName: '', width: 180, },
-
+    { field: 'id', headerName: '訂單編號', width: 220 },
+    { field: 'name', align: 'center', headerName: '訂單人', width: 120, },
+    { field: 'message', align: 'center', headerName: '備註', width: 150, },
+    { field: 'price', align: 'center', headerName: '訂單價格', width: 120, },
+    { field: 'is_paid', align: 'center', headerName: '付款狀態', width: 120, },
   ];
   const [open, setOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
@@ -55,6 +52,7 @@ export default function BackendOrders() {
   const getOrders = async (getPage = 1) => {
     const orderRes = await getBackendOrdersApi(getPage)
     setOrdersData(orderRes.data.orders)
+    setOrdersProdData(orderRes.data.orders.products)
     isLoadingRef.current = false;
     setLoadingPage(false)
     setPage(orderRes.data.pagination)
@@ -63,19 +61,6 @@ export default function BackendOrders() {
       table: { dataTamp: orderRes.data.pagination },
       tableData: ordersData,
     })
-  }
-  const dataValue = (value) => {
-    const DATE = value
-    let date = DATE.getDate().toString(); //15
-    let month = (DATE.getMonth() + 1).toString()  //6
-    let year = DATE.getFullYear().toString();  //2016
-    if (month.length < 2) {
-      month = '0' + month
-    }
-    if (date.length < 2) {
-      date = '0' + date
-    }
-    return [year, month, date].join('-')
   }
   // 排序 start
   const handleSortOrder = (order) => {
@@ -102,9 +87,9 @@ export default function BackendOrders() {
       .sort(getSort(sortOrder, sortOrderID))
   }, [ordersData, sortOrder, sortOrderID])
   // 排序 end
+
   useEffect(() => {
     getOrders();
-
   }, [])
 
   const handleOrderOpen = (type, order) => {
@@ -117,12 +102,11 @@ export default function BackendOrders() {
     setOpen(true);
     setTableType(type);
   }
-  const handleOrderClose = (reason) => {
+  const handleOrderClose = (reason: CloseReason) => {
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
       setOpen(false);
     }
   };
-  const dialogRef = useRef<HTMLInputElement>(null)
   const theme = createTheme({
     palette: {
       primary: {
@@ -176,12 +160,13 @@ export default function BackendOrders() {
   return (
     <>
       <CTableFrom
+        isNewButton={false}
         title="訂單列表"
         checkboxAllSelection={ordersData.length}
         checkboxSelection={state.dataTamp.length}
         handleCheckboxDelete={() => { handleClickDelete('allDelete') }}>
         <>
-          <TableContainer component={Paper} sx={{ maxHeight: 500, minWidth: '100%', }}>
+          <TableContainer sx={{ height: 'calc(100% - 182px)', minWidth: '100%' }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead >
                 <TableRow>
@@ -208,9 +193,11 @@ export default function BackendOrders() {
                       </TableSortLabel>
                     </TableCell>
                   ))}
+                  <TableCell style={{ minWidth: 160 }} colSpan={2} />
                 </TableRow>
               </TableHead>
               <TableBody>
+
                 {SORT_DATA.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell padding="checkbox">
@@ -222,12 +209,11 @@ export default function BackendOrders() {
                         }}
                       />
                     </TableCell>
-                    <TableCell>{dataValue(row.due_date)}</TableCell>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.percent}</TableCell>
-                    <TableCell>{dataValue(row.due_date)}</TableCell>
-                    <TableCell>{row.code}</TableCell>
-                    <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
+                    <TableCell>{row.id}</TableCell>
+                    <TableCell>{row.user.name}</TableCell>
+                    <TableCell>{row.message}</TableCell>
+                    <TableCell>{Math.round(row.total).toLocaleString('zh-TW')}</TableCell>
+                    <TableCell>{row.is_paid ? '付款' : '未付款'}</TableCell>
                     <TableCell>
                       <Button
                         disabled={CHECK_DATA_LENGTH}
@@ -273,23 +259,19 @@ export default function BackendOrders() {
           page={page.current_page}
           getOrders={getOrders}
           orderType={tableType}
-          tampData={state.dataTamp}
+          tampDataALL={state.dataTamp}
           handleClose={handleOrderClose}
           theme={theme}
           color="primary"
         />
       )}
-      {(tableType === 'edit' || tableType === 'create') && (
+      {(tableType === 'edit') && (
         (<DialogEditOrders
           open={open}
           page={page.current_page}
           getOrders={getOrders}
-          prodType={tableType}
           tampData={tamp}
           handleClose={handleOrderClose}
-          dialogRef={dialogRef}
-          dialogTitle={`編輯${tamp.title}`}
-          dialogSubmitBtnText={tableType === 'edit' ? '儲存' : '新增'}
         />)
       )}
     </>
