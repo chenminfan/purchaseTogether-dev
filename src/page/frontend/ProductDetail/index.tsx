@@ -43,7 +43,6 @@ export default function ProductDetail() {
       setCategoryProds(prodAllRes.data.products)
     } catch (error) {
       const errorRes = error
-      console.log(errorRes)
     }
   }
 
