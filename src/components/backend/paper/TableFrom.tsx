@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 
 type CTableFromType = {
+  isSearch?: boolean,
+  isNewButton?: boolean,
   children: JSX.Element | JSX.Element[]
   title: string,
   checkboxAllSelection: number,
@@ -18,12 +20,14 @@ type CTableFromType = {
   handleChangeInputBtn?;
 }
 export default function CTableFrom(props: CTableFromType) {
-  const { children, title, checkboxAllSelection, checkboxSelection, handleCheckboxDelete, handleProdOpen, search = '', handleChangeInput, handleChangeInputBtn } = props
+  const { isSearch = false, isNewButton = true, children, title, checkboxAllSelection, checkboxSelection, handleCheckboxDelete, handleProdOpen, search = '', handleChangeInput, handleChangeInputBtn } = props
   return (
     <Box component="section" sx={{ height: '100%' }}>
       <Typography variant="h4" component="div" sx={{ px: 3 }}>{title}</Typography>
-      <Box component="div" sx={{ display: 'flex', justifyContent: 'space-between', p: 3, paddingBottom: '12px', borderBottom: '1px solid #ddd' }}>
-        <Box component="div" sx={{
+      <Box component="div" sx={
+        { display: 'flex', justifyContent: `${isSearch ? 'space-between' : 'flex-end'}`, p: 3, paddingBottom: '12px', height: '76px', borderBottom: '1px solid #ddd' }
+      }>
+        {isSearch && <Box component="div" sx={{
           display: 'flex', width: '100%', maxWidth: "300px", fontSize: '12px'
         }}>
           {/* <InputBase
@@ -41,7 +45,7 @@ export default function CTableFrom(props: CTableFromType) {
           <IconButton type="button" sx={{ p: '4px 10px', fontSize: '12px', marginLeft: '12px' }} aria-label="search" onClick={handleChangeInputBtn}>
             <i className="bi bi-search"></i>
           </IconButton>
-        </Box>
+        </Box>}
         {checkboxSelection > 1 && (
           <Button
             variant="contained"
@@ -53,7 +57,7 @@ export default function CTableFrom(props: CTableFromType) {
             {checkboxSelection === checkboxAllSelection ? '全部刪除' : '刪除'}
           </Button>
         )}
-        {checkboxSelection === 0 && (
+        {isNewButton && checkboxSelection === 0 && (
           <Button
             variant="contained"
             sx={[{ marginLeft: checkboxSelection > 1 ? '12px' : '', padding: '0 12px', lineHeight: '1.5' }, { '>i:nth-of-type(1)': { fontSize: '16px' } }]}

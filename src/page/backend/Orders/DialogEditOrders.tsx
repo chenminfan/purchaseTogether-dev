@@ -6,94 +6,79 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import {
   postBackendOrdersApi,
 } from '../../../data/Apis'
 import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
+import { ProductsType } from '@typeTS/Products'
+import { OrdersType, OrdersProdType } from '@typeTS/Orders'
 
-type FormDataType = {
-  title: string,
-  percent: number,
-  is_enabled: number,
-  due_date: number,
-  code: string
+type DialogNewOrderType = {
+  open: boolean,
+  page: number,
+  getOrders;
+  handleClose;
+  tampData;
 }
-export default function DialogNewOrder(props) {
-  const { open, page, getOrders, dialogTitle, handleClose, couponType, tampData } = props;
+export default function DialogNewOrder(props: DialogNewOrderType) {
+  const { open, page, getOrders, handleClose, tampData } = props;
   const [, dispatch] = useContext<any>(DialogContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [newDate, setNewDate] = useState<Date>(new Date())
-  const [formData, setFormData] = useState<FormDataType>({
-    title: '',
-    percent: 0,
-    is_enabled: 0,
-    due_date: 0,
-    code: ""
+  const [formData, setFormData] = useState({
+    create_at: 0,
+    id: '',
+    is_paid: false,
+    message: '',
+    products: {
+      product: {},
+      qty: 0,
+      final_total: 0,
+      total: 0,
+      product_id: '',
+    },
+    total: 0,
+    user: {
+      address: '',
+      email: '',
+      name: '',
+      tel: '',
+    },
+    num: 0
   })
-  const dataValue = (value) => {
-    const DATE = value
-    let date = DATE.getDate().toString(); //15
-    let month = (DATE.getMonth() + 1).toString()  //6
-    let year = DATE.getFullYear().toString();  //2016
-    if (month.length < 2) {
-      month = '0' + month
-    }
-    if (date.length < 2) {
-      date = '0' + date
-    }
-    return [year, month, date].join('-')
-  }
-
-  const handleInputKeyDown = (e) => {
-    if (e.key === "e") e.preventDefault();
-  }
-
+  const [ordersProdData, setOrdersProdData] = useState<OrdersProdType[]>([]);
   const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
-    const replaceString = value.replace(/[^\d]/g, '');
     e.preventDefault();
-    if (['percent'].includes(name)) {
-      if (!/\d*/.test(value)) return
+    if (name === 'is_paid') {
       setFormData({
         ...formData,
-        [name]: Number(replaceString), //變數的方式帶入屬性
-      })
-    } else if (name === 'is_enabled') {
-      setFormData({
-        ...formData,
-        [name]: Number(checked), //Number或＋
-      })
-    } else if (name === 'due_date') {
-      setNewDate(new Date(value))
-      setFormData({
-        ...formData,
-        [name]: new Date(value).getTime(),
-      })
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,//變數的方式帶入屬性
+        [name]: checked, //Number或＋
       })
     }
   }
 
   const handleOrderSubmit = async () => {
     try {
-      if (couponType === 'edit') {
-        const res = await postBackendOrdersApi(couponType, formData)
-        dispatch({
-          type: 'DIALOG_MESSAGE',
-          snackbar: {
-            type: 'success',
-            message: res.data.message,
-            snackbarState: res.data.success,
-            autoHideDuration: 3000,
-          }
-        })
-      }
+      const res = await postBackendOrdersApi('edit', formData)
+      dispatch({
+        type: 'DIALOG_MESSAGE',
+        snackbar: {
+          type: 'success',
+          message: res.data.message,
+          snackbarState: res.data.success,
+          autoHideDuration: 3000,
+        }
+      })
       handleClose();
-      getOrders(page, '');
+      getOrders(page);
     } catch (error: any) {
       dispatch({
         type: 'DIALOG_MESSAGE',
@@ -105,86 +90,91 @@ export default function DialogNewOrder(props) {
       })
     }
   }
+  const Prod_Id = Object.keys(ordersProdData)
+  const Prods = Object.values(ordersProdData)
   useEffect(() => {
-    if (couponType === 'edit' || couponType === 'delete') {
-      setFormData(tampData);
-      setNewDate(new Date(tampData.due_date));
-    }
+    setFormData(tampData);
+    setOrdersProdData(tampData.products);
 
-  }, [couponType, tampData])
+  }, [tampData])
+
   return (
     <Dialog
       open={open}
       handleClose={handleClose}
       fullScreen={fullScreen}
       maxWidth="xl"
-      dialogTitle={dialogTitle}
+      dialogTitle={`編輯${formData.id}`}
       handleSubmit={handleOrderSubmit}
-      dialogSubmitBtnText={couponType === 'edit' ? '儲存' : '新增'}
+      dialogSubmitBtnText="儲存"
     >
       <Box
-        {...props}
         component="div"
         sx={[
           { '& .MuiTextField-root': { m: 1 } },
           { '& .MuiBox-root': { display: 'flex' } }
         ]}
-        noValidate
-        autoComplete="off"
       >
         <Box component="div">
           <TextField
             required
             fullWidth
-            label="優惠券名稱"
-            placeholder='請輸入優惠券名稱'
-            name="title"
-            onChange={(e) => handleInputChange(e)}
-            value={formData.title}
+            label="email"
+            name="email"
+            value={formData.user.email}
+            disabled
           />
           <TextField
             required
             fullWidth
-            label="使用期限"
-            placeholder='請輸入使用期限'
-            name="due_date"
-            type="date"
-            value={dataValue(newDate)}
-            onChange={(e) => handleInputChange(e)}
-            onKeyDown={(e) => handleInputKeyDown(e)}
+            label="訂購人"
+            name="name"
+            value={formData.user.name}
+            disabled
+          />
+          <TextField
+            required
+            fullWidth
+            label="訂購人地址"
+            name="address"
+            value={formData.user.address}
+            disabled
           />
         </Box>
         <Box component="div">
-          <TextField
-            required
-            fullWidth
-            label="折扣數"
-            placeholder='請輸入折扣數'
-            name="percent"
-            type="number"
-            value={formData.percent}
-            onChange={(e) => handleInputChange(e)}
-            onKeyDown={(e) => handleInputKeyDown(e)}
-          />
-          <TextField
-            required
-            fullWidth
-            label="優惠碼"
-            placeholder='請輸入優惠碼'
-            name="code"
-            value={formData.code}
-            onChange={(e) => handleInputChange(e)}
-          />
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>商品</TableCell>
+                <TableCell align="right">數量</TableCell>
+                <TableCell align="right">折扣後</TableCell>
+                <TableCell align="right">原價</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Prods.map((row) => (
+                <TableRow
+                  key={row.product_id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell>{row?.product?.title}</TableCell>
+                  <TableCell>{row.qty}</TableCell>
+                  <TableCell align="right">{row.final_total}</TableCell>
+                  <TableCell align="right">{row.total}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </Box>
         <FormControlLabel
           control={
             <Checkbox
-              checked={!!formData.is_enabled}
-              name="is_enabled"
+              checked={!!formData.is_paid}
+              name="is_paid"
               onChange={(e) => handleInputChange(e)}
             />
           }
-          label="是否啟用"
+          label="付款狀態"
         />
       </Box>
     </Dialog>

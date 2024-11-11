@@ -6,29 +6,49 @@ import {
   postBackendOrdersApi
 } from '../../../data/Apis'
 import { DialogContent } from '../../../provider/DialogProvider/DialogContent'
-
-export default function DialogDeleteOrders(props) {
-  const { open, page, tampData, dialogRef, handleClose, getOrders, theme, color, couponType } = props;
+import { OrdersType, OrdersProdType } from '@typeTS/Orders'
+import { ProductsType } from '@typeTS/Products'
+type DialogDeleteCouponType = {
+  open: boolean,
+  page: number,
+  getOrders;
+  handleClose;
+  orderType: string,
+  color: string,
+  tampData?: OrdersType,
+  tampDataALL?: OrdersType[],
+  theme: object,
+}
+export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
+  const { open, page, tampData = {
+    create_at: 0,
+    id: '',
+    is_paid: false,
+    message: '',
+    products: {
+      product: {
+        title: '',
+      },
+      qty: 0,
+      final_total: 0,
+      total: 0,
+      product_id: '',
+    },
+    total: 0,
+    user: {
+      address: '',
+      email: '',
+      name: '',
+      tel: '',
+    },
+    num: 0
+  }, tampDataALL = [], handleClose, getOrders, theme, color, orderType } = props;
   const [state, dispatch] = useContext<any>(DialogContent);
-
-  const dataValue = (value) => {
-    const DATE = new Date(value)
-    let date: string | number = DATE.getDate(); //15
-    let month: string | number = (DATE.getMonth() + 1)  //6
-    let year: string | number = DATE.getFullYear();  //2016
-    if (month < 2) {
-      month = '0' + month
-    }
-    if (date < 2) {
-      date = '0' + date
-    }
-    return [year, month, date].join('/')
-  }
 
   const handleOrdersDelete = async () => {
     try {
-      if (couponType === 'delete') {
-        const res = await postBackendOrdersApi(couponType, tampData)
+      if (orderType === 'delete') {
+        const res = await postBackendOrdersApi(orderType, tampData)
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {
@@ -37,14 +57,14 @@ export default function DialogDeleteOrders(props) {
           }
         })
 
-      } else if (couponType === 'allDelete') {
+      } else if (orderType === 'allDelete') {
         await Promise.all(
-          tampData.map((item) => postBackendOrdersApi(couponType, item))
+          tampDataALL.map((item) => postBackendOrdersApi(orderType, item))
         )
         dispatch({
           type: 'DIALOG_MESSAGE',
           snackbar: {
-            messageLength: tampData.length,
+            messageLength: tampDataALL.length,
             snackbarState: true,
           }
         })
@@ -65,36 +85,36 @@ export default function DialogDeleteOrders(props) {
     <Dialog
       open={open}
       handleClose={handleClose}
-      dialogRef={dialogRef}
       maxWidth="sm"
       fullWidth
-      dialogTitle={couponType === 'delete' ? `${tampData.title} - 確認刪除` : '當前頁商品全部刪除'}
+      dialogTitle={orderType === 'delete' ? `${tampData?.id} - 確認刪除` : '當前頁商品全部刪除'}
       handleSubmit={handleOrdersDelete}
-      dialogSubmitBtnText="確認刪除"
+      dialogSubmitBtnText={"確認刪除"}
       dialogSubmitColor="error"
       theme={theme}
       color={color}
     >
-      {couponType === 'delete' ? (
+      {orderType === 'delete' ? (
         <Box
-          {...props}
           component="div"
           sx={[
             { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
           ]}
-          noValidate
-          autoComplete="off"
         >
-          {tampData.title}
-          <Box component="div">優惠券到期日：{dataValue(tampData.due_date)}</Box>
-          <Box component="div">折扣數：{tampData.percent}</Box>
-          <Box component="div">優惠碼：{tampData.code}</Box>
+          <h3>訂單編號：{tampData.id}</h3>
+          <Box component="div">訂購人：{tampData.user.name}</Box>
+          <Box component="div">商品</Box>
         </Box>
       ) : (
         <div>
-          {tampData.map((item) => (
-            <div key={item.id}>{item.title}</div>
-          ))}
+          {tampDataALL.map((item) => {
+            return (
+              <Box key={item.id} component="div">
+                <h3>訂單編號：{item.id}</h3>
+                <Box component="div">訂購人：{item.user.name}</Box>
+              </Box>
+            )
+          })}
         </div>
       )}
     </Dialog>
