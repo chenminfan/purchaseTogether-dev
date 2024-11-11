@@ -8,24 +8,24 @@ import './checkoutCard.scss'
 
 type Props = {
   cart: {
-    final_total: number,
     id: string,
     product: ProductsType,
     qty: number,
-    total: number
+    total: number,
+    final_total: number,
   },
-  isSuccess: boolean,
   checkout: () => void,
 }
 
 export default function CheckoutCard(props: Props) {
-  const { cart, isSuccess, checkout } = props
+  const { cart, checkout } = props
   const [stepperNum, setStepperNum] = useState(cart.qty)
   const [state, dispatch] = useContext<any>(DialogContent);
   const stepperValue = useRef(0)
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(false);
-  const [stepperEdit, setStepperEdit] = useState<boolean>(true);
+  const [stepperEdit, setStepperEdit] = useState<boolean>(false);
+  const [track, setTrack] = useState<boolean>(false)
 
   const handleDelete = async (cartData) => {
     try {
@@ -88,8 +88,8 @@ export default function CheckoutCard(props: Props) {
   return (
     <div className="checkout checkout-card" >
       <div className="card-image">
-        <button className="btn btn-primary card-btn btn-sm" type="button">
-          {isSuccess ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
+        <button className="btn btn-primary card-btn btn-sm" type="button" onClick={() => setTrack((newTrack) => !newTrack)} >
+          {track ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
         </button>
         <div className="img_box">
           <LazyLoadImg className="card-img-top" src={cart.product.imageUrl} alt={cart.product.title} />
@@ -111,18 +111,23 @@ export default function CheckoutCard(props: Props) {
                 getCart(cart, cutNumber)
               }}
               isDisabled={loadingPage}
-              isEdit={cart.qty !== stepperNum && stepperEdit}
+              isEdit={(cart.qty !== stepperNum) && stepperEdit}
               handleClickSubmit={(inputNumber) => {
                 getCart(cart, inputNumber)
               }}
               handleInputChange={
                 (e) => {
+                  setStepperEdit(true)
                   setStepperNum(Number(e))
                 }
               }
             />
           </div>
-          <div className="card-price">NT$ {cart.total.toLocaleString('zh-TW')}</div>
+          <div className="card-total">
+            <div className="card-price">NT$ {cart.total.toLocaleString('zh-TW')}</div>
+            {cart.final_total !== cart.total && <div className="card-price">折扣後 NT$ {cart.final_total.toLocaleString('zh-TW')}</div>}
+          </div>
+
         </div>
 
       </div>

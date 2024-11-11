@@ -1,6 +1,6 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { getCartApi, postCartApi } from '@api/Apis';
+import { postCouponApi } from '@api/Apis';
 import { ProductsType } from '@typeTS/Products';
 import './checkout.scss'
 import CheckoutCard from '@components/frontend/CartCheckout/CheckoutCard';
@@ -23,12 +23,32 @@ type CartCheckoutType = {
 }
 export default function CartCheckout() {
   const { cartData, checkout } = useOutletContext<CartCheckoutType>();
+  const [couponCode, setCouponCode] = useState('')
+  const [couponInfo, setCouponInfo] = useState({
+    info: '',
+    infoState: false,
+  })
   useEffect(() => {
     checkout()
   }, [])
 
 
-  const isSuccess = false;
+  const handleClickCoupon = async (code) => {
+    const data = {
+      code: code
+    }
+    try {
+      const codeRes = await postCouponApi(data)
+      setCouponInfo({
+        info: code,
+        infoState: codeRes.data.success,
+      })
+    } catch (error) {
+
+    }
+  }
+
+  console.log(couponCode)
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
@@ -37,7 +57,6 @@ export default function CartCheckout() {
             {cartData.carts.map((cart, index) => (
               <CheckoutCard
                 key={`cart${cart.id}`}
-                isSuccess={isSuccess}
                 cart={cart}
                 checkout={checkout}
               />
@@ -48,22 +67,28 @@ export default function CartCheckout() {
             <div className="checkout-list p-4">
               <h4 className="fw-bold">結帳明細</h4>
               <div className="checkout-code">
-                <div className="checkout-item">
-                  <div className="input-group mt-3">
-                    <input type="text" className="form-control rounded-0 shadow-none" placeholder="折扣碼" aria-label="Recipient's username" aria-describedby="button-addon2" />
-                    <div className="input-group-append">
-                      <button className="btn btn-primary rounded-0" type="button" id="button-addon2">
-                        {isSuccess ? (<i className="bi bi-check2-square"></i>)
-                          : (<i className="bi bi-pencil"></i>)}
-                      </button>
-                    </div>
+                <div className="input-group mt-3">
+                  <input type="text" className="form-control rounded-0 shadow-none" placeholder="折扣碼" aria-label="折扣碼"
+                    value={couponCode}
+                    onChange={(e) => { setCouponCode(e.target.value) }} />
+                  <div className="input-group-append">
+                    <button className="btn btn-primary rounded-0" type="button"
+                      onClick={() => handleClickCoupon(couponCode)}
+                    >
+                      {couponInfo.infoState ? (<i className="bi bi-check2-square"></i>)
+                        : (<i className="bi bi-pencil"></i>)}
+                    </button>
                   </div>
                 </div>
+                {couponInfo.infoState && (
+                  <div className='checkout-couponInfo mt-2 text-success'>
+                    <span className='bg-success text-light'><i className="bi bi-check2-square mx-2"></i></span>已套用優惠券：{couponInfo.info}
+                  </div>)}
 
               </div>
               <div className="checkout-body">
                 <div className="checkout-item">
-                  <div className="checkout-title">小計</div>
+                  <div className="checkout-title">原價小計</div>
                   <div className="checkout-content">NT$ {cartData.total.toLocaleString('zh-TW')}</div>
                 </div>
                 <div className="checkout-item">
@@ -74,11 +99,11 @@ export default function CartCheckout() {
               <div className="checkout-footer">
                 <div className="checkout-item checkout-item-total">
                   <div className="checkout-title">Total</div>
-                  <div className="checkout-content">NT ${cartData.final_total.toLocaleString('zh-TW')}</div>
+                  <div className="checkout-content">NT ${Math.round(cartData.final_total).toLocaleString('zh-TW')}</div>
                 </div>
                 <div className="d-grid gap-2">
                   <button className="btn btn-primary checkout-btn" type="button">
-                    結帳
+                    填寫資料
                   </button>
                 </div>
               </div>
