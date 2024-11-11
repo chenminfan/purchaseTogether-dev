@@ -3,10 +3,18 @@
   align-items: center;
   background-color: $gray-200;
   height: 45px;
-  input[type='number']::-webkit-inner-spin-button {
-    opacity: 1;
+  &-edit.stepper {
+    max-width: 100%;
+    input[type='number'] {
+      max-width: 120px;
+    }
   }
-  input[type='number']::-webkit-inner-spin-button {
-    -webkit-appearance: none;
+  input[type='number'] {
+    &::-webkit-inner-spin-button {
+      opacity: 1;
+    }
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
   }
 }
