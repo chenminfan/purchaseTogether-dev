@@ -8,4 +8,11 @@ async function getOrdersApi() {
     throw error;
   }
 }
-export { getOrdersApi }
+async function getOrdersIdApi(orderId) {
+  try {
+    return await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/order/${orderId}`)
+  } catch (error: any) {
+    throw error;
+  }
+}
+export { getOrdersApi, getOrdersIdApi }
