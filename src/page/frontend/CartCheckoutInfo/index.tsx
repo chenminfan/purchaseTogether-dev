@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useForm } from "react-hook-form"
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import CartProdCard from '@components/frontend/Cart/CartProdCard';
 import TextArea from '@components/frontend/InputFrom/TextArea';
 import Input from '@components/frontend/InputFrom/Input';
 import Checkbox from '@components/frontend/InputFrom/Checkbox';
+import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import { ProductsType } from '@typeTS/Products';
 import { postOrdersApi } from '@api/Apis';
 import './checkoutInfo.scss';
@@ -36,6 +37,8 @@ export default function CartCheckoutInfo() {
     handleSubmit,
     formState: { errors },
   } = useForm()
+  const navigate = useNavigate()
+  const [state, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
   const handleFormSubmit = handleSubmit(async (data) => {
     const { name, email, tel, address, message } = data;
@@ -50,9 +53,14 @@ export default function CartCheckoutInfo() {
     }
     try {
       const res = await postOrdersApi(dataFrom)
+      setTimeout(() => {
+        navigate(`/cart/pay/${res.data.orderId}`)
+      }, 1500)
+      handleSnackbarSuccess(dispatch, res);
       console.log(res)
-    } catch (error) {
 
+    } catch (error: any) {
+      handleSnackbarError(dispatch, error);
     }
   })
   return (
@@ -85,7 +93,7 @@ export default function CartCheckoutInfo() {
                       message: 'Email 格式不正確'
                     }
                   }} />
-                  <Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="number" rules={{
+                  <Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
                     required: {
                       value: true,
                       message: '請輸入 聯絡電話'
@@ -143,10 +151,10 @@ export default function CartCheckoutInfo() {
                   <div className="checkout-title">原價小計</div>
                   <div className="checkout-content">NT$ {cartData.total.toLocaleString('zh-TW')}</div>
                 </div>
-                <div className="checkout-item">
+                {/* <div className="checkout-item">
                   <div className="checkout-title">支付方式</div>
                   <div className="checkout-content"></div>
-                </div>
+                </div> */}
               </div>
               <div className="checkout-footer">
                 <div className="checkout-item checkout-item-total">
