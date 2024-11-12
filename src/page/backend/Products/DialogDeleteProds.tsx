@@ -18,9 +18,10 @@ type DialogDeleteProdsType = {
   tampData?: ProductsType,
   tampDataALL?: ProductsType[],
   theme: object,
+  searchWord: string,
 }
 export default function DialogDeleteProds(props: DialogDeleteProdsType) {
-  const { open, page, tampData = {
+  const { open, page, searchWord, tampData = {
     title: '',
     category: '',
     content: '',
@@ -50,7 +51,11 @@ export default function DialogDeleteProds(props: DialogDeleteProdsType) {
       handleSnackbarError(dispatch, error);
     }
     handleClose();
-    getProds(page, '');
+    if (searchWord) {
+      getProds(page, searchWord);
+    } else {
+      getProds(page, '');
+    }
   }
   return (
     <Dialog
@@ -58,7 +63,7 @@ export default function DialogDeleteProds(props: DialogDeleteProdsType) {
       handleClose={handleClose}
       maxWidth="sm"
       fullWidth
-      dialogTitle={prodType === 'delete' ? `${tampData.title} - 確認刪除` : '刪除多筆資料'}
+      dialogTitle={prodType === 'delete' ? `${tampData.title} - 確認刪除` : '刪除多筆商品'}
       dialogSubmitBtnText={prodType === 'delete' ? '確認刪除' : '確認刪除多筆資料'}
       handleSubmit={handleProdDelete}
       dialogSubmitColor="error"

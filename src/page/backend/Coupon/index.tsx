@@ -7,6 +7,8 @@ import DialogDeleteCoupon from './DialogDeleteCoupon';
 import {
   getBackendCouponApi,
 } from '@api/Apis'
+import { dataValue } from '@api/utilities/dataValue';
+import { getTableSort, handleTableSort, handleTableOrder } from '@api/utilities/tableSort';
 
 import { createTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -62,25 +64,9 @@ export default function BackendCoupon() {
     })
   }
   // 排序 start
-  const handleSortOrder = (order) => {
-    const isAsc = sortOrderID === order && sortOrder === 'asc';
-    setSortOrder(isAsc ? 'desc' : 'asc')
-    setSortOrderID(order)
-  }
-  const newSortOrder = (a: any, b: any, sortOrderID: string) => {
-    if (a[sortOrderID] > b[sortOrderID]) {
-      return -1;
-    }
-    if (a[sortOrderID] < b[sortOrderID]) {
-      return 1;
-    }
-    return 0;
-  }
-  const getSort = (sortOrder: string, sortOrderID: string) => {
-    return sortOrder === 'desc' ?
-      (a: any, b: any) => newSortOrder(a, b, sortOrderID) :
-      (a: any, b: any) => -newSortOrder(a, b, sortOrderID)
-  }
+  const handleSortOrder = handleTableOrder(sortOrderID, sortOrder, setSortOrder, setSortOrderID)
+  const newSortOrder = handleTableSort()
+  const getSort = getTableSort(newSortOrder)
   const SORT_DATA: CouponType[] = useMemo(() => {
     return [...couponData]
       .sort(getSort(sortOrder, sortOrderID))
@@ -91,19 +77,6 @@ export default function BackendCoupon() {
     getCoupon();
   }, [])
 
-  const dataValue = (value) => {
-    const DATE = new Date(value)
-    let date: string | number = DATE.getDate(); //15
-    let month: string | number = (DATE.getMonth() + 1)  //6
-    let year: string | number = DATE.getFullYear();  //2016
-    if (month < 2) {
-      month = '0' + month
-    }
-    if (date < 2) {
-      date = '0' + date
-    }
-    return [year, month, date].join('/')
-  }
   const handleCouponOpen = (type, coupon) => {
     setTamp(coupon);
     setOpen(true);
@@ -154,6 +127,7 @@ export default function BackendCoupon() {
     })
   }
   const CHECK_DATA_LENGTH = state.dataTamp.length > 1;
+
   if (loadingPage) {
     return (
       <Box component="div"
