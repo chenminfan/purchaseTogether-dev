@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { postCouponApi } from '@api/Apis';
-import { ProductsType } from '@typeTS/Products';
 import CartProdCard from '@components/frontend/Cart/CartProdCard';
-import { SnackbarContent } from '@provider/SnackbarProvider/SnackbarContent'
+import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './checkout.scss'
 import { CartCheckType } from '@typeTS/CartCheck'
 
@@ -27,8 +26,6 @@ export default function Cart() {
     checkout()
   }, [])
   const [state, dispatch] = useContext<any>(SnackbarContent);
-
-
   const handleClickCoupon = async (code) => {
     const data = {
       code: code
@@ -39,13 +36,18 @@ export default function Cart() {
         info: code,
         infoState: codeRes.data.success,
       })
+      handleSnackbarSuccess(dispatch, codeRes);
     } catch (error) {
+      handleSnackbarError(dispatch, error);
     }
   }
 
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
+        <div className="row">
+
+        </div>
         <div className="row">
           <div className="col-lg-7 col-md-12">
             {cartData.carts.map((cart) => (
@@ -85,10 +87,10 @@ export default function Cart() {
                   <div className="checkout-title">原價小計</div>
                   <div className="checkout-content">NT$ {cartData.total.toLocaleString('zh-TW')}</div>
                 </div>
-                <div className="checkout-item">
+                {/* <div className="checkout-item">
                   <div className="checkout-title">支付方式</div>
                   <div className="checkout-content"></div>
-                </div>
+                </div> */}
               </div>
               <div className="checkout-footer">
                 <div className="checkout-item checkout-item-total">
