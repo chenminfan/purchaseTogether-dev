@@ -1,13 +1,14 @@
 import { useMemo, useEffect, useRef, useState, useContext } from 'react'
 import Pagination from '@components/backend/Pagination';
 import CTableFrom from '@components/backend/paper/TableFrom';
-import { TableContent } from '@provider/TableProvider/TableContent'
+import { TableContent, handleTableCheckbox } from '@provider/TableProvider/TableContent'
 import DialogNewProds from './DialogNewProds';
 import DialogDeleteProds from './DialogDeleteProds';
 import {
   getBackendProductsApi,
   getBackendProductsCategoryApi
 } from '@api/Apis'
+import { getTableSort, handleTableSort, handleTableOrder } from '@api/utilities/tableSort';
 
 import { createTheme } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -68,67 +69,47 @@ export default function BackendProducts() {
   // 搜尋
 
   // 排序 start
-  const handleSortOrder = (order: string) => {
-    const isAsc = sortOrderID === order && sortOrder === 'asc';
-    setSortOrder(isAsc ? 'desc' : 'asc')
-    setSortOrderID(order)
-  }
-  const newSortOrder = (a: any, b: any, sortOrderID: string) => {
-    if (a[sortOrderID] > b[sortOrderID]) {
-      return -1;
-    }
-    if (a[sortOrderID] < b[sortOrderID]) {
-      return 1;
-    }
-    return 0;
-  }
-  const getSort = (sortOrder: string, sortOrderID: string) => {
-    return sortOrder === 'desc' ?
-      (a: any, b: any) => newSortOrder(a, b, sortOrderID) :
-      (a: any, b: any) => -newSortOrder(a, b, sortOrderID)
-  }
-  // 排序 end
-
-  const getProds = async (getPage = 1, category = searchBTN) => {
-    if (category !== '') {
-      const productRes = await getBackendProductsCategoryApi(getPage, category)
-      setProdData(productRes.data.products)
-      setPage(productRes.data.pagination)
-    } else {
-      const productRes = await getBackendProductsApi(getPage)
-      setProdData(productRes.data.products)
-      isLoadingRef.current = false;
-      setLoadingPage(false)
-      setPage(productRes.data.pagination)
-      dispatch({
-        type: 'RE_RENDER_CHECKBOX',
-        table: { dataTamp: productRes.data.pagination },
-        tableData: prodData,
-      })
-    }
-  }
+  const handleSortOrder = handleTableOrder(sortOrderID, sortOrder, setSortOrder, setSortOrderID)
+  const newSortOrder = handleTableSort()
+  const getSort = getTableSort(newSortOrder)
 
   const SEARCH_DATA = useMemo(() => {
     return [...prodData
       .filter((item) => item.category.match(searchBTN))]
       .sort(getSort(sortOrder, sortOrderID))
   }, [searchBTN, prodData, sortOrder, sortOrderID])
+  // 排序 end
+  const categoryId = Array.from(new Set(prodData.map((item) => item.category))).find((item) => item)
 
-  useEffect(() => {
-    if (SEARCH_DATA.length === 0) {
-      setSearch('')
-      setSearchBTN('')
+  const getProds = async (getPage = 1, category = searchBTN) => {
+    if (category !== categoryId) {
+      const productRes = await getBackendProductsApi(getPage)
+      setProdData(productRes.data.products)
+      isLoadingRef.current = false;
+      setLoadingPage(false)
+      setPage(productRes.data.pagination)
+      handleTableCheckbox(dispatch, productRes, prodData);
+    } else {
+      const productRes = await getBackendProductsCategoryApi(getPage, category)
+      setProdData(productRes.data.products)
+      isLoadingRef.current = false;
+      setLoadingPage(false)
+      setPage(productRes.data.pagination)
+      handleTableCheckbox(dispatch, productRes, prodData);
     }
-  }, [SEARCH_DATA])
-
+  }
   useEffect(() => {
     getProds(1, searchBTN);
   }, [searchBTN])
 
-
   const handleChangeInput = (e: any) => {
     setSearch(e.target.value)
-    return
+    if (e.target.value === '') {
+      getProds(1, '')
+      setSearchBTN(e.target.value)
+    } else {
+      getProds(1, searchBTN)
+    }
   }
 
   const handleChangeInputBtn = () => {
@@ -146,6 +127,7 @@ export default function BackendProducts() {
     setOpen(true);
     setTableType(type);
   }
+
   const handleProdClose = (reason: CloseReason) => {
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
       setOpen(false);
@@ -185,7 +167,6 @@ export default function BackendProducts() {
   }
   const CHECK_DATA_LENGTH = state.dataTamp.length > 1;
 
-
   if (loadingPage) {
     return (
       <Box ref={isLoadingRef} component="div"
@@ -193,15 +174,47 @@ export default function BackendProducts() {
         <CircularProgress />
       </Box>
     )
-  } else if (prodData.length === 0) {
+  } else if (searchBTN !== categoryId && prodData.length === 0) {
     return (
-      <Box component="div"
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', maxHeight: '350px' }}>
-        暫無資料
-      </Box>
+      <CTableFrom
+        isSearch
+        title="產品列表"
+        checkboxAllSelection={prodData.length}
+        checkboxSelection={state.dataTamp.length}
+        handleCheckboxDelete={() => { handleClickDelete('allDelete') }}
+        handleProdOpen={() => { handleProdOpen('create', {}) }}
+        search={search}
+        handleChangeInput={(e) => { handleChangeInput(e) }}
+        handleChangeInputBtn={() => { handleChangeInputBtn() }}
+      >
+        <Box
+          component="div"
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', maxHeight: '350px' }}>
+          搜尋的類別暫無資料
+        </Box>
+      </CTableFrom>
     )
-  }
-  return (
+  } else if (searchBTN === '' && prodData.length === 0) {
+    return (
+      <CTableFrom
+        isSearch
+        title="產品列表"
+        checkboxAllSelection={prodData.length}
+        checkboxSelection={state.dataTamp.length}
+        handleCheckboxDelete={() => { handleClickDelete('allDelete') }}
+        handleProdOpen={() => { handleProdOpen('create', {}) }}
+        search={search}
+        handleChangeInput={(e) => { handleChangeInput(e) }}
+        handleChangeInputBtn={() => { handleChangeInputBtn() }}
+      >
+        <Box
+          component="div"
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', maxHeight: '350px' }}>
+          暫無資料
+        </Box>
+      </CTableFrom>
+    )
+  } return (
     <>
       {/* <>{JSON.stringify(sortData)}</> */}
       <CTableFrom
@@ -217,113 +230,116 @@ export default function BackendProducts() {
       >
         <>
           <TableContainer sx={{ height: 'calc(100% - 182px)', minWidth: '100%' }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      name="checkAll"
-                      color="primary"
-                      checked={state.checkBool}
-                      onChange={(e) => {
-                        handleChangeCheckAll(e, prodData)
-                      }}
-                    />
-                  </TableCell>
-                  {COLUMNS.map((col) => (
-                    <TableCell
-                      key={col.field}
-                      style={{ minWidth: col.width }}>
-                      <TableSortLabel
-                        active={sortOrderID === col.field}
-                        // direction={sortOrder ? sortOrder : 'asc'}
-                        onClick={() => handleSortOrder(col.field)}
-                      >
-                        {col.headerName}
-                      </TableSortLabel>
-
+            {prodData.length !== 0 && (
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        name="checkAll"
+                        color="primary"
+                        checked={state.checkBool}
+                        onChange={(e) => {
+                          handleChangeCheckAll(e, prodData)
+                        }}
+                      />
                     </TableCell>
-                  ))}
-                  <TableCell style={{ minWidth: 160 }} colSpan={2} />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {SEARCH_DATA.map((row) => {
-                  const Filter_IMAGE = row.imagesUrl?.filter((item) => item.length > 0 && item.includes('https://' || 'http://'))
-                  return (
-                    <TableRow key={row.id}>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={CHECK_STATE(row)}
-                          onChange={(e) => {
-                            handleChangeCheck(e, row)
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
-                        <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
-                      </TableCell>
-                      <TableCell>
-                        {row.title}
-                      </TableCell>
-                      {/* <TableCell>{row.category}</TableCell> */}
-                      {/* <TableCell><div className="text">{row.content}</div></TableCell> */}
-                      <TableCell align="center" sx={[
-                        { '.row-image': { display: 'flex' } },
-                        { '.img_box + .img_box': { marginLeft: '4px' } },
-                        { '.img_box': { width: '30px', height: '30px' } }
-                      ]}>
-                        <div className="row-image">
-                          { }
-                          {Filter_IMAGE.map((item, index) => (
-                            <div className='img_box' key={`Filter_IMAGE-img${index}`}><img src={item} alt={row.id} /></div>))}
-                        </div>
+                    {COLUMNS.map((col) => (
+                      <TableCell
+                        key={col.field}
+                        style={{ minWidth: col.width }}>
+                        <TableSortLabel
+                          active={sortOrderID === col.field}
+                          // direction={sortOrder ? sortOrder : 'asc'}
+                          onClick={() => handleSortOrder(col.field)}
+                        >
+                          {col.headerName}
+                        </TableSortLabel>
 
                       </TableCell>
-                      <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
-                      <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
-                      <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
-                      <TableCell>
-                        <Button
-                          disabled={CHECK_DATA_LENGTH}
-                          variant="contained"
-                          onClick={() => handleProdOpen('edit', row)}
-                          sx={[
-                            { padding: '4px', lineHeight: '1.5', minWidth: '55px', boxShadow: 'none' }
-                          ]}
-                        >
-                          <i className="bi bi-pencil-square"></i>
-                        </Button>
+                    ))}
+                    <TableCell style={{ minWidth: 160 }} colSpan={2} />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {SEARCH_DATA.map((row) => {
+                    const Filter_IMAGE = row.imagesUrl?.filter((item) => item.length > 0 && item.includes('https://' || 'http://'))
+                    return (
+                      <TableRow key={row.id}>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={CHECK_STATE(row)}
+                            onChange={(e) => {
+                              handleChangeCheck(e, row)
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell sx={[{ '&>.img_box': { width: '50px', height: '50px' }, }]}>
+                          <div className='img_box'><img src={row.imageUrl} alt={row.id} /></div>
+                        </TableCell>
+                        <TableCell>
+                          {row.title}
+                        </TableCell>
+                        {/* <TableCell>{row.category}</TableCell> */}
+                        {/* <TableCell><div className="text">{row.content}</div></TableCell> */}
+                        <TableCell align="center" sx={[
+                          { '.row-image': { display: 'flex' } },
+                          { '.img_box + .img_box': { marginLeft: '4px' } },
+                          { '.img_box': { width: '30px', height: '30px' } }
+                        ]}>
+                          <div className="row-image">
+                            { }
+                            {Filter_IMAGE.map((item, index) => (
+                              <div className='img_box' key={`Filter_IMAGE-img${index}`}><img src={item} alt={row.id} /></div>))}
+                          </div>
 
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          color="error"
-                          disabled={CHECK_DATA_LENGTH}
-                          variant="contained"
-                          onClick={() => handleProdDeleteOpen('delete', row)}
-                          sx={[
-                            { padding: '4px', lineHeight: '1.5', minWidth: '55px', boxShadow: 'none' }
-                          ]}
-                        >
-                          <i className="bi bi-trash3-fill"></i>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
+                        </TableCell>
+                        <TableCell>{row.is_enabled ? '啟用' : '未啟用'}</TableCell>
+                        <TableCell align="right">{row.origin_price.toLocaleString('zh-TW')}</TableCell>
+                        <TableCell align="right">{row.price.toLocaleString('zh-TW')}</TableCell>
+                        <TableCell>
+                          <Button
+                            disabled={CHECK_DATA_LENGTH}
+                            variant="contained"
+                            onClick={() => handleProdOpen('edit', row)}
+                            sx={[
+                              { padding: '4px', lineHeight: '1.5', minWidth: '55px', boxShadow: 'none' }
+                            ]}
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </Button>
+
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            color="error"
+                            disabled={CHECK_DATA_LENGTH}
+                            variant="contained"
+                            onClick={() => handleProdDeleteOpen('delete', row)}
+                            sx={[
+                              { padding: '4px', lineHeight: '1.5', minWidth: '55px', boxShadow: 'none' }
+                            ]}
+                          >
+                            <i className="bi bi-trash3-fill"></i>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            )}
           </TableContainer>
           <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Pagination page={page} getPagination={getProds} pageLink="#/backend/product" />
+            {searchBTN === '' && <Pagination page={page} getPagination={getProds} pageLink="#/backend/product" />}
           </Box>
         </>
       </CTableFrom>
       {tableType === 'delete' && (
         <DialogDeleteProds
           open={open}
+          searchWord={searchBTN}
           page={page.current_page}
           getProds={getProds}
           prodType={tableType}
@@ -336,6 +352,7 @@ export default function BackendProducts() {
       {tableType === "allDelete" && (
         <DialogDeleteProds
           open={open}
+          searchWord={searchBTN}
           page={page.current_page}
           getProds={getProds}
           prodType={tableType}
@@ -348,6 +365,7 @@ export default function BackendProducts() {
       {(tableType === 'edit' || tableType === 'create') && (
         (<DialogNewProds
           open={open}
+          searchWord={searchBTN}
           page={page.current_page}
           getProds={getProds}
           prodType={tableType}
@@ -360,3 +378,4 @@ export default function BackendProducts() {
     </>
   )
 }
+
