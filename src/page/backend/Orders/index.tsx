@@ -7,6 +7,8 @@ import DialogDeleteOrders from './DialogDeleteOrders';
 import {
   getBackendOrdersApi,
 } from '@api/Apis'
+import { dataValue } from '@api/utilities/dataValue';
+import { getTableSort, handleTableSort, handleTableOrder } from '@api/utilities/tableSort';
 
 import { createTheme } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -38,6 +40,7 @@ export default function BackendOrders() {
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const columns = [
+    { field: 'date', headerName: '訂單日期', width: 180 },
     { field: 'id', headerName: '訂單編號', width: 220 },
     { field: 'name', align: 'center', headerName: '訂單人', width: 120, },
     { field: 'message', align: 'center', headerName: '備註', width: 150, },
@@ -63,25 +66,9 @@ export default function BackendOrders() {
     })
   }
   // 排序 start
-  const handleSortOrder = (order) => {
-    const isAsc = sortOrderID === order && sortOrder === 'asc';
-    setSortOrder(isAsc ? 'desc' : 'asc')
-    setSortOrderID(order)
-  }
-  const newSortOrder = (a, b, sortOrderID) => {
-    if (b[sortOrderID] < a[sortOrderID]) {
-      return -1;
-    }
-    if (b[sortOrderID] > a[sortOrderID]) {
-      return 1;
-    }
-    return 0;
-  }
-  const getSort = (sortOrder, sortOrderID) => {
-    return sortOrder === 'desc' ?
-      (a, b) => newSortOrder(a, b, sortOrderID) :
-      (a, b) => -newSortOrder(a, b, sortOrderID)
-  }
+  const handleSortOrder = handleTableOrder(sortOrderID, sortOrder, setSortOrder, setSortOrderID)
+  const newSortOrder = handleTableSort()
+  const getSort = getTableSort(newSortOrder)
   const SORT_DATA = useMemo(() => {
     return [...ordersData]
       .sort(getSort(sortOrder, sortOrderID))
@@ -142,6 +129,9 @@ export default function BackendOrders() {
     })
   }
   const CHECK_DATA_LENGTH = state.dataTamp.length > 1;
+
+
+
   if (loadingPage) {
     return (
       <Box component="div"
@@ -209,6 +199,7 @@ export default function BackendOrders() {
                         }}
                       />
                     </TableCell>
+                    <TableCell>{dataValue(row.create_at)}</TableCell>
                     <TableCell>{row.id}</TableCell>
                     <TableCell>{row.user.name}</TableCell>
                     <TableCell>{row.message}</TableCell>
@@ -277,3 +268,5 @@ export default function BackendOrders() {
     </>
   )
 }
+
+

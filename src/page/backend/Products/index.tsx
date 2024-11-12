@@ -8,6 +8,7 @@ import {
   getBackendProductsApi,
   getBackendProductsCategoryApi
 } from '@api/Apis'
+import { getTableSort, handleTableSort, handleTableOrder } from '@api/utilities/tableSort';
 
 import { createTheme } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -68,25 +69,14 @@ export default function BackendProducts() {
   // 搜尋
 
   // 排序 start
-  const handleSortOrder = (order: string) => {
-    const isAsc = sortOrderID === order && sortOrder === 'asc';
-    setSortOrder(isAsc ? 'desc' : 'asc')
-    setSortOrderID(order)
-  }
-  const newSortOrder = (a: any, b: any, sortOrderID: string) => {
-    if (a[sortOrderID] > b[sortOrderID]) {
-      return -1;
-    }
-    if (a[sortOrderID] < b[sortOrderID]) {
-      return 1;
-    }
-    return 0;
-  }
-  const getSort = (sortOrder: string, sortOrderID: string) => {
-    return sortOrder === 'desc' ?
-      (a: any, b: any) => newSortOrder(a, b, sortOrderID) :
-      (a: any, b: any) => -newSortOrder(a, b, sortOrderID)
-  }
+  const handleSortOrder = handleTableOrder(sortOrderID, sortOrder, setSortOrder, setSortOrderID)
+  const newSortOrder = handleTableSort()
+  const getSort = getTableSort(newSortOrder)
+  const SEARCH_DATA = useMemo(() => {
+    return [...prodData
+      .filter((item) => item.category.match(searchBTN))]
+      .sort(getSort(sortOrder, sortOrderID))
+  }, [searchBTN, prodData, sortOrder, sortOrderID])
   // 排序 end
 
   const getProds = async (getPage = 1, category = searchBTN) => {
@@ -108,11 +98,7 @@ export default function BackendProducts() {
     }
   }
 
-  const SEARCH_DATA = useMemo(() => {
-    return [...prodData
-      .filter((item) => item.category.match(searchBTN))]
-      .sort(getSort(sortOrder, sortOrderID))
-  }, [searchBTN, prodData, sortOrder, sortOrderID])
+
 
   useEffect(() => {
     if (SEARCH_DATA.length === 0) {

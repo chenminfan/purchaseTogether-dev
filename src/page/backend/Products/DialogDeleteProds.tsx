@@ -58,7 +58,7 @@ export default function DialogDeleteProds(props: DialogDeleteProdsType) {
       handleClose={handleClose}
       maxWidth="sm"
       fullWidth
-      dialogTitle={prodType === 'delete' ? `${tampData.title} - 確認刪除` : '刪除多筆資料'}
+      dialogTitle={prodType === 'delete' ? `${tampData.title} - 確認刪除` : '刪除多筆商品'}
       dialogSubmitBtnText={prodType === 'delete' ? '確認刪除' : '確認刪除多筆資料'}
       handleSubmit={handleProdDelete}
       dialogSubmitColor="error"
