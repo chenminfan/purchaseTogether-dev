@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import Dialog from '@components/backend/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -9,14 +9,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import {
-  postBackendOrdersApi,
-} from '@api/Apis'
+import { postBackendOrdersApi } from '@api/Apis'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
-import { ProductsType } from '@typeTS/Products'
 import { OrdersType, OrdersProdType } from '@typeTS/Orders'
 
 type DialogNewOrderType = {
@@ -24,14 +20,13 @@ type DialogNewOrderType = {
   page: number,
   getOrders;
   handleClose;
-  tampData;
+  tampData: OrdersType,
 }
 export default function DialogNewOrder(props: DialogNewOrderType) {
   const { open, page, getOrders, handleClose, tampData } = props;
   const [, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [newDate, setNewDate] = useState<Date>(new Date())
   const [formData, setFormData] = useState({
     create_at: 0,
     id: '',
@@ -76,13 +71,7 @@ export default function DialogNewOrder(props: DialogNewOrderType) {
     }
   }
   const Prod_Id = Object.keys(ordersProdData)
-  const Prods = Object.values(ordersProdData)
-  useEffect(() => {
-    setFormData(tampData);
-    setOrdersProdData(tampData.products);
-
-  }, [tampData])
-
+  const Prods = Object.values(tampData.products)
   return (
     <Dialog
       open={open}
@@ -142,7 +131,7 @@ export default function DialogNewOrder(props: DialogNewOrderType) {
                   key={row.product_id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell>{row?.product?.title}</TableCell>
+                  <TableCell>{row.product.title}</TableCell>
                   <TableCell>{row.qty}</TableCell>
                   <TableCell align="right">{row.final_total}</TableCell>
                   <TableCell align="right">{row.total}</TableCell>

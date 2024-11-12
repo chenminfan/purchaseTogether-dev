@@ -8,6 +8,13 @@ const tableCheckState = {
   checkBool: false,
   table_type: ''
 }
+function handleTableCheckbox(dispatch: any, productRes, prodData) {
+  dispatch({
+    type: 'RE_RENDER_CHECKBOX',
+    table: { dataTamp: productRes.data.pagination },
+    tableData: prodData,
+  });
+}
 const tableReducer = (state, action) => {
   switch (action.type) {
     case "TABLE_CHECKBOX":
@@ -48,4 +55,4 @@ const tableReducer = (state, action) => {
   }
 }
 
-export { TableContent, tableReducer, tableCheckState }
+export { handleTableCheckbox, TableContent, tableReducer, tableCheckState }

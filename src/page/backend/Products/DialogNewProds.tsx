@@ -24,11 +24,12 @@ type DialogNewProdsType = {
   prodType: string,
   tampData: ProductsType,
   page: number,
+  searchWord: string,
 
 }
 
 export default function DialogNewProds(props: DialogNewProdsType) {
-  const { open, page, dialogTitle, dialogSubmitBtnText, getProds, handleClose = () => { }, prodType, tampData } = props;
+  const { open, page, searchWord, dialogTitle, dialogSubmitBtnText, getProds, handleClose = () => { }, prodType, tampData } = props;
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -104,30 +105,37 @@ export default function DialogNewProds(props: DialogNewProdsType) {
       if (prodType === 'create') {
         const res = await postBackendProductsApi(prodType, formData)
         handleSnackbarSuccess(dispatch, res);
+        handleClose();
+        getProds(page, '');
 
       } else if (prodType === 'edit') {
         const res = await postBackendProductsApi(prodType, formData)
         handleSnackbarSuccess(dispatch, res);
+        handleClose();
+        if (searchWord === '') {
+          getProds(page, '');
+        } else {
+          getProds(page, searchWord);
+        }
       }
-      handleClose();
-      getProds(page, '');
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }
+
   }
 
   useEffect(() => {
     if (prodType === 'create') {
       setFormData({
-        title: 'DialogNewProds DialogNewProds',
-        category: 'DialogNewProds DialogNewProds',
-        content: 'DialogNewProds',
-        origin_price: 3000,
-        price: 300,
-        unit: '個',
-        description: 'DialogNewProds',
+        title: '',
+        category: '',
+        content: '',
+        origin_price: 83000,
+        price: 39900,
+        unit: '',
+        description: '',
         is_enabled: 1,
-        imageUrl: 'https://images.unsplash.com/photo-1525088553748-01d6e210e00b?q=80&w=1752&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: '',
         imagesUrl: ['', '', '', '', ''],
       })
     } else if (prodType === 'edit') {

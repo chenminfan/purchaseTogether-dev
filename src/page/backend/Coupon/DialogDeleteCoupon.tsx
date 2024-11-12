@@ -70,7 +70,7 @@ export default function DialogDeleteCoupon(props: DialogDeleteCouponType) {
       handleClose={handleClose}
       maxWidth="sm"
       fullWidth
-      dialogTitle={couponType === 'delete' ? `${tampData.title} - 確認刪除` : '當前頁商品全部刪除'}
+      dialogTitle={couponType === 'delete' ? `${tampData.title} - 確認刪除` : '刪除多筆折扣碼'}
       handleSubmit={handleCouponDelete}
       dialogSubmitBtnText="確認刪除"
       dialogSubmitColor="error"
