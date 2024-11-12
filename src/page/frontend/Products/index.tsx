@@ -107,7 +107,7 @@ export default function Products() {
           </div>
         </div>
 
-        <Pagination page={page} getPagination={getProds} pageLink="#" />
+        <Pagination page={page} getPagination={getProds} pageLink="#/prods" />
       </div>
     </div >
   )
