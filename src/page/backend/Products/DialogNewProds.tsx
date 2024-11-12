@@ -24,11 +24,12 @@ type DialogNewProdsType = {
   prodType: string,
   tampData: ProductsType,
   page: number,
+  searchWord: string,
 
 }
 
 export default function DialogNewProds(props: DialogNewProdsType) {
-  const { open, page, dialogTitle, dialogSubmitBtnText, getProds, handleClose = () => { }, prodType, tampData } = props;
+  const { open, page, searchWord, dialogTitle, dialogSubmitBtnText, getProds, handleClose = () => { }, prodType, tampData } = props;
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -104,16 +105,23 @@ export default function DialogNewProds(props: DialogNewProdsType) {
       if (prodType === 'create') {
         const res = await postBackendProductsApi(prodType, formData)
         handleSnackbarSuccess(dispatch, res);
+        handleClose();
+        getProds(page, '');
 
       } else if (prodType === 'edit') {
         const res = await postBackendProductsApi(prodType, formData)
         handleSnackbarSuccess(dispatch, res);
+        handleClose();
+        if (searchWord === '') {
+          getProds(page, '');
+        } else {
+          getProds(page, searchWord);
+        }
       }
-      handleClose();
-      getProds(page, '');
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }
+
   }
 
   useEffect(() => {
