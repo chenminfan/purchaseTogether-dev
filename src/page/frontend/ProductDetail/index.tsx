@@ -60,7 +60,7 @@ export default function ProductDetail() {
     HomeUrl: '#/',
     ProdsId: 'home',
     ProdsName: '商品分類',
-    ProdsUrl: '#/prods',
+    ProdsUrl: '#/main/prods',
     // ProdsUrl: '#/prods',
   };
 
