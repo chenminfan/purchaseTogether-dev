@@ -1,4 +1,5 @@
 $frontendHeader: 56px;
+$frontendFooter: 200px;
 
 main {
   &.frontend {
@@ -6,12 +7,12 @@ main {
     padding: 0;
     color: $gray-900;
     background-color: $gray-100;
-    min-height: calc(100vh - ($frontendHeader + 142px));
+    min-height: calc(100vh - ($frontendHeader + $frontendFooter));
     [class*='_page'] {
       padding-bottom: 16px;
     }
     @include media-breakpoint-down(md) {
-      min-height: calc(100vh - ($frontendHeader + 180px));
+      min-height: calc(100vh - ($frontendHeader + $frontendFooter));
     }
   }
 }
