@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import LogoBUY from '@components/frontend/LogoBUY';
 import './header.scss';
 
 export default function Header(props) {
@@ -16,7 +17,7 @@ export default function Header(props) {
               <li className="nav-item">
                 <a className="nav-link" href="#/main/prods" aria-label="prods-category" role="link">
                   <i className="bi bi-signpost-split-fill"></i>
-                  商品分類
+                  store
                 </a>
               </li>
               <li className="nav-item">
@@ -27,7 +28,11 @@ export default function Header(props) {
               </li>
             </ul>
           </div>
-          <a className="navbar-brand" href={headerLink} aria-label='logo-link' role="link"><span className="logo">{headerTitle}</span></a>
+          <a className="navbar-brand text-white h4" href={headerLink} aria-label='logo-link' role="link">
+            <div className="logo">
+              <LogoBUY />
+            </div>
+          </a>
           <div className="navbar-collapse navbar-icon">
             <ul className="navbar-nav">
               <li className="nav-item">
@@ -39,7 +44,7 @@ export default function Header(props) {
                     </span>
                   ) : (
                     <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">
-                      <span className={cartData.carts.length === 0 ? "" : "visually-hidden"}>趕快下單啊</span>
+                      <span className={cartData.carts.length === 0 ? "" : "visually-hidden"}>做伙下單</span>
                     </span>
                   )}
                 </a>
