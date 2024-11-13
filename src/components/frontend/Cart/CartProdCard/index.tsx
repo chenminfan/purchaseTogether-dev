@@ -75,7 +75,7 @@ export default function CartProdCard(props: Props) {
       <div className="card-info">
         {isTool && <button className="btn text-primary card-btn btn-sm" type="button" onClick={() => { handleDelete(cart) }}><i className="bi bi-x-lg"></i></button>}
 
-        <a href={`#/prods/detail/${cart.id}`}>
+        <a href={`#/main/prods/detail/${cart.id}`}>
           <span className="card-title">{cart.product.title}</span>
         </a>
 
