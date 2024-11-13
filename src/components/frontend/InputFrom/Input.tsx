@@ -11,10 +11,10 @@ type TextAreaType = {
 export default function TextArea(props: TextAreaType) {
   const { id, labelText, type, rules, register, errors } = props;
   return (
-    <div className='my-3'>
-      <label htmlFor={id} className='form-label'>
+    <div className={labelText ? 'my-3' : ''}>
+      {labelText && <label htmlFor={id} className='form-label'>
         {labelText}
-      </label>
+      </label>}
       <input
         id={id}
         type={type}

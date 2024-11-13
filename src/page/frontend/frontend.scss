@@ -6,6 +6,7 @@ main {
     padding: 0;
     color: $gray-900;
     background-color: $gray-100;
-    min-height: calc(100vh - $frontendHeader);
+    min-height: calc(100vh - ($frontendHeader + 142px));
+    padding-bottom: 16px;
   }
 }
