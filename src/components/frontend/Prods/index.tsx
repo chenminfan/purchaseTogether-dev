@@ -44,7 +44,7 @@ export default function Prods(props: ProdsType) {
     <div className="card prods">
       <div className="card-body">
         <div className="prods-content">
-          <h5 className="card-title"><a href={`#/prods/detail/${prod.id}`} role="link" aria-label="prod-link">{prod.title}</a></h5>
+          <h5 className="card-title"><a href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="prod-link">{prod.title}</a></h5>
           <div className="prods-price">
             <div className="prods-item">
               <div className="title">特價</div>
@@ -57,7 +57,7 @@ export default function Prods(props: ProdsType) {
           </div>
         </div>
 
-        <a href={`#/prods/detail/${prod.id}`} role="link" aria-label="img-link">
+        <a href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="img-link">
           <div className="img_box">
             <LazyLoadImg className="card-img-top" src={prod.imageUrl} alt={prod.title} />
           </div>

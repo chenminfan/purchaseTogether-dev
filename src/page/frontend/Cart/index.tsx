@@ -98,7 +98,7 @@ export default function Cart() {
                   <div className="checkout-content">NT ${Math.round(cartData.final_total).toLocaleString('zh-TW')}</div>
                 </div>
                 <div className="d-grid gap-2">
-                  <a className="btn btn-primary checkout-btn" type="button" href="#/cart/info">
+                  <a className="btn btn-primary checkout-btn" type="button" href="#/main/cart/info">
                     填寫資料
                   </a>
                 </div>
