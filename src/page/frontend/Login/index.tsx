@@ -49,7 +49,7 @@ export default function Login() {
   }, [])
 
   return (
-    <div className="user-page">
+    <div className="user_page">
       <div className="user-box">
         {Object.keys(loginState).length !== 0 && (
           <div className={`alert alert-${loginState.success ? "success" : "danger"}`}>

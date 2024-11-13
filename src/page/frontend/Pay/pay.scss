@@ -1,10 +1,18 @@
 .pay {
   &_page {
     padding: 32px;
+    @include media-breakpoint-down(md) {
+      padding: 8px;
+    }
     .order {
       &-item {
         display: flex;
         padding: 4px;
+        @include media-breakpoint-down(md) {
+          flex-direction: column;
+          align-items: center;
+          margin-top: 8px;
+        }
       }
       &-title {
         width: 100px;
@@ -22,6 +30,10 @@
     width: 100%;
     max-width: 600px;
     padding: 16px;
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      padding: 0;
+    }
   }
   &-note {
     display: inline-flex;
@@ -36,10 +48,19 @@
     i {
       margin-right: 8px;
     }
+    @include media-breakpoint-down(md) {
+      padding: 4px 16px;
+    }
   }
   &-info {
     padding: 0 36px;
     width: calc(100% - 100px);
+    @include media-breakpoint-down(md) {
+      padding: 0;
+      margin: 16px 0;
+      width: 100%;
+      text-align: center;
+    }
   }
   &-btn {
     width: 100px;
@@ -69,5 +90,8 @@
     padding: 32px;
     border: 1px solid $primary;
     border-radius: 16px;
+    @include media-breakpoint-down(md) {
+      padding: 16px;
+    }
   }
 }
