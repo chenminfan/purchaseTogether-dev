@@ -32,7 +32,7 @@ export default function Frontend() {
   return (
     <LoginContentProvider>
       <SnackbarProvider>
-        <Header headerTitle="react cart" cartData={cartData} />
+        <Header headerTitle="做伙Buy" cartData={cartData} />
         <main className='frontend'>
           <Outlet context={{ checkout, cartData }} />
         </main>
