@@ -12,6 +12,12 @@ header {
       @include media-breakpoint-down(md) {
         position: relative;
       }
+      .nav {
+        &-item {
+          display: flex;
+          align-items: center;
+        }
+      }
       &-carIcon {
         display: flex;
         align-items: center;
@@ -115,23 +121,45 @@ header {
         flex-grow: inherit;
         width: auto;
         margin: 0;
+        .navbar-nav {
+          .nav {
+            &-item {
+              &:last-child {
+                @include media-breakpoint-down(sm) {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
       }
-
       &-nav {
         display: flex;
         flex-direction: row;
-      }
-      .nav {
-        &-item {
-          display: flex;
-          align-items: center;
+        @include media-breakpoint-down(sm) {
+          flex-direction: column;
         }
       }
     }
+
     &-link {
       padding: 8px 4px;
       > i {
         margin: 0 4px;
+      }
+    }
+  }
+  .navbar-collapse {
+    &:not(.navbar-icon) {
+      .nav {
+        &-item {
+          &:last-child {
+            display: none;
+            @include media-breakpoint-down(sm) {
+              display: flex;
+            }
+          }
+        }
       }
     }
   }

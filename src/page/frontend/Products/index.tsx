@@ -76,7 +76,7 @@ export default function Products() {
             onClick={() => {
               handleClick('all')
             }}>
-            <a className={`nav-link ${categoryId === 'all' ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/prods" ><i className="bi bi-signpost-split-fill"></i></a>
+            <a className={`nav-link ${categoryId === 'all' ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/main/prods" ><i className="bi bi-signpost-split-fill"></i></a>
           </li>
           {category.map((item) => (
             <li className='nav-item'
@@ -84,7 +84,7 @@ export default function Products() {
               onClick={() => {
                 handleClick(item)
               }}>
-              <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/prods" >{item}</a>
+              <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/main/prods" >{item}</a>
             </li >
           ))
           }
@@ -107,7 +107,7 @@ export default function Products() {
           </div>
         </div>
 
-        <Pagination page={page} getPagination={getProds} pageLink="#/prods" />
+        <Pagination page={page} getPagination={getProds} pageLink="#/main/prods" />
       </div>
     </div >
   )

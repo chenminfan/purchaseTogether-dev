@@ -1,0 +1,7 @@
+footer {
+  height: 142px;
+  background-color: rgba($dark, $alpha: 0.9);
+  @include media-breakpoint-down(sm) {
+    height: 180px;
+  }
+}
