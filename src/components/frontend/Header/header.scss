@@ -23,6 +23,13 @@ header {
           padding: 4px 8px;
         }
       }
+      &-toggler {
+        padding: 2px 4px;
+        &-icon {
+          width: 24px;
+          height: 24px;
+        }
+      }
       &-brand {
         display: flex;
         align-items: center;
@@ -36,11 +43,17 @@ header {
         transform: translate(-50%, 0);
         border-radius: 0 0 12px 12px;
         background-color: $gray-200;
+        @include media-breakpoint-down(md) {
+          height: calc(100% - 12px);
+        }
         &:hover {
           color: rgb(85 31 31);
         }
         .logo {
           padding: 8px 32px;
+          @include media-breakpoint-down(md) {
+            padding: 8px 12px;
+          }
           &::before,
           &::after {
             content: '';
@@ -72,7 +85,7 @@ header {
           top: 56px;
           left: 0;
           right: 0;
-          padding: 0 16px;
+          padding: 8px 16px;
           width: 100%;
           width: auto;
           background: #fff;
@@ -116,6 +129,7 @@ header {
       }
     }
     &-link {
+      padding: 8px 4px;
       > i {
         margin: 0 4px;
       }
