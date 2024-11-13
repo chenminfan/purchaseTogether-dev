@@ -14,9 +14,15 @@ export default function Header(props) {
           <div className="collapse navbar-collapse navbar-box" id="navbarTogglerDemo01">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link" href="#/prods" aria-label="prods-category" role="link">
+                <a className="nav-link" href="#/main/prods" aria-label="prods-category" role="link">
                   <i className="bi bi-signpost-split-fill"></i>
                   商品分類
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#/main/login" aria-label="prods-category" role="link">
+                  <i className="bi bi-signpost-split-fill"></i>
+                  後台管理
                 </a>
               </li>
             </ul>
@@ -25,7 +31,7 @@ export default function Header(props) {
           <div className="navbar-collapse navbar-icon">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link navbar-carIcon" href="#/cart" aria-label='shopping-cart' role="link">
+                <a className="nav-link navbar-carIcon" href="#/main/cart" aria-label='shopping-cart' role="link">
                   <i className="bi bi-cart-check-fill"></i>
                   {cartData.carts.length ? (
                     <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">
@@ -39,11 +45,10 @@ export default function Header(props) {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#/login" aria-label='backend-user' role="link">
+                <a className="nav-link" href="#/main/login" aria-label='backend-user' role="link">
                   <i className="bi bi-window-sidebar"></i>
                 </a>
               </li>
-
             </ul>
           </div>
         </div>
