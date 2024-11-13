@@ -30,10 +30,10 @@ export default function ProductDetail() {
     imagesUrl: [],
   })
   const isLoadingRef = useRef(true)
+  const { checkout } = useOutletContext<contextType>();
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [, dispatch] = useContext<any>(SnackbarContent);
   const [cartQty, setCartQty] = useState(1)
-  const { checkout } = useOutletContext<contextType>();
 
   const getProds = async (prodId) => {
     try {
@@ -60,7 +60,7 @@ export default function ProductDetail() {
     HomeUrl: '#/',
     ProdsId: 'home',
     ProdsName: '商品分類',
-    ProdsUrl: '#',
+    ProdsUrl: '#/prods',
     // ProdsUrl: '#/prods',
   };
 
@@ -72,6 +72,7 @@ export default function ProductDetail() {
     try {
       if (type !== '') {
         const res = await postCartApi(type, addCart)
+        checkout()
         handleSnackbarSuccess(dispatch, res);
       }
 
@@ -162,23 +163,21 @@ export default function ProductDetail() {
 
         </div >
 
-        {
-          loadingPage ? (
-            <div className="row my-5" >
-              <p className="card-text placeholder-glow">
-                <span className="placeholder col-7"></span>
-                <span className="placeholder col-4"></span>
-                <span className="placeholder col-6"></span>
-                <span className="placeholder col-8"></span>
-              </p>
-            </div>
-          ) : (
-            <div className="row my-5">
-              <p>{detail.content}</p>
-              <p className="text-muted">{detail.description}</p>
-            </div>
-          )
-        }
+        {loadingPage ? (
+          <div className="row my-5" >
+            <p className="card-text placeholder-glow">
+              <span className="placeholder col-7"></span>
+              <span className="placeholder col-4"></span>
+              <span className="placeholder col-6"></span>
+              <span className="placeholder col-8"></span>
+            </p>
+          </div>
+        ) : (
+          <div className="row my-5">
+            <p>{detail.content}</p>
+            <p className="text-muted">{detail.description}</p>
+          </div>
+        )}
 
         <div className="row">
           <h3 className="fw-bold">其他 {detail.category} 的商品</h3>

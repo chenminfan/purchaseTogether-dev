@@ -1,8 +1,14 @@
 .detail {
   &_page {
     padding: 1rem 0;
+    @include media-breakpoint-down(md) {
+      padding: 4px 0;
+    }
     .carousel {
       height: 500px;
+      @include media-breakpoint-down(md) {
+        max-height: 300px;
+      }
     }
     h2 {
       @include text-line-truncate(4, 100%, auto, 1.5);
