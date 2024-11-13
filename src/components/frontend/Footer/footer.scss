@@ -1,7 +1,27 @@
 footer {
-  height: 142px;
+  height: 200px;
   background-color: rgba($dark, $alpha: 0.9);
   @include media-breakpoint-down(md) {
     height: 180px;
+  }
+  .footer {
+    &-item {
+      display: flex;
+    }
+    &-note {
+      font-size: 14px;
+      margin: 0;
+      margin-left: 16px;
+    }
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    color: $gray-900;
+    &-text {
+      color: $white;
+    }
   }
 }
