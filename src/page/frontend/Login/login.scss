@@ -1,5 +1,5 @@
 .user {
-  &-page {
+  &_page {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,7 +16,7 @@
     padding: 16px 0;
   }
   &-box {
-    margin: 48px 0;
+    margin: 72px 0;
     width: 100%;
     max-width: 500px;
     padding: 24px;

@@ -115,7 +115,7 @@ export default function Dashboard(props) {
                 {navItems.map((navItem) => (
                   <Button
                     key={navItem.nameId}
-                    href={`#${navItem.link}`}
+                    href={`#/main${navItem.link}`}
                     variant="outlined"
                     sx={{ color: '#000' }}
                     onClick={navItem.handleClick}>

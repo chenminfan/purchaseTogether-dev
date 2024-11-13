@@ -6,6 +6,12 @@ main {
     padding: 0;
     color: $gray-900;
     background-color: $gray-100;
-    min-height: calc(100vh - $frontendHeader);
+    min-height: calc(100vh - ($frontendHeader + 142px));
+    [class*='_page'] {
+      padding-bottom: 16px;
+    }
+    @include media-breakpoint-down(md) {
+      min-height: calc(100vh - ($frontendHeader + 180px));
+    }
   }
 }
