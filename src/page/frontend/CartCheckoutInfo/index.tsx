@@ -54,7 +54,7 @@ export default function CartCheckoutInfo() {
     try {
       const res = await postOrdersApi(dataFrom)
       setTimeout(() => {
-        navigate(`/cart/pay/${res.data.orderId}`)
+        navigate(`/main/cart/pay/${res.data.orderId}`)
       }, 1500)
       handleSnackbarSuccess(dispatch, res);
 

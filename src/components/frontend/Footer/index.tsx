@@ -1,8 +1,9 @@
 import React from 'react'
+import './footer.scss'
 
 export default function Footer() {
   return (
-    <footer className='bg-dark py-5'>
+    <footer className='py-3'>
       <div className='container'>
         <data className='d-flex align-items-center justify-content-between text-white mb-md-7 mb-4'>
           <a className="text-white h4" href="./index.html">LOGO</a>
