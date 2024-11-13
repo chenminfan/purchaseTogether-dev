@@ -24,7 +24,7 @@
       }
       &-link {
         font-weight: 600;
-        max-width: 60px;
+        max-width: 150px;
         @include text-one-line-truncate(100%, auto, 1.5);
         &.active {
           color: $link-color;
