@@ -57,7 +57,6 @@ export default function CartCheckoutInfo() {
         navigate(`/cart/pay/${res.data.orderId}`)
       }, 1500)
       handleSnackbarSuccess(dispatch, res);
-      console.log(res)
 
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
