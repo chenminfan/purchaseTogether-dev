@@ -1,15 +1,10 @@
 import React, { useContext } from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { SnackbarContent } from '@provider/SnackbarProvider/SnackbarContent'
+import { SnackbarContent, handleSnackbarClose } from '@provider/SnackbarProvider/SnackbarContent'
 
 export default function CSnackbar() {
   const [state, dispatch] = useContext<any>(SnackbarContent);
-  const handleClose = (dispatch: any) => {
-    dispatch({
-      type: 'DIALOG_CLOSE',
-    });
-  }
   return (
     <Snackbar
       anchorOrigin={{
@@ -18,10 +13,10 @@ export default function CSnackbar() {
       }}
       autoHideDuration={state.autoHideDuration}
       open={state.snackbarOpen}
-      onClose={!state.snackbarState ? () => { } : handleClose}
+      onClose={!state.snackbarState ? () => { } : () => { handleSnackbarClose(dispatch) }}
     >
       <Alert
-        onClose={handleClose}
+        onClose={() => { handleSnackbarClose(dispatch) }}
         severity={state.snackbarState === true ? 'success' : 'error'}
         variant="filled"
         sx={{ width: '100%' }}
