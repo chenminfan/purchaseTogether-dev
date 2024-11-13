@@ -8,9 +8,9 @@
   overflow: hidden;
 }
 
-@mixin text-one-line-truncate($line-value, $width, $height, $lineHeight) {
+@mixin text-one-line-truncate($width, $height, $lineHeight) {
   width: $width;
-  height: $height * 2;
+  height: $height;
   line-height: $lineHeight;
   overflow: hidden;
   text-overflow: ellipsis;
