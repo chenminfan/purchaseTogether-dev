@@ -24,6 +24,29 @@ $font-size-base: 16px;
       text-decoration-line: line-through;
     }
   }
+  &-prodImage {
+    position: relative;
+  }
+  &-btn {
+    &.card-btn-track {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      position: absolute;
+      z-index: 1;
+      border-radius: 8px 0 100% 0;
+      background: transparent;
+      border: none;
+      width: 40px;
+      height: 36px;
+      padding: 4px 8px;
+      color: $primary;
+      &.btn-primary {
+        color: $white;
+        background-color: $BUY-color;
+      }
+    }
+  }
   .prods {
     &-content {
       display: flex;
