@@ -9,6 +9,8 @@ import { ProductsType } from '@typeTS/Products'
 import './home.scss'
 
 const Home = () => {
+  const [windowHeight]: number[] = useScreen();
+
   const boxImageText = [{
     title: '你是最好的品牌嗎？你是最好的..？....',
     text: '各大品牌，各大商品，歡迎與我們一起攜手共同推廣，開箱嚴格評比，給你最棒的商品，啾咪。 ',
@@ -32,7 +34,6 @@ const Home = () => {
     register,
     formState: { errors },
   } = useForm()
-  const [windowHeight]: number[] = useScreen();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(couponData)
@@ -221,13 +222,13 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <button
-        className='btn btn-primary btn-BUY-top'
+      {windowHeight > 200 && <button
+        className='btn btn-primary btn-BUY-top fade'
         onClick={() => {
           window.scrollTo(0, 0)
         }}>
         <i className="bi bi-arrow-up-circle"></i>
-      </button>
+      </button>}
     </div >
   );
 }

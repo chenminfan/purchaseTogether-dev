@@ -12,6 +12,14 @@ header {
       @include media-breakpoint-down(md) {
         position: relative;
       }
+      .fade {
+        &.navbar-toggler:not(.show) {
+          opacity: 1;
+        }
+        &.navbar-collapse {
+          opacity: 1;
+        }
+      }
       .nav {
         &-item {
           display: flex;
@@ -80,7 +88,6 @@ header {
             box-shadow: 0 -16px 0 0 $gray-200;
           }
         }
-        
       }
       &-box {
         flex-basis: auto;
@@ -125,7 +132,7 @@ header {
         .navbar-nav {
           .nav {
             &-item {
-              &:last-child {
+              &-mobile {
                 @include media-breakpoint-down(sm) {
                   display: none;
                 }
@@ -144,17 +151,29 @@ header {
     }
 
     &-link {
+      display: flex;
+      align-items: center;
       padding: 8px 4px;
       > i {
         margin: 0 4px;
+      }
+      > .badge {
+        margin-left: 4px;
       }
     }
   }
   .navbar-collapse {
     &:not(.navbar-icon) {
+      .navbar-nav {
+        @include media-breakpoint-down(md) {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
       .nav {
         &-item {
-          &:last-child {
+          &-mobile {
             display: none;
             @include media-breakpoint-down(sm) {
               display: flex;
