@@ -3,7 +3,7 @@ import LogoBUY from '@components/frontend/LogoBUY';
 import './header.scss';
 
 export default function Header(props) {
-  const { headerLink = '#', headerTitle, cartData } = props;
+  const { headerLink = '#', cartData, trackList } = props;
 
   return (
     <header>
@@ -24,11 +24,26 @@ export default function Header(props) {
                 <a className="nav-link" href="#/main/track" aria-label="prods-category" role="link">
                   <i className="bi bi-bookmark-heart-fill"></i>
                   追蹤商品
+                  {trackList.length ? (
+                    <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">
+                      {trackList.length ? trackList.length : 0}
+                    </span>
+                  ) : (
+                    <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">
+                      <span className={trackList.length === 0 ? "" : "visually-hidden"}>等你追</span>
+                    </span>
+                  )}
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item nav-item-mobile">
                 <a className="nav-link" href="#/main/login" aria-label="prods-category" role="link">
-                  <i className="bi bi-signpost-split-fill"></i>
+                  <i className="bi bi-card-checklist"></i>
+                  訂單明細
+                </a>
+              </li>
+              <li className="nav-item nav-item-mobile">
+                <a className="nav-link" href="#/main/login" aria-label="prods-category" role="link">
+                  <i className="bi bi-window-sidebar"></i>
                   後台管理
                 </a>
               </li>
@@ -55,12 +70,12 @@ export default function Header(props) {
                   )}
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item nav-item-mobile">
                 <a className="nav-link" href="#/main/order" aria-label='backend-user' role="link">
                   <i className="bi bi-card-checklist"></i>
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item nav-item-mobile">
                 <a className="nav-link" href="#/main/login" aria-label='backend-user' role="link">
                   <i className="bi bi-window-sidebar"></i>
                 </a>

@@ -54,7 +54,7 @@ export default function Frontend() {
   return (
     <LoginContentProvider>
       <SnackbarProvider>
-        <Header headerTitle="做伙Buy" cartData={cartData} />
+        <Header headerTitle="做伙Buy" cartData={cartData} trackList={trackList} />
         <main className='frontend'>
           <Outlet context={{ checkout, cartData, handleTrack, trackList, setCartStep, cartStep }} />
         </main>
