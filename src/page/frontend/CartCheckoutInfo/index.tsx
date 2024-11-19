@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { useForm } from "react-hook-form"
 import { useOutletContext, useNavigate } from 'react-router-dom'
+import CartStep from '@components/frontend/CartStep';
 import CartProdCard from '@components/frontend/Cart/CartProdCard';
 import TextArea from '@components/frontend/InputFrom/TextArea';
 import Input from '@components/frontend/InputFrom/Input';
@@ -26,10 +27,12 @@ type CartCheckoutType = {
     final_total: number,
     total: number
   }
+  cartStep: number,
+  setCartStep: (number) => void,
 }
 
 export default function CartCheckoutInfo() {
-  const { cartData, checkout } = useOutletContext<CartCheckoutType>();
+  const { cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const cardInfo = cartData.carts.filter((item) => item)
   const {
     register,
@@ -55,6 +58,7 @@ export default function CartCheckoutInfo() {
       const res = await postOrdersApi(dataFrom)
       setTimeout(() => {
         navigate(`/main/cart/pay/${res.data.orderId}`)
+        setCartStep(2)
       }, 1500)
       handleSnackbarSuccess(dispatch, res);
 
@@ -62,14 +66,20 @@ export default function CartCheckoutInfo() {
       handleSnackbarError(dispatch, error);
     }
   })
+  useEffect(() => {
+    setCartStep(1)
+  }, [])
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
         <div className="row">
+          <CartStep active={cartStep} />
+        </div>
+        <div className="row">
           <div className="col-lg-7 col-md-12">
             <div className="checkout-from p-3">
               <form action="" onSubmit={handleFormSubmit}>
-                <h4 className="fw-bold">結帳資訊</h4>
+                <h4 className="fw-bold mb-4">結帳資訊</h4>
                 <div className="checkout-body">
                   <Input
                     register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
@@ -123,7 +133,9 @@ export default function CartCheckoutInfo() {
                 </div>
                 <div className="checkout-footer">
                   <div className="d-grid gap-2">
-                    <button type='submit' className='btn btn-primary'>
+                    <button type='submit' className='btn btn-primary' onClick={() => {
+                      setCartStep(2)
+                    }}>
                       送出填寫資訊
                     </button>
                   </div>
