@@ -1,6 +1,6 @@
 .pay {
   &_page {
-    padding: 32px;
+    padding: 16px 32px;
     @include media-breakpoint-down(md) {
       padding: 8px;
     }
