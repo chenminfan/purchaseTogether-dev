@@ -12,6 +12,8 @@ import './productDetail.scss'
 
 type contextType = {
   checkout: () => void,
+  handleTrack?;
+  trackList?: string[],
 }
 export default function ProductDetail() {
   const { id } = useParams();
@@ -30,7 +32,7 @@ export default function ProductDetail() {
     imagesUrl: [],
   })
   const isLoadingRef = useRef(true)
-  const { checkout } = useOutletContext<contextType>();
+  const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [, dispatch] = useContext<any>(SnackbarContent);
   const [cartQty, setCartQty] = useState(1)
@@ -50,6 +52,7 @@ export default function ProductDetail() {
     getProds(id)
     isLoadingRef.current = false
     setLoadingPage(false)
+    window.scrollTo(0, 0)
   }, [id])
 
   const IS_IMAGES = detail.imagesUrl?.filter((item) => item.length > 0 && item.includes('https://' || 'http://'))
@@ -80,6 +83,7 @@ export default function ProductDetail() {
       handleSnackbarError(dispatch, error);
     }
   }
+  const trackID = trackList?.find((item) => item.match(detail.id))
   return (
     <div className="detail_page">
       <div className='container-fluid py-2'>
@@ -118,6 +122,15 @@ export default function ProductDetail() {
                   <span className="placeholder col-12"></span>
                 </h2>
 
+                <div className="row my-5" >
+                  <p className="card-text placeholder-glow">
+                    <span className="placeholder col-7"></span>
+                    <span className="placeholder col-4"></span>
+                    <span className="placeholder col-6"></span>
+                    <span className="placeholder col-8"></span>
+                  </p>
+                </div>
+
                 <p className="card-text placeholder-glow">
                   <span className="placeholder col-7"></span>
                   <span className="placeholder col-4"></span>
@@ -138,12 +151,26 @@ export default function ProductDetail() {
                   </ol>
                 </nav>
 
-                <h2 className="fw-bold h1 my-2">{detail.title}</h2>
+                <h2 className="fw-bold h1">{detail.title}</h2>
+                <div className="row my-5">
+                  <p>{detail.content}</p>
+                  <p className="text-muted">{detail.description}</p>
+                </div>
+                <div className="row align-items-center">
+                  <div className="col-6">
+                    <button className={`btn ${trackID === detail.id ? 'btn-primary' : 'btn-light'} `} type="button" onClick={() => {
+                      handleTrack(detail.id)
+                    }} >
+                      {trackID === detail.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
+                    </button>
+                  </div>
 
-                <p className="mb-0 text-muted text-end"><del>NT{detail.origin_price.toLocaleString('zh-TW')}</del></p>
+                  <div className="col-6">
+                    <p className="mb-0 text-muted text-end"><del>NT{detail.origin_price.toLocaleString('zh-TW')}</del></p>
 
-                <p className="h4 fw-bold text-end">NT{detail.price.toLocaleString('zh-TW')}</p>
-
+                    <p className="h4 fw-bold text-end">NT{detail.price.toLocaleString('zh-TW')}</p>
+                  </div>
+                </div>
                 <div className="row align-items-center">
                   <div className="col-6">
                     <InputStepper inputStepperNum={cartQty} setInputStepperNum={setCartQty} />
@@ -163,30 +190,19 @@ export default function ProductDetail() {
 
         </div >
 
-        {loadingPage ? (
-          <div className="row my-5" >
-            <p className="card-text placeholder-glow">
-              <span className="placeholder col-7"></span>
-              <span className="placeholder col-4"></span>
-              <span className="placeholder col-6"></span>
-              <span className="placeholder col-8"></span>
-            </p>
-          </div>
-        ) : (
-          <div className="row my-5">
-            <p>{detail.content}</p>
-            <p className="text-muted">{detail.description}</p>
-          </div>
-        )}
-
         <div className="row">
           <h3 className="fw-bold">其他 {detail.category} 的商品</h3>
           <div className="detail-carouselBox">
             <div className="carouselBox">
               {moreProds.map((more) => (
-                <Prods key={more.id} prod={more} isLoading={loadingPage} handleClick={() => {
-                  handleAddCart(more?.id, 'addCart')
-                }} />
+                <Prods key={more.id} prod={more}
+                  isLoading={loadingPage}
+                  handleClick={() => {
+                    handleAddCart(more?.id, 'addCart')
+                  }}
+                  handleTrack={handleTrack}
+                  trackList={trackList}
+                />
               ))}
             </div>
 
