@@ -1,5 +1,6 @@
 export type ProductsType = {
-  id?: string,
+  [x: string]: any
+  id: string,
   title: string,
   category: string,
   content: string,
