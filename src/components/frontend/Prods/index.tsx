@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React from 'react'
 import LazyLoadImg from "@components/hook/LazyLoadImage";
 import { ProductsType } from '@typeTS/Products'
 import './prods.scss'
@@ -6,10 +6,17 @@ import './prods.scss'
 type ProdsType = {
   prod: ProductsType,
   isLoading: boolean,
-  handleClick: () => void
+  handleClick: () => void,
+  handleTrack?: (string) => {},
+  trackList?: string[],
 }
+
 export default function Prods(props: ProdsType) {
-  const { prod, isLoading, handleClick } = props;
+  const { prod, isLoading, handleClick, handleTrack = () => { }, trackList } = props;
+  const handleTrackClick = (prodID) => {
+    handleTrack(prodID)
+  }
+  const trackID = trackList?.find((item) => item.match(prod.id))
   if (isLoading) {
     return (
       <div className="card prods" aria-hidden="true">
@@ -24,10 +31,12 @@ export default function Prods(props: ProdsType) {
             <span className="placeholder col-6"></span>
             <span className="placeholder col-8"></span>
           </p>
-
-          <div className="img_box">
-            <LazyLoadImg src="..." className="card-img-top" alt="..." />
+          <div className="card-image">
+            <div className="img_box">
+              <LazyLoadImg src="..." className="card-img-top" alt="..." />
+            </div>
           </div>
+
 
           <div className="prods-tool">
             <button className="btn btn-primary prods-btn-add" aria-disabled="true">
@@ -55,13 +64,24 @@ export default function Prods(props: ProdsType) {
               <span className='origin-price'>${prod.origin_price.toLocaleString('zh-TW')}</span>
             </div>
           </div>
+
+
+
+        </div>
+        <div className="card-prodImage">
+          <button className={`btn ${trackID === prod.id ? 'btn-primary' : 'btn-light'} card-btn card-btn-track `} type="button" onClick={() => {
+            handleTrackClick(prod.id)
+          }} >
+            {trackID === prod.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
+          </button>
+          <a href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="img-link">
+
+            <div className="img_box">
+              <LazyLoadImg className="card-img-top" src={prod.imageUrl} alt={prod.title} />
+            </div>
+          </a>
         </div>
 
-        <a href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="img-link">
-          <div className="img_box">
-            <LazyLoadImg className="card-img-top" src={prod.imageUrl} alt={prod.title} />
-          </div>
-        </a>
 
         <div className="prods-tool" onClick={handleClick}>
           <button type="button" className="btn btn-primary prods-btn-add" role="button"><span className='prods-cart-icon'>

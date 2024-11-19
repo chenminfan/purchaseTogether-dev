@@ -15,4 +15,14 @@ main {
       min-height: calc(100vh - ($frontendHeader + $frontendFooter));
     }
   }
+  .btn {
+    &-BUY {
+      &-top {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        border-radius: 100%;
+      }
+    }
+  }
 }

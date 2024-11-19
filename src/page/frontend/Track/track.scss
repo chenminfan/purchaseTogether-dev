@@ -1,0 +1,39 @@
+.prods {
+  &_page {
+    .nav {
+      &bar {
+        padding: 0 16px;
+        border-top: 1px solid $gray-400;
+        border-bottom: 1px solid $gray-400;
+        background-color: #f3f3f3;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        &-custom-scroll {
+          display: flex;
+          flex-wrap: nowrap;
+          flex-direction: row;
+        }
+      }
+      &-item {
+        min-width: 40px;
+        padding: 8px;
+        text-align: center;
+        word-break: keep-all;
+      }
+      &-link {
+        font-weight: 600;
+        max-width: 150px;
+        @include text-one-line-truncate(100%, auto, 1.5);
+        &.active {
+          color: $link-color;
+        }
+      }
+    }
+    .prods_box {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+}
