@@ -56,6 +56,11 @@ export default function Header(props) {
                 </a>
               </li>
               <li className="nav-item">
+                <a className="nav-link" href="#/main/order" aria-label='backend-user' role="link">
+                  <i className="bi bi-card-checklist"></i>
+                </a>
+              </li>
+              <li className="nav-item">
                 <a className="nav-link" href="#/main/login" aria-label='backend-user' role="link">
                   <i className="bi bi-window-sidebar"></i>
                 </a>
