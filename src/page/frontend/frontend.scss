@@ -15,11 +15,20 @@ main {
       min-height: calc(100vh - ($frontendHeader + $frontendFooter));
     }
   }
+  .fade {
+    &.btn {
+      &-BUY {
+        &-top {
+          opacity: 1;
+        }
+      }
+    }
+  }
   .btn {
     &-BUY {
       &-top {
         position: fixed;
-        bottom: 16px;
+        bottom: 216px;
         right: 16px;
         border-radius: 100%;
       }
