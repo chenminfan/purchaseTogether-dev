@@ -49,13 +49,14 @@ export default function Frontend() {
       setTrackList([...trackList])
     }
   }
+  const [cartStep, setCartStep] = useState(0)
 
   return (
     <LoginContentProvider>
       <SnackbarProvider>
         <Header headerTitle="做伙Buy" cartData={cartData} />
         <main className='frontend'>
-          <Outlet context={{ checkout, cartData, handleTrack, trackList }} />
+          <Outlet context={{ checkout, cartData, handleTrack, trackList, setCartStep, cartStep }} />
         </main>
 
         <Footer />

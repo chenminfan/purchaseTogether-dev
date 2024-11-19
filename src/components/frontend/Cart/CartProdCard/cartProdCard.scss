@@ -31,6 +31,10 @@ $borderRadius: 18px;
       &-title {
         padding-right: 72px;
         font-size: 16px;
+        @include media-breakpoint-down(md) {
+          text-align: center;
+          padding-right: 40px;
+        }
       }
       &-total {
         display: flex;
@@ -38,6 +42,11 @@ $borderRadius: 18px;
         justify-content: space-between;
         font-size: 14px;
         padding-right: 8px;
+        @include media-breakpoint-down(md) {
+          padding: 0;
+          width: 100%;
+          align-items: center;
+        }
         &-title {
           width: 60px;
           text-align: right;
@@ -85,6 +94,14 @@ $borderRadius: 18px;
       height: 90px;
       overflow: hidden;
       border-radius: $borderRadius 4px 4px $borderRadius;
+      @include media-breakpoint-down(md) {
+        min-height: 190px;
+      }
+      .img_box {
+        @include media-breakpoint-down(md) {
+          padding-bottom: 100%;
+        }
+      }
     }
     &-image & {
       &-btn {
@@ -102,6 +119,18 @@ $borderRadius: 18px;
         font-weight: 600;
       }
     }
+    &-inputStepper {
+      @include media-breakpoint-down(md) {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .inputStepper.rounded {
+        @include media-breakpoint-down(md) {
+          max-width: 100%;
+        }
+      }
+    }
     &-price {
       display: flex;
       white-space: nowrap;
@@ -111,6 +140,7 @@ $borderRadius: 18px;
       @include media-breakpoint-down(md) {
         margin-top: 8px;
       }
+
       &-total {
         color: $gray-500;
         font-weight: 500;
