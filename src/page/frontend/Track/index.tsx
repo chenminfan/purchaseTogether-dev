@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useEffect, useState, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
+import { useScreen } from '@api/utilities/useScreen'
 import Prods from '@components/frontend/Prods'
 import NotDataState from '@components/frontend/NotDataState'
 import { postCartApi, getProductsAllApi } from '@api/Apis'
@@ -13,6 +14,7 @@ type contextType = {
   trackList?: string[],
 }
 export default function Track() {
+  const [windowHeight]: number[] = useScreen();
   const [prods, setProds] = useState<ProductsType[]>([])
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
@@ -79,7 +81,7 @@ export default function Track() {
         </div>
       </div>
       <button
-        className='btn btn-primary btn-BUY-top'
+        className='btn btn-primary btn-BUY-top fade'
         onClick={() => {
           window.scrollTo(0, 0)
         }}>
