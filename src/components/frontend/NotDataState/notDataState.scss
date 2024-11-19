@@ -1,0 +1,29 @@
+.notState {
+  &-box {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    color: $primary;
+    max-width: 500px;
+    margin: auto;
+    height: 350px;
+  }
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 32px;
+    padding: 16px;
+    width: 80px;
+    height: 80px;
+    border: 6px solid $primary;
+    border-radius: 100%;
+    i {
+      font-size: 32px;
+    }
+  }
+  &-title {
+    font-weight: 500;
+  }
+}

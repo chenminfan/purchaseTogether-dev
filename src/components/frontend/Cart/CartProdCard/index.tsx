@@ -9,11 +9,13 @@ import './cartProdCard.scss'
 type Props = {
   cart;
   checkout: () => void,
-  isTool?: boolean
+  isTool?: boolean,
+  handleTrack?: (string) => {},
+  trackList?: string[],
 }
 
 export default function CartProdCard(props: Props) {
-  const { cart, checkout, isTool = true } = props
+  const { cart, checkout, isTool = true, handleTrack = () => { }, trackList } = props
   const [inputStepperNum, setInputStepperNum] = useState<number>(cart.qty)
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const inputStepperValue = useRef(0)
@@ -62,11 +64,17 @@ export default function CartProdCard(props: Props) {
     inputStepperValue.current = inputStepperNum
   }, [inputStepperNum])
 
+  const handleTrackClick = (prodID) => {
+    handleTrack(prodID)
+  }
+  const trackID = trackList?.find((item) => item.match(cart.product.id))
   return (
     <div className={`checkout checkout-card ${isTool ? 'checkout-tool' : ''}`} >
       <div className="card-image">
-        <button className={`btn ${track ? 'btn-primary' : 'btn-light'} card-btn btn-sm `} type="button" onClick={() => setTrack((newTrack) => !newTrack)} >
-          {track ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
+        <button className={`btn ${trackID === cart.product.id ? 'btn-primary' : 'btn-light'} card-btn btn-sm `} type="button" onClick={() => {
+          handleTrackClick(cart.product.id)
+        }} >
+          {trackID === cart.product.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
         </button>
         <div className="img_box">
           <LazyLoadImg className="card-img-top" src={cart.product.imageUrl} alt={cart.product.title} />
@@ -104,8 +112,18 @@ export default function CartProdCard(props: Props) {
             />
           </div>}
           <div className="card-total">
-            <div className="card-price">NT$ {cart.total.toLocaleString('zh-TW')}</div>
-            {cart.final_total !== cart.total && <div className="card-price">折扣後 NT$ {cart.final_total.toLocaleString('zh-TW')}</div>}
+            <div className="card-price">
+              <div className="card-total-title">單價</div>
+              <div className="card-total-content">NT$ {cart.product.price.toLocaleString('zh-TW')}</div>
+            </div>
+            <div className={`card-price ${cart.final_total !== cart.total ? 'card-price-total' : ''}`}>
+              <div className="card-total-title">小計</div>
+              <div className="card-total-content">NT$ {cart.total.toLocaleString('zh-TW')}</div>
+            </div>
+            {cart.final_total !== cart.total && <div className="card-price card-price-code">
+              <div className="card-total-title">折扣後 </div>
+              <div className="card-total-content">NT$ {cart.final_total.toLocaleString('zh-TW')}</div>
+            </div>}
           </div>
 
         </div>

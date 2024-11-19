@@ -35,6 +35,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [imageUpdate, setImageUpdate] = useState<string>('');
   const [formData, setFormData] = useState<ProductsType>({
+    id: '',
     title: '',
     category: '',
     content: '',
@@ -127,6 +128,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
   useEffect(() => {
     if (prodType === 'create') {
       setFormData({
+        id: '',
         title: '',
         category: '',
         content: '',
