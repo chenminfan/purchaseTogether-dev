@@ -16,8 +16,14 @@ export default function Header(props) {
             <ul className="navbar-nav">
               <li className="nav-item">
                 <a className="nav-link" href="#/main/prods" aria-label="prods-category" role="link">
-                  <i className="bi bi-signpost-split-fill"></i>
+                  <i className="bi bi-signpost-split"></i>
                   store
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#/main/track" aria-label="prods-category" role="link">
+                  <i className="bi bi-bookmark-heart-fill"></i>
+                  追蹤商品
                 </a>
               </li>
               <li className="nav-item">
