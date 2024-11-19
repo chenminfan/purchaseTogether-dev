@@ -26,6 +26,9 @@ $borderRadius: 18px;
     border-radius: $borderRadius;
     border: 1px solid $primary;
     min-height: 500px;
+    @include media-breakpoint-down(md) {
+      min-height: 310px;
+    }
   }
   &-content {
     display: flex;
@@ -36,6 +39,9 @@ $borderRadius: 18px;
     margin-top: 32px;
     color: $gray-600;
     min-height: 200px;
+    @include media-breakpoint-down(md) {
+      min-height: auto;
+    }
   }
   &-footer {
     display: flex;
