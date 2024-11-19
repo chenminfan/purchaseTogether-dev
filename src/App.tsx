@@ -10,6 +10,7 @@ import CartCheckoutInfo from '@pageFrontend/CartCheckoutInfo';
 import Pay from '@pageFrontend/Pay';
 import Products from '@pageFrontend/Products';
 import Track from '@pageFrontend/Track';
+import Order from '@pageFrontend/Order';
 import ProductDetail from '@pageFrontend/ProductDetail';
 import Dashboard from '@pageBackend/Dashboard';
 import BackendProducts from '@pageBackend/Products';
@@ -29,6 +30,7 @@ export default function App() {
         <Route path='/main/prods' element={<Products />}></Route>
         <Route path='/main/prods/detail/:id' element={<ProductDetail />}></Route>
         <Route path='/main/track' element={<Track />}></Route>
+        <Route path='/main/order' element={<Order />}></Route>
         <Route path='/main/*' element={<Home />}></Route>
       </Route >
       <Route path='/backend' element={<Dashboard />}>

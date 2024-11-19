@@ -28,3 +28,13 @@ export const dataValue = (value) => {
   }
 
 }
+
+export const telValue = (value) => {
+  let tel = value;
+  return tel.substring(0, 3) + tel.substring(0, 3).padStart(tel.toString().length - 3, '＊')
+}
+
+export const nameValue = (value) => {
+  let name = value;
+  return name.substring(0, 1) + '＊＊' + name.substring((name.length / 2) + 1)
+}

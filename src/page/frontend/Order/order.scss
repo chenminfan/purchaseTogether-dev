@@ -1,0 +1,15 @@
+.order {
+  &_page {
+    padding: 16px 0;
+  }
+  &-prod {
+    display: flex;
+    & + & {
+      margin-top: 8px;
+    }
+    &-qty {
+      margin-left: 32px;
+      color: $gray-600;
+    }
+  }
+}
