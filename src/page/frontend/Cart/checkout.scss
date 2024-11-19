@@ -9,9 +9,23 @@ $borderRadius: 18px;
   }
 }
 .checkout {
+  &-notState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    color: $gray-700;
+    &-icon {
+      margin-right: 16px;
+      i {
+        font-size: 24px;
+      }
+    }
+  }
   &-list {
     border-radius: $borderRadius;
     border: 1px solid $primary;
+    min-height: 500px;
   }
   &-content {
     display: flex;
@@ -21,6 +35,14 @@ $borderRadius: 18px;
   &-body {
     margin-top: 32px;
     color: $gray-600;
+    min-height: 200px;
+  }
+  &-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    max-height: 120px;
   }
   &-item {
     display: flex;

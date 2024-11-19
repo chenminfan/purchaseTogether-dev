@@ -221,6 +221,13 @@ const Home = () => {
           </div>
         </div>
       </section>
+      <button
+        className='btn btn-primary btn-BUY-top'
+        onClick={() => {
+          window.scrollTo(0, 0)
+        }}>
+        <i className="bi bi-arrow-up-circle"></i>
+      </button>
     </div >
   );
 }
