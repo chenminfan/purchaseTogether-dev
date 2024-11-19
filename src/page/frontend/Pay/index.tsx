@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState, } from 'react'
+import { useParams, useOutletContext } from 'react-router-dom'
 import { postPayApi, getOrdersIdApi } from '@api/Apis';
 import { dataValue } from '@api/utilities/dataValue';
+import CartStep from '@components/frontend/CartStep';
 import './pay.scss'
-type Props = {}
-export default function Pay({ }: Props) {
+type CartCheckoutType = {
+  cartStep: number,
+  setCartStep: (number) => void,
+}
+export default function Pay() {
   const { orderId } = useParams()
+  const { cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const [saveOrder, setSaveOrder] = useState({
     create_at: 0,
     id: '',
@@ -42,11 +47,15 @@ export default function Pay({ }: Props) {
   }
   useEffect(() => {
     getCart(orderId)
+    saveOrder.is_paid ? setCartStep(4) : setCartStep(3)
   }, [orderId])
 
   return (
     <div className="pay_page" >
       <div className="container-fluid py-2">
+        <div className="row">
+          <CartStep active={cartStep} />
+        </div>
         <div className="row">
           <div className="col-lg-12">
             <div className="pay-order">
@@ -106,7 +115,8 @@ export default function Pay({ }: Props) {
 
                 </div>
                 {saveOrder.is_paid ? '' : (<div className="pay-btn d-grid gap-2">
-                  <button className='btn btn-primary btn-lg' onClick={() => { handleClickPay(saveOrder.id) }}>
+                  <button className='btn btn-primary btn-lg'
+                    onClick={() => { handleClickPay(saveOrder.id) }}>
                     <i className="bi bi-cash-coin"></i>
                     <span>前往付款</span>
                   </button>

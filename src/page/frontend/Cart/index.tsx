@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { postCouponApi } from '@api/Apis';
+import CartStep from '@components/frontend/CartStep';
 import CartProdCard from '@components/frontend/Cart/CartProdCard';
 import NotDataState from '@components/frontend/NotDataState'
 
@@ -18,9 +19,11 @@ type CartCheckoutType = {
   }
   handleTrack?: (string) => {},
   trackList?: string[],
+  cartStep: number,
+  setCartStep: (number) => void,
 }
 export default function Cart() {
-  const { cartData, checkout, handleTrack, trackList } = useOutletContext<CartCheckoutType>();
+  const { cartData, checkout, handleTrack, trackList, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const [couponCode, setCouponCode] = useState('')
   const [couponInfo, setCouponInfo] = useState({
     info: '',
@@ -28,7 +31,8 @@ export default function Cart() {
   })
   useEffect(() => {
     checkout()
-  }, [])
+    cartData.carts.length === 0 ? setCartStep(-1) : setCartStep(0)
+  }, [cartData.carts.length])
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const handleClickCoupon = async (code) => {
     const data = {
@@ -46,11 +50,12 @@ export default function Cart() {
     }
   }
 
+
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
         <div className="row">
-
+          <CartStep active={cartStep} />
         </div>
         <div className="row">
           <div className="col-lg-7 col-md-12">
@@ -109,7 +114,9 @@ export default function Cart() {
                     <div className="checkout-content">NT ${Math.round(cartData.final_total).toLocaleString('zh-TW')}</div>
                   </div>
                   <div className="d-grid gap-2">
-                    <a className="btn btn-primary checkout-btn" type="button" href="#/main/cart/info">
+                    <a className="btn btn-primary checkout-btn" type="button" href="#/main/cart/info" onClick={() => {
+                      setCartStep(1)
+                    }}>
                       填寫資料
                     </a>
                   </div>
