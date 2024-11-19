@@ -10,6 +10,8 @@ import './products.scss'
 
 type contextType = {
   checkout: () => void,
+  handleTrack?;
+  trackList?: string[],
 }
 export default function Products() {
   const [prods, setProds] = useState<ProductsType[]>([])
@@ -25,7 +27,7 @@ export default function Products() {
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<string>('all')
   const [state, dispatch] = useContext<any>(SnackbarContent);
-  const { checkout } = useOutletContext<contextType>();
+  const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
   const getProds = async (getPage = 1, category = '') => {
     try {
       const prodRes = await getProductsApi(getPage, category);
@@ -106,6 +108,8 @@ export default function Products() {
               {prods.map((item) => {
                 return (
                   <Prods key={item.id} prod={item} isLoading={loadingPage}
+                    handleTrack={handleTrack}
+                    trackList={trackList}
                     handleClick={() => {
                       handleAddCart(item?.id, 'addCart')
                     }} />
