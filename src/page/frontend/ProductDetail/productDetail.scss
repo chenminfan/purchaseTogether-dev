@@ -12,6 +12,12 @@
     }
     h2 {
       @include text-line-truncate(4, 100%, auto, 1.5);
+      margin: 32px 0 60px;
+    }
+    .container-fluid {
+      .row + .row {
+        margin-top: 32px;
+      }
     }
   }
   &-carouselBox {

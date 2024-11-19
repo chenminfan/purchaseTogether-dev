@@ -9,9 +9,23 @@ $borderRadius: 18px;
   }
 }
 .checkout {
+  &-notState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    color: $gray-700;
+    &-icon {
+      margin-right: 16px;
+      i {
+        font-size: 24px;
+      }
+    }
+  }
   &-list {
     border-radius: $borderRadius;
     border: 1px solid $primary;
+    height: 100%;
   }
   &-content {
     display: flex;
