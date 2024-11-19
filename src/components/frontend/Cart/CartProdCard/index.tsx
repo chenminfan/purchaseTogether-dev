@@ -22,7 +22,6 @@ export default function CartProdCard(props: Props) {
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(false);
   const [inputStepperEdit, setInputStepperEdit] = useState<boolean>(false);
-  const [track, setTrack] = useState<boolean>(false)
 
   const handleDelete = async (cartData) => {
     try {
