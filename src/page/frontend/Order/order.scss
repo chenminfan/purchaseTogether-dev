@@ -1,6 +1,14 @@
 .order {
   &_page {
     padding: 16px 0;
+    .accordion-button {
+      &-danger {
+        background-color: rgba($primary, 0.2);
+        > a {
+          color: $danger;
+        }
+      }
+    }
   }
   &-prod {
     display: flex;
@@ -9,7 +17,18 @@
     }
     &-qty {
       margin-left: 32px;
+      min-width: 120px;
       color: $gray-600;
+    }
+    &-note {
+      padding: 2px 6px;
+      font-size: 14px;
+      color: $white;
+      border-radius: 6px;
+      background-color: $primary;
+    }
+    &-title {
+      width: calc(100% - 120px);
     }
   }
 }

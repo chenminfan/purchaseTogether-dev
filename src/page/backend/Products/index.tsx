@@ -80,7 +80,6 @@ export default function BackendProducts() {
   }, [searchBTN, prodData, sortOrder, sortOrderID])
   // 排序 end
   const categoryId = Array.from(new Set(prodData.map((item) => item.category))).find((item) => item)
-  console.log(categoryId)
 
   const getProds = async (getPage = 1, category = searchBTN) => {
     if (category !== categoryId) {
