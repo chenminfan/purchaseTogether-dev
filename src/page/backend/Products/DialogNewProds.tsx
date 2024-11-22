@@ -285,7 +285,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
             label="商品描述"
             placeholder='請輸入商品描述'
             multiline
-            rows={2}
+            rows={3}
             name="content"
             value={formData.content}
             onChange={(e) => handleInputChange(e)}
@@ -297,7 +297,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
             label="商品說明"
             placeholder='請輸入商品說明'
             multiline
-            rows={2}
+            rows={10}
             name="description"
             value={formData.description}
             onChange={(e) => handleInputChange(e)}
