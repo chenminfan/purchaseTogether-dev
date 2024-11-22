@@ -8,6 +8,7 @@ import { ProductsType } from '@typeTS/Products'
 import Carousel from '@components/frontend/Carousel'
 import Prods from '@components/frontend/Prods'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
+import HtmlContent from '@components/frontend/common/HtmlContent'
 import './productDetail.scss'
 
 type contextType = {
@@ -154,7 +155,8 @@ export default function ProductDetail() {
                 <h2 className="fw-bold h1">{detail.title}</h2>
                 <div className="row my-5">
                   <p>{detail.content}</p>
-                  <p className="text-muted">{detail.description}</p>
+                  {/* <p className="text-muted">{detail.description}</p> */}
+                  <HtmlContent htmlString={detail.description} />
                 </div>
                 <div className="row align-items-center">
                   <div className="col-6">
