@@ -72,7 +72,6 @@ export default function BackendCoupon() {
       .sort(getSort(sortOrder, sortOrderID))
   }, [couponData, sortOrder, sortOrderID])
   // 排序 end
-  console.log(couponData)
   useEffect(() => {
     getCoupon();
   }, [])
