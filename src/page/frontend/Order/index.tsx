@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { getOrdersApi } from '@api/Apis';
 import { dataValue, telValue, nameValue } from '@api/utilities/dataValue';
 import { OrdersType } from '@app/typeTS/Orders';
+import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import './order.scss'
 
 export default function Order() {
+  const { user, token } = useContext<any>(LoginContext)
+  const navigate = useNavigate()
   const [orderData, setOrderData] = useState<OrdersType[]>([])
   const getCoupon = async () => {
     try {
@@ -16,7 +20,10 @@ export default function Order() {
 
   useEffect(() => {
     getCoupon()
-  }, [])
+    if (token === '' || (user === null && user.accessToken !== token)) {
+      navigate('/main/memberLogin')
+    }
+  }, [user, token])
 
   return (
     <div className="order_page">

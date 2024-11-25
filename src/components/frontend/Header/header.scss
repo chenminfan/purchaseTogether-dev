@@ -6,9 +6,26 @@ header {
   z-index: 999;
   box-shadow: 0px 0px 3px #555;
   background-color: $white;
+  .navbar-expand-lg {
+    .nav {
+      &bar {
+        &-nav {
+          .nav {
+            &-link {
+              padding: 16px;
+              @include media-breakpoint-down(md) {
+                padding: 16px 4px;
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   .nav {
     &bar {
-      padding: 8px 0;
+      padding: 0;
       @include media-breakpoint-down(md) {
         position: relative;
       }
@@ -24,6 +41,32 @@ header {
         &-item {
           display: flex;
           align-items: center;
+        }
+        &-link {
+          position: relative;
+          transition: 0.5s;
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            left: 50%;
+            border-bottom: 3px solid transparent;
+            transition: 0.5s;
+          }
+          &.active {
+            color: $primary;
+            transition: 0.5s;
+            &::before {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              border-bottom: 3px solid $primary;
+              transition: 0.5s;
+            }
+          }
         }
       }
       &-carIcon {
@@ -96,7 +139,7 @@ header {
         @include media-breakpoint-down(md) {
           flex-grow: inherit;
           position: absolute;
-          top: 56px;
+          top: 53px;
           left: 0;
           right: 0;
           padding: 8px 16px;
@@ -115,6 +158,26 @@ header {
               margin: 0;
             }
           }
+          &-link {
+            @include media-breakpoint-down(md) {
+              &::before {
+                left: 0;
+                top: 50%;
+                bottom: 50%;
+                border-bottom: none;
+                border-left: 5px solid transparent;
+              }
+              &.active {
+                &::before {
+                  left: 0;
+                  top: 0;
+                  bottom: 0;
+                  border-bottom: none;
+                  border-left: 5px solid $primary;
+                }
+              }
+            }
+          }
         }
       }
       &-box & {
@@ -130,6 +193,9 @@ header {
         width: auto;
         margin: 0;
         .navbar-nav {
+          @include media-breakpoint-down(md) {
+            flex-direction: row;
+          }
           .nav {
             &-item {
               &-mobile {
