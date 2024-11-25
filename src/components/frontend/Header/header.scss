@@ -6,9 +6,25 @@ header {
   z-index: 999;
   box-shadow: 0px 0px 3px #555;
   background-color: $white;
+  .navbar-expand-lg {
+    .nav {
+      &bar {
+        &-nav {
+          .nav {
+            &-link {
+              padding: 16px;
+              @include media-breakpoint-down(md) {
+                padding: 16px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   .nav {
     &bar {
-      padding: 8px 0;
+      padding: 0;
       @include media-breakpoint-down(md) {
         position: relative;
       }
@@ -24,6 +40,32 @@ header {
         &-item {
           display: flex;
           align-items: center;
+        }
+        &-link {
+          position: relative;
+          transition: 0.5s;
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            left: 50%;
+            border-bottom: 3px solid transparent;
+            transition: 0.5s;
+          }
+          &.active {
+            color: $primary;
+            transition: 0.5s;
+            &::before {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              border-bottom: 3px solid $primary;
+              transition: 0.5s;
+            }
+          }
         }
       }
       &-carIcon {
