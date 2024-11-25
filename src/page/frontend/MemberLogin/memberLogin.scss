@@ -1,0 +1,25 @@
+.member {
+  &_page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 24px;
+  }
+  &-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 72px 0;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 1px 1px 12px 0 #ccc;
+    background-color: $white;
+    overflow: hidden;
+  }
+  &-tabs {
+  }
+  &-content {
+    width: 100%;
+    max-width: 500px;
+  }
+}
