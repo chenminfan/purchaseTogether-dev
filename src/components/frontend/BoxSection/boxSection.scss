@@ -1,0 +1,9 @@
+.box {
+  &Section {
+    width: 100%;
+    background-color: $white;
+  }
+  &-main {
+    padding: 24px;
+  }
+}
