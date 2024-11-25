@@ -1,5 +1,5 @@
 export const dataValue = (value) => {
-  const DATE = new Date(value.toString().length === 13 ? value : value * 1000)
+  const DATE = new Date(value.toString().length === 13 ? Number(value) : Number(value) * 1000)
   let date: string | number = DATE.getDate(); //15
   let month: string | number = (DATE.getMonth() + 1)  //6
   let year: string | number = DATE.getFullYear();  //2016
