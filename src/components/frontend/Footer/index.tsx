@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className='py-3 text-white'>
       <div className='container'>
-        <data className='d-flex align-items-center justify-content-between text-white mb-md-7 mb-4'>
+        <div className='d-flex align-items-center justify-content-between text-white mb-md-7 mb-4'>
           <a className="text-white h4" href="#">
             <div className="logo">
               <LogoBUY />
@@ -25,10 +25,16 @@ export default function Footer() {
               <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
                 <i className="bi bi-line"></i></a>
             </li>
+            <li>
+              <a className="text-white mx-3" href="#/main/loginBackend" aria-label='backend-user' role="link">
+                <i className="bi bi-window-sidebar"></i>
+              </a>
+            </li>
           </ul>
-        </data>
+        </div>
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end align-items-start">
           <div className="mb-md-0 mb-1">
+
             <div className="footer-item">
               <p className="mb-0">02-3456-7890</p>
               <p className="footer-note">本公司不會撥打給您，如有來電顯示此號碼，請勿理會</p>
