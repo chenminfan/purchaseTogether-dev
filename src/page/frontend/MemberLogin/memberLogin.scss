@@ -1,4 +1,4 @@
-.member {
+.memberLogin {
   &_page {
     display: flex;
     align-items: center;
@@ -16,7 +16,18 @@
     background-color: $white;
     overflow: hidden;
   }
-  &-tabs {
+  &-tool {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  &-btn {
+    top: -0.5rem;
+    right: 0;
+    .btn {
+      margin-left: 16px;
+    }
   }
   &-content {
     width: 100%;
