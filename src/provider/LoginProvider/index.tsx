@@ -48,7 +48,7 @@ export const LoginContentProvider = (props) => {
     if (user !== null && token !== '') {
       navigate('/main/member')
     } else {
-      navigate('/')
+      navigate('/main/memberLogin')
     }
     axios.defaults.headers.common['Authorization'] = token
   }, [user, token])
