@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { dataValue } from '@api/utilities/dataValue';
-import { updateProfile, deleteUser } from "firebase/auth";
+import { updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
 import LazyLoadImg from "@components/hook/LazyLoadImage";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import Input from '@components/frontend/InputFrom/Input';
@@ -14,23 +14,20 @@ export default function Member({ }: Props) {
   const navigate = useNavigate()
   const [userData, setUserData] = useState('');
   const [userImgData, setUserImgData] = useState('');
-  const [userIsDelete, setIsUserDelete] = useState(false);
-  const [userConfirmDelete, setConfirmUserDelete] = useState(false);
-  const [buttonOpe, setButtonOpen] = useState(false);
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setUserData(value)
-  }
-  const handleImgChange = (e) => {
-    const { value } = e.target;
-    setUserImgData(value)
-  }
+  const [isUserDelete, setIsUserDelete] = useState(false);
+  const [isUserConfirmDelete, setIsConfirmUserDelete] = useState(false);
+  const [isButtonOpe, setIsButtonOpen] = useState(false);
+  const [isVerifyCheck, setIsVerifyCheck] = useState(false);
+  const [isNewPassword, setIsNewPassword] = useState(false);
+  const [isCheckPassword, setIsCheckPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+
   const getDeleteUser = () => {
     setIsUserDelete(true)
-    setButtonOpen(false)
+    setIsButtonOpen(false)
   }
   const handleDeleteUser = () => {
-    setConfirmUserDelete(true)
+    setIsConfirmUserDelete(true)
     document.cookie = 'myHexSchoolDEV='
     deleteUser(user).then(() => {
       getMember()
@@ -42,11 +39,11 @@ export default function Member({ }: Props) {
     }).catch((error) => {
     });
   }
-  const getUserName = (auth) => {
+  const handleUserName = (auth) => {
     updateProfile(auth.currentUser, {
       displayName: userData, photoURL: userImgData
     }).then(() => {
-      setButtonOpen(true)
+      setIsButtonOpen(true)
       getMember()
       window.location.reload();
     }).catch((error) => {
@@ -54,6 +51,29 @@ export default function Member({ }: Props) {
       // ...
     });
   }
+
+  // 驗證信箱
+  const handleVerified = () => {
+    sendEmailVerification(auth.currentUser)
+      .then(() => {
+        // Email verification sent!
+        setIsVerifyCheck(true)
+      });
+  }
+
+  // 更新密碼
+  const handlePassword = (newString) => {
+    updatePassword(user, newString).then(() => {
+      // Update successful.
+      setIsCheckPassword(true)
+      setIsNewPassword(false)
+    }).catch((error) => {
+      // An error ocurred
+      // ...
+    });
+
+  }
+
 
   useEffect(() => {
     if ((user?.displayName === null) || (user?.photoURL === null)) {
@@ -70,6 +90,7 @@ export default function Member({ }: Props) {
     }
   }, [user, token])
 
+  console.log(user)
   return (
     <div className='memberUser_page'>
       <div className="container-fluid">
@@ -96,19 +117,57 @@ export default function Member({ }: Props) {
                         {user.displayName && (<div className="memberUser-userName">{user.displayName}</div>)}
                       </div>
                     </li>
-                    {!buttonOpe && (
+                    {!isButtonOpe && (
                       <li className="list-group-item">
                         <button className="btn btn-primary" type='button'
-                          onClick={() => { setButtonOpen((buttonOpeImg => !buttonOpeImg)) }}>修改使用者</button>
+                          onClick={() => {
+                            setIsButtonOpen((isButtonOpeImg => !isButtonOpeImg))
+                            setIsNewPassword(false)
+                            setIsUserDelete(false)
+                          }}>修改使用者</button>
                       </li>)}
-                    {!userIsDelete && <li className="list-group-item">
+                    {!isNewPassword && (
+                      <li className="list-group-item">
+                        <button className="btn btn-primary" type='button'
+                          onClick={() => {
+                            setIsNewPassword((isNewPassword => !isNewPassword))
+                            setIsButtonOpen(false)
+                            setIsUserDelete(false)
+                          }}>修改密碼</button>
+                      </li>)}
+                    {!isUserDelete && <li className="list-group-item">
                       <button className="btn btn-primary" type='button'
-                        onClick={() => { getDeleteUser() }}>註銷使用者
+                        onClick={() => {
+                          getDeleteUser()
+                          setIsNewPassword(false)
+                          setIsButtonOpen(false)
+                        }}>註銷使用者
                       </button>
                     </li>}
                     <li className="list-group-item">
                       <div className='list-title'>ID</div>
                       <div className='list-content'>{user.email}</div>
+                    </li>
+                    <li className="list-group-item">
+                      <div className='list-title'>email驗證</div>
+                      <div className='list-content'>
+                        {user.emailVerified ? (
+                          <div className="alert alert-success d-inline-flex align-items-center p-2 m-0" role="alert">
+                            <i className="bi bi-check-all flex-shrink-0 me-2"></i>
+                            <div>已驗證</div>
+                          </div>
+                        ) : (<button type="button" className='btn btn-warning' onClick={() => { handleVerified() }}>未驗證</button>)}
+                        {isVerifyCheck && (
+                          <div className="memberUser-info mt-2">
+                            <div className="alert alert-warning d-flex align-items-center p-2 m-0" role="alert">
+                              <i className="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
+                              <div>
+                                請至您的信箱確認驗證,若沒有請至垃圾郵件確認！！
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </li>
                     <li className="list-group-item">
                       <div className='list-title'>註冊時間</div>
@@ -122,33 +181,40 @@ export default function Member({ }: Props) {
         </div>
         <div className="row">
           <div className="col">
-            {buttonOpe && (
-              <div className='memberUser-tool'>
-                <Input
-                  id="name" labelText="會員名稱" type="text"
-                  value={userData}
-                  handleChange={(e) => handleChange(e)}
-                />
-                <Input
-                  id="name" labelText="會員大頭貼" type="text"
-                  value={userImgData}
-                  handleChange={(e) => handleImgChange(e)}
-                />
-                <div className="img_box">
-                  <LazyLoadImg className="" src={userImgData} alt={userImgData} />
-                </div>
-                <div className="memberUser-btn">
-                  <button className="btn btn-primary" type='button' disabled={(userData === user?.displayName) && (userImgData === user?.photoURL)} onClick={() => { getUserName(auth) }}>更新</button>
-                  <button className="btn btn-primary" type='button'
-                    onClick={() => {
-                      setButtonOpen((buttonOpeImg => !buttonOpeImg))
-                    }}>取消</button>
+            {isButtonOpe && (
+              <div className="memberUser-box">
+                <div className='memberUser-tool'>
+                  <div className='d-flex align-items-center mb-2'>
+                    <div>
+                      <Input
+                        id="name" labelText="會員名稱" type="text"
+                        value={userData}
+                        handleChange={(e) => setUserData(e.target.value)}
+                      />
+                      <Input
+                        id="name" labelText="會員大頭貼" type="text"
+                        value={userImgData}
+                        handleChange={(e) => setUserImgData(e.target.value)}
+                      />
+                    </div>
+                    <div className="img_box ms-4">
+                      <LazyLoadImg className="" src={userImgData} alt={userImgData} />
+                    </div>
+                  </div>
+                  <div className="memberUser-btn">
+                    <button className="btn btn-primary" type='button' disabled={(userData === user?.displayName) && (userImgData === user?.photoURL)} onClick={() => { handleUserName(auth) }}>更新</button>
+                    <button className="btn btn-primary" type='button'
+                      onClick={() => {
+                        setIsButtonOpen((isButtonOpeImg => !isButtonOpeImg))
+                      }}>取消</button>
+                  </div>
                 </div>
               </div>
+
             )}
-            {userIsDelete && (
+            {isUserDelete && (
               <div className="memberUser-box">
-                {userConfirmDelete ? (
+                {isUserConfirmDelete ? (
                   <div className="memberUser-tool">
                     <div className="memberUser-icon"><i className="bi bi-person-dash"></i></div>
                     <div className="alert alert-success" role="alert">您的帳號已成功刪除</div>
@@ -162,12 +228,44 @@ export default function Member({ }: Props) {
                       </button>
                       <button className="btn btn-primary" type='button'
                         onClick={() => {
-                          setIsUserDelete((userIsDelete => !userIsDelete))
+                          setIsUserDelete((isUserDelete => !isUserDelete))
                         }}>取消</button>
                     </div>
 
                   </div>
                 )}
+              </div>
+            )}
+            {isNewPassword && (
+              <div className='memberUser-box'>
+                <div className="memberUser-tool">
+                  {!isCheckPassword && (
+                    <form onSubmit={() => { handlePassword(newPassword) }}>
+                      <Input
+                        id="password" labelText="新密碼" type="text"
+                        value={newPassword}
+                        placeholder="請輸入新密碼"
+                        handleChange={(e) => setNewPassword(e.target.value)}
+                      />
+                      <div className="memberUser-btn">
+                        <button type="submit" className="btn btn-primary" disabled={newPassword === ''} >修改密碼</button>
+                        <button className="btn btn-primary" type='button'
+                          onClick={() => {
+                            setIsNewPassword((isNewPassword => !isNewPassword))
+                          }}>取消</button>
+                      </div>
+                    </form>
+                  )}
+                  {isCheckPassword && (
+                    <div className="alert alert-success d-flex align-items-center p-2 m-0 mt-2" role="alert">
+                      <i className="bi bi-check-all flex-shrink-0 me-2"></i>
+                      <div>
+                        已更新密碼
+                      </div>
+                    </div>
+                  )}
+                </div>
+
               </div>
             )}
 

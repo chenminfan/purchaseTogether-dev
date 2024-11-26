@@ -16,7 +16,7 @@ type TextAreaType = {
 export default function TextArea(props: TextAreaType) {
   const { id, labelText, type, rules, register, errors, placeholder, value, handleChange = () => { }, name, disabled } = props;
   return (
-    <div className={labelText ? 'my-3' : ''}>
+    <div className={labelText ? 'my-2' : ''}>
       {labelText && <label htmlFor={id} className='form-label'>
         {labelText}
       </label>}
@@ -29,7 +29,7 @@ export default function TextArea(props: TextAreaType) {
           className={`form-control ${errors[id] && 'is-invalid'}`}
           value={value}
           onChange={handleChange}
-          autocomplete={type === 'password' && 'new-password'}
+          autoComplete={type === 'password' && 'new-password'}
 
         />
       ) : (
