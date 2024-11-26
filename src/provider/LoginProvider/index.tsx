@@ -29,10 +29,11 @@ export const LoginContentProvider = (props) => {
     });
   }
 
-  const getLoginOut = (isRouter) => {
+  const getLoginOut = (isRouter = true) => {
     signOut(auth).then(async () => {
       document.cookie = 'myHexSchoolDEV='
       getMember()
+      navigate('/main/memberLogin')
     }).catch((error) => {
     });
     if (!isRouter) {
@@ -47,8 +48,6 @@ export const LoginContentProvider = (props) => {
   useEffect(() => {
     if (user !== null && token !== '') {
       navigate('/main/member')
-    } else {
-      navigate('/')
     }
     axios.defaults.headers.common['Authorization'] = token
   }, [user, token])

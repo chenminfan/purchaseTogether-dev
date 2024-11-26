@@ -1,4 +1,4 @@
-import React, { useState, useContext, forwardRef } from 'react'
+import React, { useState, useContext, forwardRef, useEffect } from 'react'
 import { useLocation } from 'react-router-dom';
 import LogoBUY from '@components/frontend/LogoBUY';
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
@@ -32,7 +32,7 @@ const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, classNam
 })
 
 export default function Header(props) {
-  const { user, getLoginOut } = useContext<any>(LoginContext)
+  const { user, getLoginOut, getMember } = useContext<any>(LoginContext)
   const { headerLink = '#', cartData, trackList } = props;
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
@@ -48,6 +48,9 @@ export default function Header(props) {
     { navName: '我的會員', navID: 'member', className: 'nav-item-mobile', link: '#/main/memberLogin', icon: 'bi-person' },
     { navName: '訂單', navID: 'order', className: 'nav-item-mobile', link: '#/main/order', icon: 'bi-card-checklist' },
   ]
+  useEffect(() => {
+    getMember()
+  }, [])
   return (
     <header>
       <nav className="navbar navbar-expand-lg"
@@ -108,7 +111,7 @@ export default function Header(props) {
                 </RouterLink>
               ))}
 
-              {user && <li className="nav-item">
+              {user !== null && <li className="nav-item">
                 <button type='button' className="nav-link" aria-label="prods-category" role="link" onClick={() => { getLoginOut() }}>
                   登出
                 </button>

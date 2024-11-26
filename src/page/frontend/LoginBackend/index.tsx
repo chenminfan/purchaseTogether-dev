@@ -64,6 +64,7 @@ export default function Login() {
                 placeholder="請輸入帳號"
                 type="email"
                 id="username"
+                name="username"
                 handleChange={(e) => handleChange(e)}
               />
             </div>
@@ -78,14 +79,16 @@ export default function Login() {
             </div>
 
             <div className="loginBackend-label">
-              <Input
-                labelText="密碼"
-                placeholder="請輸入密碼"
-                type="text"
-                id="password"
-                handleChange={(e) => handleChange(e)}
-                autocomplete="off"
-              />
+              <form>
+                <Input
+                  labelText="密碼"
+                  placeholder="請輸入密碼"
+                  type="password"
+                  id="password"
+                  name="password"
+                  handleChange={(e) => handleChange(e)}
+                />
+              </form>
             </div>
           </div>
 
