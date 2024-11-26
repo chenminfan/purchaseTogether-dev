@@ -5,7 +5,6 @@ type TextAreaType = {
   type: string,
   placeholder?: string,
   rules?;
-  autocomplete?: string,
   name?: string,
   value?: string | number,
   handleChange?: (e: any) => void,
@@ -15,13 +14,13 @@ type TextAreaType = {
 }
 
 export default function TextArea(props: TextAreaType) {
-  const { id, labelText, type, rules, register, errors, placeholder, value, handleChange = () => { }, autocomplete, name, disabled } = props;
+  const { id, labelText, type, rules, register, errors, placeholder, value, handleChange = () => { }, name, disabled } = props;
   return (
     <div className={labelText ? 'my-3' : ''}>
       {labelText && <label htmlFor={id} className='form-label'>
         {labelText}
       </label>}
-      {register ? (<>
+      {register ? (
         <input
           id={id}
           type={type}
@@ -30,21 +29,25 @@ export default function TextArea(props: TextAreaType) {
           className={`form-control ${errors[id] && 'is-invalid'}`}
           value={value}
           onChange={handleChange}
+          autocomplete={type === 'password' && 'new-password'}
+
         />
-        {errors[id] && (
-          <div className='invalid-feedback'>{errors?.[id]?.message}</div>
-        )}
-      </>) : (<input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        className="form-control"
-        value={value}
-        name={name}
-        onChange={handleChange}
-        autoComplete={autocomplete}
-        disabled={disabled}
-      />)}
+      ) : (
+        <input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          className="form-control"
+          value={value}
+          name={name}
+          onChange={handleChange}
+          disabled={disabled}
+        />
+      )}
+
+      {errors && errors[id] && (
+        <div className='invalid-feedback'>{errors?.[id]?.message}</div>
+      )}
     </div>
 
   )
