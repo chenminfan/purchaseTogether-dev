@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
+import { useForm } from "react-hook-form"
 import BoxSection from '@components/frontend/BoxSection'
 import Input from '@components/frontend/InputFrom/Input';
 import './memberLogin.scss';
@@ -11,6 +12,11 @@ type loginStateType = {
   password: string,
 }
 export default function MemberLogin() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
   const { auth, user, getMember, loginState, setLoginState, token } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const nav = [{ navName: '登入', navID: 'login' },
@@ -18,16 +24,11 @@ export default function MemberLogin() {
   const [navState, setNavState] = useState('login');
   const [createState, setCreateState] = useState<loginStateType[] | any>({});
 
-  const [data, setData] = useState({
-    username: '',
-    password: ''
-  });
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({ ...data, [name]: value })
-  }
-
-  const loginUser = (email, password) => {
+  console.log(errors)
+  console.log(register)
+  const loginUser = handleSubmit((data) => {
+    console.log(data)
+    const { email, password } = data;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
@@ -47,13 +48,14 @@ export default function MemberLogin() {
         const errorCode = error.code;
         const errorMessage = error.message;
         setLoginState({
-          isCreate: true,
+          isCreate: false,
           text: errorCode,
         })
       });
-  }
+  })
 
-  const createUser = (email, password) => {
+  const createUser = handleSubmit((data) => {
+    const { email, password } = data;
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCreate) => {
         const user = userCreate.user;
@@ -77,7 +79,7 @@ export default function MemberLogin() {
           text: errorCode
         })
       });
-  }
+  })
 
   useEffect(() => {
     if (token !== '' && user !== null) {
@@ -104,47 +106,60 @@ export default function MemberLogin() {
             <BoxSection headLineText="使用您的帳號"
               isAlertOpen={Object.keys(loginState).length !== 0}
               isAlert={loginState.isCreate}
-              alertMessage={loginState.isCreate ? '登入成功' : `登入失敗，${createState.text}`}
+              alertMessage={loginState.isCreate ? '登入成功' : `登入失敗，${loginState.text === 'auth/invalid-email' && '請輸入電子信箱或檢查輸入的帳號密碼'}`}
             >
-              <div className="form-card">
+              <form className="form-card" action="" onSubmit={loginUser}>
                 <div className="member-label">
                   <Input
+                    register={register} errors={errors} rules={{
+                      required: {
+                        value: true,
+                        message: '請輸入 Email'
+                      },
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: 'Email 格式不正確'
+                      }
+                    }}
                     labelText="帳號"
-                    placeholder="請輸入帳號"
+                    placeholder="請輸入電子信箱"
                     type="email"
-                    id="loginUsername"
-                    name="username"
-                    handleChange={(e) => handleChange(e)}
+                    id="email"
+
                   />
                 </div>
                 <div className="member-label">
-                  <form>
-                    <Input
-                      labelText="密碼"
-                      placeholder="請輸入密碼"
-                      type="password"
-                      id="loginPassword"
-                      name="password"
-                      handleChange={(e) => handleChange(e)}
-                      autocomplete="off"
-                    />
-                  </form>
+                  <Input
+                    labelText="密碼"
+                    placeholder="請輸入密碼"
+                    type="password"
+                    id="password"
+                    register={register} errors={errors} rules={{
+                      required: {
+                        value: true,
+                        message: '請輸入 密碼'
+                      },
+                      pattern: {
+                        value: /(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6}/,
+                        message: 'Email 格式不正確'
+                      }
+                    }}
+                  />
                 </div>
                 <div className="d-grid gap-2 mt-3">
-                  <button type="button" className="btn btn-primary"
-                    onClick={() => { loginUser(data.username, data.password) }}
+                  <button type="submit" className="btn btn-primary"
                   >登入</button>
                   <button type="button" className="btn"
                     onClick={() => { }}
                   >忘記密碼</button>
                 </div>
-              </div>
+              </form>
             </BoxSection>
           ) : (
             <BoxSection headLineText="建立帳號"
               isAlertOpen={Object.keys(createState).length !== 0}
               isAlert={createState.isCreate}
-              alertMessage={createState.isCreate ? '建立成功' : `註冊失敗，${createState.text}`}
+              alertMessage={createState.isCreate ? '建立成功' : `註冊失敗，${createState.text === 'auth/invalid-email' && '請輸入電子信箱或檢查輸入的帳號密碼'}`}
             >
               <>
                 {createState.isCreate ? (
@@ -153,36 +168,49 @@ export default function MemberLogin() {
                     <li>信箱是否驗證：{createState.verify ? '已驗證' : '尚未驗證'}</li>
                   </ul>
                 ) : ''}
-                <div className="form-card">
+                <form className="form-card" action="" onSubmit={createUser}>
                   <div className="member-label">
                     <Input
+                      register={register} errors={errors} rules={{
+                        required: {
+                          value: true,
+                          message: '請輸入 Email'
+                        },
+                        pattern: {
+                          value: /^\S+@\S+$/i,
+                          message: 'Email 格式不正確'
+                        }
+                      }}
                       labelText="帳號"
-                      placeholder="請輸入帳號"
-                      type="email"
-                      id="createUsername"
-                      name="username"
-                      handleChange={(e) => handleChange(e)}
+                      placeholder="請輸入電子信箱"
+                      type="text"
+                      id="email"
                     />
                   </div>
                   <div className="member-label">
-                    <form>
-                      <Input
-                        labelText="密碼"
-                        placeholder="請輸入密碼"
-                        type="password"
-                        id="createPassword"
-                        name="password"
-                        handleChange={(e) => handleChange(e)}
-                        autocomplete="off"
-                      />
-                    </form>
+                    <Input
+                      labelText="密碼"
+                      placeholder="請輸入密碼"
+                      type="password"
+                      id="password"
+                      register={register} errors={errors} rules={{
+                        required: {
+                          value: true,
+                          message: '請輸入 密碼'
+                        },
+                        pattern: {
+                          value: /(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6}/,
+                          message: 'Email 格式不正確'
+                        }
+                      }}
+                    />
                   </div>
                   <div className="d-grid gap-2 mt-3">
-                    <button type="button" className="btn btn-primary"
-                      onClick={() => { createUser(data.username, data.password) }}
+                    <button type="submit" className="btn btn-primary"
+
                     >註冊</button>
                   </div>
-                </div>
+                </form>
               </>
             </BoxSection>
           )}

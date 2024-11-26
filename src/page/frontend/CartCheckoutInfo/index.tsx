@@ -36,7 +36,6 @@ export default function CartCheckoutInfo() {
   const cardInfo = cartData.carts.filter((item) => item)
   const {
     register,
-    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm()
