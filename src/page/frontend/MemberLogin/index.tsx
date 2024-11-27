@@ -162,7 +162,7 @@ export default function MemberLogin() {
                           },
                           pattern: {
                             value: /(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6}/,
-                            message: 'Email 格式不正確'
+                            message: '密碼格式不正確'
                           }
                         }}
                       />
@@ -269,7 +269,7 @@ export default function MemberLogin() {
                         },
                         pattern: {
                           value: /(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6}/,
-                          message: 'Email 格式不正確'
+                          message: '密碼格式不正確'
                         }
                       }}
                     />
