@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/myHexschool-dev/static/css/main.432cff79.css",
-    "main.js": "/myHexschool-dev/static/js/main.725d4b62.js",
+    "main.js": "/myHexschool-dev/static/js/main.e85945e1.js",
     "static/js/453.501ae7c9.chunk.js": "/myHexschool-dev/static/js/453.501ae7c9.chunk.js",
     "static/media/bootstrap-icons.woff?": "/myHexschool-dev/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
     "static/media/bootstrap-icons.woff2?": "/myHexschool-dev/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
@@ -9,6 +9,6 @@
   },
   "entrypoints": [
     "static/css/main.432cff79.css",
-    "static/js/main.725d4b62.js"
+    "static/js/main.e85945e1.js"
   ]
 }
