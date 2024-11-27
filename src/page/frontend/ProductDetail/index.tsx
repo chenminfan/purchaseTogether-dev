@@ -87,9 +87,20 @@ export default function ProductDetail() {
   const trackID = trackList?.find((item) => item.match(detail.id))
   return (
     <div className="detail_page">
-      <div className='container-fluid py-2'>
-        <div className="row align-items-center">
-          <div className="col-md-7">
+      <div className='container-fluid'>
+        <div className="row">
+          <div className="col-12">
+            <nav aria-label="breadcrumb" className='detail-breadcrumb'>
+              <ol className="breadcrumb mb-0">
+                <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
+                <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl} role="link" aria-label="breadcrumb-link">{breadcrumbData.ProdsName}</a></li>
+                <li className="breadcrumb-item active text-primary" aria-current="page">{detail.category}</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+        <div className="row align-items-start">
+          <div className="col-md-6">
             <Carousel carouselName="prodCarousel" carouselPre={IS_IMAGES.length > 1} carouselNext={IS_IMAGES.length > 1}>
               <div className="carousel-inner h-100">
                 <div className="carousel-item h-100 active" data-bs-interval="5000">
@@ -111,19 +122,13 @@ export default function ProductDetail() {
 
           </div>
           {loadingPage ? (
-            <div className="col-md-5">
-              <div className="detail-info py-2" aria-hidden="true">
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb px-0 mb-0 py-3">
-                    <span className="placeholder col-7"></span>
-                  </ol>
-                </nav>
-
+            <div className="col-md-6">
+              <div className="detail-info py-2 px-4" aria-hidden="true">
                 <h2 className="card-title placeholder-glow">
                   <span className="placeholder col-12"></span>
                 </h2>
 
-                <div className="row my-5" >
+                <div className="row my-2" >
                   <p className="card-text placeholder-glow">
                     <span className="placeholder col-7"></span>
                     <span className="placeholder col-4"></span>
@@ -142,32 +147,17 @@ export default function ProductDetail() {
               </div>
             </div>
           ) : (
-            <div className="col-md-5">
+            <div className="col-md-6">
               <div className="detail-info py-2">
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb px-0 mb-0 py-3">
-                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
-                    <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl} role="link" aria-label="breadcrumb-link">{breadcrumbData.ProdsName}</a></li>
-                    <li className="breadcrumb-item active text-primary" aria-current="page">{detail.category}</li>
-                  </ol>
-                </nav>
-
                 <h2 className="fw-bold h1">{detail.title}</h2>
-                <div className="row my-5">
+                <div className="row my-2">
                   <p>{detail.content}</p>
                   {/* <p className="text-muted">{detail.description}</p> */}
-                  <HtmlContent htmlString={detail.description} />
+                  <HtmlContent className='detail-textInfo' htmlString={detail.description} />
                 </div>
                 <div className="row align-items-center">
-                  <div className="col-6">
-                    <button className={`btn ${trackID === detail.id ? 'btn-primary' : 'btn-light'} `} type="button" onClick={() => {
-                      handleTrack(detail.id)
-                    }} >
-                      {trackID === detail.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
-                    </button>
-                  </div>
 
-                  <div className="col-6">
+                  <div className="col-12">
                     <p className="mb-0 text-muted text-end"><del>NT{detail.origin_price.toLocaleString('zh-TW')}</del></p>
 
                     <p className="h4 fw-bold text-end">NT{detail.price.toLocaleString('zh-TW')}</p>
@@ -178,11 +168,19 @@ export default function ProductDetail() {
                     <InputStepper inputStepperNum={cartQty} setInputStepperNum={setCartQty} />
                   </div>
                   <div className="col-6">
-                    <button type="button" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"
-                      onClick={() => {
-                        handleAddCart(detail.id, 'addCartMore')
-                      }}><i className="bi bi-cart-check-fill"></i>
-                    </button>
+                    <div className="detail-tool">
+                      <button type="button" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"
+                        onClick={() => {
+                          handleAddCart(detail.id, 'addCartMore')
+                        }}><i className="bi bi-cart-check-fill"></i>
+                      </button>
+                      <button className={`btn ${trackID === detail.id ? 'btn-primary' : 'btn-outline-primary'} `} type="button" onClick={() => {
+                        handleTrack(detail.id)
+                      }} >
+                        {trackID === detail.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
+                      </button>
+                    </div>
+
                   </div>
                 </div >
               </div >
@@ -193,24 +191,25 @@ export default function ProductDetail() {
         </div >
 
         <div className="row">
-          <h3 className="fw-bold">其他 {detail.category} 的商品</h3>
-          <div className="detail-carouselBox">
-            <div className="carouselBox">
-              {moreProds.map((more) => (
-                <Prods key={more.id} prod={more}
-                  isLoading={loadingPage}
-                  handleClick={() => {
-                    handleAddCart(more?.id, 'addCart')
-                  }}
-                  handleTrack={handleTrack}
-                  trackList={trackList}
-                />
-              ))}
-            </div>
 
-          </div>
         </div>
       </div >
+      <h3 className="fw-bold">其他 {detail.category} 的商品</h3>
+      <div className="detail-carouselBox">
+        <div className="carouselBox">
+          {moreProds.map((more) => (
+            <Prods key={more.id} prod={more}
+              isLoading={loadingPage}
+              handleClick={() => {
+                handleAddCart(more?.id, 'addCart')
+              }}
+              handleTrack={handleTrack}
+              trackList={trackList}
+            />
+          ))}
+        </div>
+
+      </div>
     </div >
   )
 }
