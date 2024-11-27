@@ -5,25 +5,37 @@
       padding: 4px 0;
     }
     .carousel {
+      margin: auto;
       height: 500px;
+      width: calc(100% - 32px);
       @include media-breakpoint-down(md) {
         max-height: 300px;
       }
     }
+
     h2 {
       @include text-line-truncate(4, 100%, auto, 1.5);
-      margin: 32px 0 60px;
+      margin: 8px 0;
+    }
+    h3 {
+      padding: 0 20px;
     }
     .container-fluid {
       .row + .row {
-        margin-top: 32px;
+        margin: 32px 0;
       }
+    }
+  }
+  &-breadcrumb {
+    .breadcrumb {
+      padding: 0 16px;
     }
   }
   &-carouselBox {
     overflow-x: auto;
     .carouselBox {
       display: flex;
+      padding-left: 16px;
       .prods {
         min-width: 200px;
         max-width: 200px;
@@ -31,6 +43,16 @@
     }
     &::-webkit-scrollbar {
       display: none;
+    }
+  }
+
+  &-textInfo {
+    font-size: 14px;
+  }
+  &-tool {
+    display: flex;
+    .btn + .btn {
+      margin-left: 16px;
     }
   }
 }

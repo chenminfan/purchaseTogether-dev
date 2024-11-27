@@ -46,10 +46,18 @@ export default function MemberLogin() {
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setLoginState({
-          isCreate: false,
-          text: errorCode,
-        })
+        console.log(errorCode)
+        if (errorCode === 'auth/invalid-credential') {
+          setLoginState({
+            isCreate: false,
+            text: '輸入電子信箱或密碼有誤，請再次確認！'
+          })
+        } else if (errorCode === 'auth/invalid-email') {
+          setLoginState({
+            isCreate: false,
+            text: '輸入電子信箱或檢查輸入的帳號密碼，請再次確認！'
+          })
+        }
       });
   })
 
@@ -92,10 +100,18 @@ export default function MemberLogin() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setCreateState({
-          isCreate: false,
-          text: errorCode
-        })
+        console.log(errorCode)
+        if (errorCode === 'auth/invalid-email') {
+          setCreateState({
+            isCreate: false,
+            text: '請輸入電子信箱或檢查輸入的帳號密碼'
+          })
+        } else if (errorCode === 'auth/email-already-in-use') {
+          setCreateState({
+            isCreate: false,
+            text: '電子信箱已被註冊，請再更換一個電子信箱'
+          })
+        }
       });
   })
 
@@ -124,7 +140,7 @@ export default function MemberLogin() {
             <BoxSection headLineText={!isPassword ? '使用您的帳號' : '忘記密碼'}
               isAlertOpen={Object.keys(loginState).length !== 0}
               isAlert={loginState.isCreate}
-              alertMessage={loginState.isCreate ? '登入成功' : `登入失敗，${loginState.text === 'auth/invalid-email' && '請輸入電子信箱或檢查輸入的帳號密碼'}`}
+              alertMessage={loginState.isCreate ? '登入成功' : `登入失敗，${loginState.text}`}
             >
 
               <>
@@ -162,7 +178,7 @@ export default function MemberLogin() {
                           },
                           pattern: {
                             value: /(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6}/,
-                            message: 'Email 格式不正確'
+                            message: '英文數字六碼，輸入密碼格式不正確'
                           }
                         }}
                       />
@@ -228,7 +244,7 @@ export default function MemberLogin() {
             <BoxSection headLineText="建立帳號"
               isAlertOpen={Object.keys(createState).length !== 0}
               isAlert={createState.isCreate}
-              alertMessage={createState.isCreate ? '建立成功' : `註冊失敗，${createState.text === 'auth/invalid-email' && '請輸入電子信箱或檢查輸入的帳號密碼'}`}
+              alertMessage={createState.isCreate ? '建立成功' : `註冊失敗，${createState.text}`}
             >
               <>
                 {createState.isCreate ? (
@@ -269,7 +285,7 @@ export default function MemberLogin() {
                         },
                         pattern: {
                           value: /(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6}/,
-                          message: 'Email 格式不正確'
+                          message: '英文數字六碼，輸入密碼格式不正確'
                         }
                       }}
                     />

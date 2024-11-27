@@ -1,6 +1,6 @@
-export default function HtmlContent({ htmlString }) {
+export default function HtmlContent({ htmlString, className }) {
   return (
-    <p className="text-muted"
+    <p className={`text-muted ${className}`}
       dangerouslySetInnerHTML={{ __html: htmlString }}
     />
   );
