@@ -74,7 +74,6 @@ export default function CartCheckoutInfo() {
     }
     window.scrollTo(0, 0)
   }, [user, token])
-  console.log(user)
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
@@ -87,42 +86,45 @@ export default function CartCheckoutInfo() {
               <form action="" onSubmit={handleFormSubmit}>
                 <h4 className="fw-bold mb-4">結帳資訊</h4>
                 <div className="checkout-body">
-                  {user.displayName ? (
-                    <Input id="name" labelText="聯絡人" type="text" value={user.displayName} disabled={user.displayName !== null} />) : (<Input
-                      register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
+                  {user !== null && (
+                    <>{user.displayName ? (
+                      <Input id="name" labelText="聯絡人" type="text" value={user.displayName} disabled={user.displayName !== null} />) : (<Input
+                        register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
+                          required: {
+                            value: true,
+                            message: '請輸入 聯絡人'
+                          },
+                          maxLength: {
+                            value: 10,
+                            message: '聯絡人名稱不超過10個字長'
+                          }
+                        }} />)}
+                      {user.email ? (<Input id="email" labelText="Email" type="text" value={user.email} disabled={user.email !== null} />) : (<Input register={register} errors={errors} id="email" labelText="Email" type="text" rules={{
                         required: {
                           value: true,
-                          message: '請輸入 聯絡人'
+                          message: '請輸入 Email'
                         },
-                        maxLength: {
-                          value: 10,
-                          message: '聯絡人名稱不超過10個字長'
+                        pattern: {
+                          value: /^\S+@\S+$/i,
+                          message: 'Email 格式不正確'
                         }
                       }} />)}
-                  {user.email ? (<Input id="email" labelText="Email" type="text" value={user.email} disabled={user.email !== null} />) : (<Input register={register} errors={errors} id="email" labelText="Email" type="text" rules={{
-                    required: {
-                      value: true,
-                      message: '請輸入 Email'
-                    },
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: 'Email 格式不正確'
-                    }
-                  }} />)}
-                  {user.phoneNumber ? (<Input id="tel" labelText="聯絡電話" type="tel" value={user.phoneNumber} disabled={user.phoneNumber !== null} />) : (<Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
-                    required: {
-                      value: true,
-                      message: '請輸入 聯絡電話'
-                    },
-                    minLength: {
-                      value: 6,
-                      message: '電話不少於 6 碼',
-                    },
-                    maxLength: {
-                      value: 12,
-                      message: '電話不大於 12 碼',
-                    }
-                  }} />)}
+                      {user.phoneNumber ? (<Input id="tel" labelText="聯絡電話" type="tel" value={user.phoneNumber} disabled={user.phoneNumber !== null} />) : (<Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
+                        required: {
+                          value: true,
+                          message: '請輸入 聯絡電話'
+                        },
+                        minLength: {
+                          value: 6,
+                          message: '電話不少於 6 碼',
+                        },
+                        maxLength: {
+                          value: 12,
+                          message: '電話不大於 12 碼',
+                        }
+                      }} />)}
+                    </>)}
+
                   <Input register={register} errors={errors} id="address" labelText="聯繫地址" type="address"
                     rules={{
                       required: {
