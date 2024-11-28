@@ -29,8 +29,8 @@ export default function TextArea(props: TextAreaType) {
           className={`form-control ${errors[id] && 'is-invalid'}`}
           value={value}
           onChange={handleChange}
-          autoComplete={type === 'password' && 'new-password'}
-
+          autoComplete={type === 'password' ? 'new-password' : ''}
+          disabled={disabled}
         />
       ) : (
         <input

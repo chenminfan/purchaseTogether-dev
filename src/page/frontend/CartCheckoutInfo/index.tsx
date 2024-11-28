@@ -6,6 +6,7 @@ import CartProdCard from '@components/frontend/Cart/CartProdCard';
 import TextArea from '@components/frontend/InputFrom/TextArea';
 import Input from '@components/frontend/InputFrom/Input';
 import Checkbox from '@components/frontend/InputFrom/Checkbox';
+import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import { ProductsType } from '@typeTS/Products';
 import { postOrdersApi } from '@api/Apis';
@@ -32,6 +33,8 @@ type CartCheckoutType = {
 }
 
 export default function CartCheckoutInfo() {
+  const { user, token } = useContext<any>(LoginContext)
+  const navigate = useNavigate()
   const { cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const cardInfo = cartData.carts.filter((item) => item)
   const {
@@ -39,16 +42,15 @@ export default function CartCheckoutInfo() {
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const navigate = useNavigate()
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
   const handleFormSubmit = handleSubmit(async (data) => {
-    const { name, email, tel, address, message } = data;
+    const { name, tel, email, address, message } = data;
     const dataFrom = {
       user: {
-        name,
-        email,
-        tel,
+        name: user.displayName === null ? `${name}+ ${user.uid}` : `${user.displayName}+ ${user.uid}`,
+        email: user.email === null ? email : user.email,
+        tel: user.phoneNumber === null ? tel : user.phoneNumber,
         address
       },
       message: message,
@@ -67,8 +69,11 @@ export default function CartCheckoutInfo() {
   })
   useEffect(() => {
     setCartStep(1)
+    if ((token === '' || token === undefined) && user === null) {
+      navigate('/main/memberLogin')
+    }
     window.scrollTo(0, 0)
-  }, [])
+  }, [user, token])
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
@@ -81,41 +86,45 @@ export default function CartCheckoutInfo() {
               <form action="" onSubmit={handleFormSubmit}>
                 <h4 className="fw-bold mb-4">結帳資訊</h4>
                 <div className="checkout-body">
-                  <Input
-                    register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
-                      required: {
-                        value: true,
-                        message: '請輸入 聯絡人'
-                      },
-                      maxLength: {
-                        value: 10,
-                        message: '聯絡人名稱不超過10個字長'
-                      }
-                    }} />
-                  <Input register={register} errors={errors} id="email" labelText="Email" type="text" rules={{
-                    required: {
-                      value: true,
-                      message: '請輸入 Email'
-                    },
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: 'Email 格式不正確'
-                    }
-                  }} />
-                  <Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
-                    required: {
-                      value: true,
-                      message: '請輸入 聯絡電話'
-                    },
-                    minLength: {
-                      value: 6,
-                      message: '電話不少於 6 碼',
-                    },
-                    maxLength: {
-                      value: 12,
-                      message: '電話不大於 12 碼',
-                    }
-                  }} />
+                  {user !== null && (
+                    <>{user.displayName ? (
+                      <Input id="name" labelText="聯絡人" type="text" value={user.displayName} disabled={user.displayName !== null} />) : (<Input
+                        register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
+                          required: {
+                            value: true,
+                            message: '請輸入 聯絡人'
+                          },
+                          maxLength: {
+                            value: 10,
+                            message: '聯絡人名稱不超過10個字長'
+                          }
+                        }} />)}
+                      {user.email ? (<Input id="email" labelText="Email" type="text" value={user.email} disabled={user.email !== null} />) : (<Input register={register} errors={errors} id="email" labelText="Email" type="text" rules={{
+                        required: {
+                          value: true,
+                          message: '請輸入 Email'
+                        },
+                        pattern: {
+                          value: /^\S+@\S+$/i,
+                          message: 'Email 格式不正確'
+                        }
+                      }} />)}
+                      {user.phoneNumber ? (<Input id="tel" labelText="聯絡電話" type="tel" value={user.phoneNumber} disabled={user.phoneNumber !== null} />) : (<Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
+                        required: {
+                          value: true,
+                          message: '請輸入 聯絡電話'
+                        },
+                        minLength: {
+                          value: 6,
+                          message: '電話不少於 6 碼',
+                        },
+                        maxLength: {
+                          value: 12,
+                          message: '電話不大於 12 碼',
+                        }
+                      }} />)}
+                    </>)}
+
                   <Input register={register} errors={errors} id="address" labelText="聯繫地址" type="address"
                     rules={{
                       required: {
