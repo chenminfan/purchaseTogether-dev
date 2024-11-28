@@ -90,8 +90,7 @@ $borderRadius: 18px;
     }
     &-image {
       position: relative;
-      width: 90px;
-      height: 90px;
+      width: 100px;
       overflow: hidden;
       border-radius: $borderRadius 4px 4px $borderRadius;
       @include media-breakpoint-down(md) {

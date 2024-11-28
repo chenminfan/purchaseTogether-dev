@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import { postCouponApi } from '@api/Apis';
 import CartStep from '@components/frontend/CartStep';
 import CartProdCard from '@components/frontend/Cart/CartProdCard';
 import NotDataState from '@components/frontend/NotDataState'
-
+import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './checkout.scss'
 import { CartCheckType } from '@typeTS/CartCheck'
@@ -23,6 +23,8 @@ type CartCheckoutType = {
   setCartStep: (number) => void,
 }
 export default function Cart() {
+  const { user, token } = useContext<any>(LoginContext)
+  const navigate = useNavigate()
   const { cartData, checkout, handleTrack, trackList, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const [couponCode, setCouponCode] = useState('')
   const [couponInfo, setCouponInfo] = useState({
@@ -35,22 +37,26 @@ export default function Cart() {
   }, [cartData.carts.length])
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const handleClickCoupon = async (code) => {
-    const data = {
-      code: code
+    if ((token === '' || token === undefined) && user === null) {
+      navigate('/main/memberLogin')
+    } else {
+      const data = {
+        code: code
+      }
+      try {
+        const codeRes = await postCouponApi(data)
+        setCouponInfo({
+          info: code,
+          infoState: codeRes.data.success,
+        })
+        handleSnackbarSuccess(dispatch, codeRes);
+      } catch (error) {
+        handleSnackbarError(dispatch, error);
+      }
+      checkout()
     }
-    try {
-      const codeRes = await postCouponApi(data)
-      setCouponInfo({
-        info: code,
-        infoState: codeRes.data.success,
-      })
-      handleSnackbarSuccess(dispatch, codeRes);
-    } catch (error) {
-      handleSnackbarError(dispatch, error);
-    }
-    checkout()
-  }
 
+  }
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>

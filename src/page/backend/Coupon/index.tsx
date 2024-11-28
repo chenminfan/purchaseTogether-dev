@@ -226,7 +226,7 @@ export default function BackendCoupon() {
             </Table>
           </TableContainer>
           <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Pagination page={page} getPagination={getCoupon} pageLink="#/backend/product" />
+            <Pagination page={page} getPagination={getCoupon} pageLink="#/backend/coupon" />
           </Box>
 
         </>

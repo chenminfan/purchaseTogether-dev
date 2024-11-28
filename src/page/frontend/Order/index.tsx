@@ -17,10 +17,10 @@ export default function Order() {
     } catch (error) {
     }
   }
-
+  const USER_DATA = Array.from(new Set(orderData.filter((item) => item))).filter(item => item.user.name.match(user.uid))
   useEffect(() => {
     getCoupon()
-    if (token === '' && user === null) {
+    if ((token === '' || token === undefined) && user === null) {
       navigate('/main/memberLogin')
     }
   }, [user, token])
@@ -33,7 +33,7 @@ export default function Order() {
             <h4 className="fw-bold mb-4">我的訂單</h4>
             <div className='order-box'>
               <div className="accordion" id="accordionExample">
-                {orderData.map((order, orderIndex) => {
+                {USER_DATA.map((order, orderIndex) => {
                   return (
                     <div className="accordion-item" key={`order_${order.id}`}>
                       <h2 className="accordion-header">
@@ -45,7 +45,7 @@ export default function Order() {
                         <div className="accordion-body">
                           <ul className="list-group list-group-flush">
                             <li className="list-group-item list-group-item-id">＃{order.id}</li>
-                            <li className="list-group-item">聯絡人：{nameValue(order.user.name)}</li>
+                            <li className="list-group-item">聯絡人：{nameValue(order.user.name.split('+')[0])}</li>
                             <li className="list-group-item">聯絡人電話：{telValue(order.user.tel)}</li>
                             <li className="list-group-item">訂單付款狀態：<a href={`#/main/cart/pay/${order.id}`}>{order.is_paid ? '已付款' : '未付款'}</a></li>
                             <li className="list-group-item">

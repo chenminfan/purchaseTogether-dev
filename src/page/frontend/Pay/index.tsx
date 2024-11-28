@@ -50,7 +50,6 @@ export default function Pay() {
     window.scrollTo(0, 0)
     saveOrder.is_paid ? setCartStep(3) : setCartStep(2)
   }, [orderId, saveOrder.is_paid])
-
   return (
     <div className="pay_page" >
       <div className="container-fluid py-2">
@@ -89,7 +88,7 @@ export default function Pay() {
                         聯絡人
                       </div>
                       <div className="order-content">
-                        {saveOrder.user.name}
+                        {saveOrder.user.name.split('+')[0]}
                       </div>
                     </div>
                     <div className="order-item">
