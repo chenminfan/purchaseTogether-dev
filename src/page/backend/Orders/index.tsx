@@ -229,7 +229,7 @@ export default function BackendOrders() {
             </Table>
           </TableContainer>
           <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Pagination page={page} getPagination={getOrders} pageLink="#/backend/product" />
+            <Pagination page={page} getPagination={getOrders} pageLink="#/backend/order" />
           </Box>
         </>
       </CTableFrom>
