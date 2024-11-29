@@ -4,35 +4,35 @@ import './footer.scss'
 
 export default function Footer() {
   return (
-    <footer className='py-3 text-white'>
+    <footer className='footer py-3 text-white'>
       <div className='container'>
-        <div className='d-flex align-items-center justify-content-between text-white mb-md-7 mb-4'>
-          <a className="text-white h4" href="#">
-            <div className="logo">
-              <LogoBUY />
-            </div>
-          </a>
-          <ul className="d-flex list-unstyled mb-0 h4">
-            <li>
-              <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
-                <i className="bi bi-facebook"></i></a>
-            </li>
-            <li>
-              <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
-                <i className="bi bi-instagram"></i></a>
-            </li>
-            <li>
-              <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
-                <i className="bi bi-line"></i></a>
-            </li>
-            <li>
-              <a className="text-white mx-3" href="#/main/loginBackend" aria-label='backend-user' role="link">
-                <i className="bi bi-window-sidebar"></i>
-              </a>
-            </li>
-          </ul>
+        <div className="row">
+          <div className="col-md-6">
+            <a className="text-white h4" href="#">
+              <div className="footer-logo">
+                <LogoBUY />
+              </div>
+            </a>
+          </div>
+          <div className="col-md-6">
+            <ul className="footer-icon">
+              <li>
+                <a href="https://github.com/chenminfan/myHexschool-dev" className="text-white mx-3" role="link" aria-label="footer-link">
+                  <i className="bi bi-github"></i></a>
+              </li>
+              <li>
+                <a href="#" className="text-white mx-3" role="link" aria-label="footer-link">
+                  <i className="bi bi-globe2"></i></a>
+              </li>
+              <li>
+                <a className="text-white mx-3" href="#/main/loginBackend" aria-label='backend-user' role="link">
+                  <i className="bi bi-window-sidebar"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end align-items-start">
+        <div className="footer-info">
           <div className="mb-md-0 mb-1">
 
             <div className="footer-item">

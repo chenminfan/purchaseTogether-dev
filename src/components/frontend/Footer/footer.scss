@@ -6,6 +6,34 @@ footer {
     font-size: 12px;
   }
   .footer {
+    &-logo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 8px;
+      color: $gray-900;
+      .logo {
+        &-text {
+          color: $white;
+        }
+      }
+    }
+    &-icon {
+      display: flex;
+      justify-content: flex-end;
+      padding: 8px;
+      font-size: 24px;
+      @include media-breakpoint-down(md) {
+        padding: 0;
+        margin-top: 16px;
+      }
+    }
+    &-logo,
+    &-icon {
+      @include media-breakpoint-down(md) {
+        justify-content: center;
+      }
+    }
     &-item {
       display: flex;
       @include media-breakpoint-down(md) {
@@ -27,16 +55,6 @@ footer {
         align-items: center;
         text-align: center;
       }
-    }
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    color: $gray-900;
-    &-text {
-      color: $white;
     }
   }
 }

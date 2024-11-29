@@ -90,8 +90,8 @@ export default function Member({ }: Props) {
   return (
     <div className='memberUser_page'>
       <div className="container-fluid">
-        <div className="row">
-          <div className="col">
+        <div className="row is-animation">
+          <div className={`${(isButtonOpe || isUserDelete || isNewPassword) ? ' col-md-6' : 'col-12'}`}>
             {USER_MEMBER && (
               <div key={`member_${USER_MEMBER.email}`} className='memberUser-box'>
                 <div className="col-md-12">
@@ -174,9 +174,7 @@ export default function Member({ }: Props) {
               </div>
             )}
           </div>
-        </div>
-        <div className="row">
-          <div className="col">
+          {(isButtonOpe || isUserDelete || isNewPassword) && (<div className="col-md-6">
             {isButtonOpe && (
               <div className="memberUser-box">
                 <div className='memberUser-tool'>
@@ -206,7 +204,6 @@ export default function Member({ }: Props) {
                   </div>
                 </div>
               </div>
-
             )}
             {isUserDelete && (
               <div className="memberUser-box">
@@ -264,8 +261,7 @@ export default function Member({ }: Props) {
 
               </div>
             )}
-
-          </div>
+          </div>)}
         </div>
       </div>
 
