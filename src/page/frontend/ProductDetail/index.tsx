@@ -108,7 +108,7 @@ export default function ProductDetail() {
                     <LazyLoadImg src={detail.imageUrl} className="d-block" alt={detail.title} />
                   </div>
                 </div>
-                {IS_IMAGES && (<>
+                {IS_IMAGES.length > 1 && (<>
                   {detail.imagesUrl?.map((item, index) => (
                     <div className="carousel-item h-100" data-bs-interval="5000" key={`${item}_${index}`}>
                       <div className="img_box">
