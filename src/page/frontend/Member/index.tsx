@@ -10,7 +10,7 @@ import './member.scss'
 type Props = {}
 
 export default function Member({ }: Props) {
-  const { auth, user, getMember, token, getLoginOut } = useContext<any>(LoginContext)
+  const { auth, USER_MEMBER, getMember, USER_TOKEN, getLoginOut } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const [userData, setUserData] = useState('');
   const [userImgData, setUserImgData] = useState('');
@@ -29,8 +29,7 @@ export default function Member({ }: Props) {
   const handleDeleteUser = () => {
     setIsConfirmUserDelete(true)
     document.cookie = 'myHexSchoolDEV='
-    deleteUser(user).then(() => {
-      getMember()
+    deleteUser(USER_MEMBER).then(() => {
       getLoginOut(true)
 
       setTimeout(() => {
@@ -44,7 +43,6 @@ export default function Member({ }: Props) {
       displayName: userData, photoURL: userImgData
     }).then(() => {
       setIsButtonOpen(true)
-      getMember()
       window.location.reload();
     }).catch((error) => {
       // An error occurred
@@ -63,57 +61,56 @@ export default function Member({ }: Props) {
 
   // 更新密碼
   const handlePassword = (newString) => {
-    updatePassword(user, newString).then(() => {
+    updatePassword(USER_MEMBER, newString).then(() => {
       // Update successful.
       setIsCheckPassword(true)
       setIsNewPassword(false)
     }).catch((error) => {
-      // An error ocurred
-      // ...
     });
 
   }
 
-
   useEffect(() => {
-    if ((user?.displayName === null) || (user?.photoURL === null)) {
-      setUserData(user?.displayName)
-      setUserImgData('https://images.unsplash.com/photo-1573376670774-4427757f7963?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
-    } else {
-      setUserData(user?.displayName)
-      setUserImgData(user?.photoURL)
-    }
-  }, [user])
-  useEffect(() => {
-    if (token === '' && user === null) {
+    getMember()
+    if ((USER_MEMBER !== null || USER_MEMBER !== '') && USER_TOKEN !== '') {
       navigate('/main/memberLogin')
     }
-  }, [user, token])
+  }, [USER_MEMBER, USER_TOKEN])
+  useEffect(() => {
+    if ((USER_MEMBER?.displayName === null) || (USER_MEMBER?.photoURL === null)) {
+      setUserData(USER_MEMBER?.displayName)
+      setUserImgData('https://images.unsplash.com/photo-1573376670774-4427757f7963?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+    } else {
+      setUserData(USER_MEMBER?.displayName)
+      setUserImgData(USER_MEMBER?.photoURL)
+    }
+  }, [USER_MEMBER])
+
 
   return (
     <div className='memberUser_page'>
       <div className="container-fluid">
         <div className="row">
           <div className="col">
-            {user && (
-              <div key={`member_${user.email}`} className='memberUser-box'>
+            {USER_MEMBER && (
+              <div key={`member_${USER_MEMBER.email}`} className='memberUser-box'>
                 <div className="col-md-12">
                   <ul className="list-group list-group-flush">
                     <li className="list-group-item">
                       <div className="memberUser-user">
-                        {user.photoURL === null ? (
+                        {USER_MEMBER.photoURL === null ? (
                           <div className='memberUser-image'>
                             <i className="bi bi-person"></i>
                           </div>
                         ) : (
                           <div className='memberUser-image'>
                             <div className="img_box">
-                              <LazyLoadImg className="" src={user.photoURL} alt={user.photoURL} />
+                              <LazyLoadImg className="" src={USER_MEMBER.photoURL} alt={USER_MEMBER.photoURL} />
                             </div>
                           </div>
                         )}
 
-                        {user.displayName && (<div className="memberUser-userName">{user.displayName}</div>)}
+                        {USER_MEMBER.displayName && (<div className="memberUser-userName">{USER_MEMBER.displayName}</div>)}
                       </div>
                     </li>
                     {!isButtonOpe && (
@@ -145,12 +142,12 @@ export default function Member({ }: Props) {
                     </li>}
                     <li className="list-group-item">
                       <div className='list-title'>ID</div>
-                      <div className='list-content'>{user.email}</div>
+                      <div className='list-content'>{USER_MEMBER.email}</div>
                     </li>
                     <li className="list-group-item">
                       <div className='list-title'>email驗證</div>
                       <div className='list-content'>
-                        {user.emailVerified ? (
+                        {USER_MEMBER.emailVerified ? (
                           <div className="alert alert-success d-inline-flex align-items-center p-2 m-0" role="alert">
                             <i className="bi bi-check-all flex-shrink-0 me-2"></i>
                             <div>已驗證</div>
@@ -170,7 +167,7 @@ export default function Member({ }: Props) {
                     </li>
                     <li className="list-group-item">
                       <div className='list-title'>註冊時間</div>
-                      <div className='list-content'>{dataValue(user.metadata.createdAt)}</div>
+                      <div className='list-content'>{dataValue(USER_MEMBER.metadata.createdAt)}</div>
                     </li>
                   </ul>
                 </div>
@@ -201,7 +198,7 @@ export default function Member({ }: Props) {
                     </div>
                   </div>
                   <div className="memberUser-btn">
-                    <button className="btn btn-primary" type='button' disabled={(userData === user?.displayName) && (userImgData === user?.photoURL)} onClick={() => { handleUserName(auth) }}>更新</button>
+                    <button className="btn btn-primary" type='button' disabled={(userData === USER_MEMBER?.displayName) && (userImgData === USER_MEMBER?.photoURL)} onClick={() => { handleUserName(auth) }}>更新</button>
                     <button className="btn btn-primary" type='button'
                       onClick={() => {
                         setIsButtonOpen((isButtonOpeImg => !isButtonOpeImg))
