@@ -32,7 +32,7 @@ const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, classNam
 })
 
 export default function Header(props) {
-  const { user, getLoginOut, getMember } = useContext<any>(LoginContext)
+  const { USER_MEMBER, USER_TOKEN, getLoginOut, getMember } = useContext<any>(LoginContext)
   const { headerLink = '#', cartData, trackList } = props;
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
@@ -111,8 +111,10 @@ export default function Header(props) {
                 </RouterLink>
               ))}
 
-              {user !== null && <li className="nav-item">
-                <button type='button' className="nav-link" aria-label="prods-category" role="link" onClick={() => { getLoginOut() }}>
+              {(USER_MEMBER !== null || USER_MEMBER !== '') && USER_TOKEN !== '' && <li className="nav-item">
+                <button type='button' className="nav-link" aria-label="prods-category" role="link" onClick={() => {
+                  getLoginOut()
+                }}>
                   登出
                 </button>
               </li>}
@@ -120,7 +122,7 @@ export default function Header(props) {
           </div>
         </div>
 
-      </nav>
-    </header>
+      </nav >
+    </header >
   )
 }
