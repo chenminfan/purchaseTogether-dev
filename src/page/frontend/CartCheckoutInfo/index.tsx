@@ -4,6 +4,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom'
 import CartStep from '@components/frontend/CartStep';
 import CartProdCard from '@components/frontend/Cart/CartProdCard';
 import TextArea from '@components/frontend/InputFrom/TextArea';
+import Tooltip from '@components/frontend/Tooltip';
 import Input from '@components/frontend/InputFrom/Input';
 import Checkbox from '@components/frontend/InputFrom/Checkbox';
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
@@ -33,7 +34,7 @@ type CartCheckoutType = {
 }
 
 export default function CartCheckoutInfo() {
-  const { user, token } = useContext<any>(LoginContext)
+  const { USER_MEMBER, USER_ID } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const { cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const cardInfo = cartData.carts.filter((item) => item)
@@ -48,9 +49,9 @@ export default function CartCheckoutInfo() {
     const { name, tel, email, address, message } = data;
     const dataFrom = {
       user: {
-        name: user.displayName === null ? `${name}+ ${user.uid}` : `${user.displayName}+ ${user.uid}`,
-        email: user.email === null ? email : user.email,
-        tel: user.phoneNumber === null ? tel : user.phoneNumber,
+        name: USER_MEMBER.displayName === null ? `${name}+ ${USER_ID}` : `${USER_MEMBER.displayName}+ ${USER_ID}`,
+        email: USER_MEMBER.email === null ? email : USER_MEMBER.email,
+        tel: USER_MEMBER.phoneNumber === null ? tel : USER_MEMBER.phoneNumber,
         address
       },
       message: message,
@@ -68,12 +69,14 @@ export default function CartCheckoutInfo() {
     }
   })
   useEffect(() => {
-    setCartStep(1)
-    if ((token === '' || token === undefined) && user === null) {
+    if (USER_MEMBER) {
+      setCartStep(1)
+    window.scrollTo(0, 0)
+    } else {
       navigate('/main/memberLogin')
     }
-    window.scrollTo(0, 0)
-  }, [user, token])
+    
+  }, [])
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
@@ -86,9 +89,9 @@ export default function CartCheckoutInfo() {
               <form action="" onSubmit={handleFormSubmit}>
                 <h4 className="fw-bold mb-4">結帳資訊</h4>
                 <div className="checkout-body">
-                  {user !== null && (
-                    <>{user.displayName ? (
-                      <Input id="name" labelText="聯絡人" type="text" value={user.displayName} disabled={user.displayName !== null} />) : (<Input
+                  {USER_MEMBER !== null && (
+                    <>{USER_MEMBER.displayName ? (
+                      <Input id="name" labelText="聯絡人" type="text" value={USER_MEMBER.displayName} disabled={USER_MEMBER.displayName !== null} />) : (<Input
                         register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
                           required: {
                             value: true,
@@ -99,7 +102,7 @@ export default function CartCheckoutInfo() {
                             message: '聯絡人名稱不超過10個字長'
                           }
                         }} />)}
-                      {user.email ? (<Input id="email" labelText="Email" type="text" value={user.email} disabled={user.email !== null} />) : (<Input register={register} errors={errors} id="email" labelText="Email" type="text" rules={{
+                      {USER_MEMBER.email ? (<Input id="email" labelText="Email" type="text" value={USER_MEMBER.email} disabled={USER_MEMBER.email !== null} />) : (<Input register={register} errors={errors} id="email" labelText="Email" type="text" rules={{
                         required: {
                           value: true,
                           message: '請輸入 Email'
@@ -109,7 +112,7 @@ export default function CartCheckoutInfo() {
                           message: 'Email 格式不正確'
                         }
                       }} />)}
-                      {user.phoneNumber ? (<Input id="tel" labelText="聯絡電話" type="tel" value={user.phoneNumber} disabled={user.phoneNumber !== null} />) : (<Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
+                      {USER_MEMBER.phoneNumber ? (<Input id="tel" labelText="聯絡電話" type="tel" value={USER_MEMBER.phoneNumber} disabled={USER_MEMBER.phoneNumber !== null} />) : (<Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
                         required: {
                           value: true,
                           message: '請輸入 聯絡電話'
@@ -135,18 +138,48 @@ export default function CartCheckoutInfo() {
                   <TextArea register={register} errors={errors} id="message" rows={5} labelText="我要跟你說..." />
                   <Checkbox
                     id="checkbox"
-                    checkboxText="請同意 隱私權"
+                    checkboxText="請同意"
                     required
                     name="checkbox"
-                    type='checkbox' register={register} errors={errors} handleClick={e => setCheck(e.target.value)} value={check} rules={{ required: { value: true, message: '請同意隱私權' } }} />
+                    type='checkbox' register={register} errors={errors} handleClick={e => setCheck(e.target.value)} value={check} rules={{ required: { value: true, message: '請同意隱私權' } }} >
+                    <Tooltip text="請確認您的權益">
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#checkModal">隱私權</a>
+                    </Tooltip>
+
+                  </Checkbox>
+
+                  <div className="modal fade" id="checkModal" tabIndex={-1} aria-labelledby="checkModalLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <h1 className="modal-title fs-5" id="checkModalLabel">隱私權</h1>
+                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                          行銷隱私權是指在行銷過程中，保護消費者的個人隱私和數據安全。這包括以下幾個方面：
+                          <ol className='list-group list-group-numbered m-3'>
+                            <li className='list-group-item'>資訊收集：本公司在收集消費者個人信息時，必須明確告知其用途，並取得消費者的同意。</li>
+                            <li className='list-group-item'>資訊使用：本公司只能在取得消費者同意的範圍內使用其個人信息，不得逾越合法範圍。</li>
+                            <li className='list-group-item'>資訊保護：本公司必須採取合理的安全措施，確保個人信息的安全，防止未經授權的訪問或洩漏。</li>
+                            <li className='list-group-item'>資訊權益：消費者有權要求查閱、更正或刪除其個人信息，並有權對本公司的資訊處理行為提出異議。
+                            </li>
+                          </ol>
+                          確保消費者的隱私權和數據安全，同時也增強了消費者對本公司的信任。
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="checkout-footer">
                   <div className="d-grid gap-2">
-                    <button type='submit' className='btn btn-primary' onClick={() => {
-                      setCartStep(2)
-                    }}>
-                      送出填寫資訊
-                    </button>
+                    <Tooltip text="請再次確認您的填寫資訊">
+                      <button type='submit' className='btn btn-primary' onClick={() => {
+                        setCartStep(2)
+                      }}>
+                        送出填寫資訊
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
               </form>
@@ -185,7 +218,7 @@ export default function CartCheckoutInfo() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }

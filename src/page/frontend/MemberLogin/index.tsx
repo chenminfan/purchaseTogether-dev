@@ -17,7 +17,7 @@ export default function MemberLogin() {
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const { auth, user, getMember, loginState, setLoginState, token } = useContext<any>(LoginContext)
+  const { auth, USER_MEMBER, getMember, loginState, setLoginState, token } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const nav = [{ navName: '登入', navID: 'login' },
   { navName: '註冊', navID: 'create' }]
@@ -116,10 +116,10 @@ export default function MemberLogin() {
   })
 
   useEffect(() => {
-    if (token !== '' && user !== null) {
+    if (token !== '') {
       navigate('/main/member')
     }
-  }, [user, token])
+  }, [token])
 
   return (
     <section className="memberLogin_page">

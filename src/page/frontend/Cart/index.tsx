@@ -23,7 +23,7 @@ type CartCheckoutType = {
   setCartStep: (number) => void,
 }
 export default function Cart() {
-  const { user, token } = useContext<any>(LoginContext)
+  const { USER_MEMBER, token } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const { cartData, checkout, handleTrack, trackList, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const [couponCode, setCouponCode] = useState('')
@@ -37,25 +37,22 @@ export default function Cart() {
   }, [cartData.carts.length])
   const [state, dispatch] = useContext<any>(SnackbarContent);
   const handleClickCoupon = async (code) => {
-    if ((token === '' || token === undefined) && user === null) {
-      navigate('/main/memberLogin')
-    } else {
-      const data = {
-        code: code
-      }
-      try {
-        const codeRes = await postCouponApi(data)
-        setCouponInfo({
-          info: code,
-          infoState: codeRes.data.success,
-        })
-        handleSnackbarSuccess(dispatch, codeRes);
-      } catch (error) {
-        handleSnackbarError(dispatch, error);
-      }
-      checkout()
+    checkout()
+    cartData.carts.length === 0 ? setCartStep(-1) : setCartStep(0)
+    const data = {
+      code: code
     }
-
+    try {
+      const codeRes = await postCouponApi(data)
+      setCouponInfo({
+        info: code,
+        infoState: codeRes.data.success,
+      })
+      handleSnackbarSuccess(dispatch, codeRes);
+    } catch (error) {
+      handleSnackbarError(dispatch, error);
+    }
+    checkout()
   }
   return (
     <div className="cart_page">
@@ -120,11 +117,17 @@ export default function Cart() {
                     <div className="checkout-content">NT ${Math.round(cartData.final_total).toLocaleString('zh-TW')}</div>
                   </div>
                   <div className="d-grid gap-2">
-                    <a className="btn btn-primary checkout-btn" type="button" href="#/main/cart/info" onClick={() => {
-                      setCartStep(1)
+                    <button className="btn btn-primary checkout-btn" type="button" onClick={() => {
+                      if (USER_MEMBER) {
+                        navigate('/main/cart/info')
+
+                        setCartStep(1)
+                      } else {
+                        navigate('/main/memberLogin')
+                      }
                     }}>
                       填寫資料
-                    </a>
+                    </button>
                   </div>
                 </div>
               </>) : (
