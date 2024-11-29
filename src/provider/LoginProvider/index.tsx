@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { firebaseApp } from '@api/Firebase';
-import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut, getIdToken } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut, getIdToken } from "firebase/auth";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -17,9 +17,6 @@ export const LoginContentProvider = (props) => {
   const navigate = useNavigate()
 
   const getMember = async () => {
-    // 支援的驗證狀態持續性類型
-    await setPersistence(auth, browserLocalPersistence)
-
     // 取得目前登入的使用者
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -28,6 +25,7 @@ export const LoginContentProvider = (props) => {
       }
     });
   }
+
 
   const getLoginOut = (isRouter = true) => {
     signOut(auth).then(async () => {
@@ -46,12 +44,8 @@ export const LoginContentProvider = (props) => {
     ?.split("=")[1];
 
   useEffect(() => {
-    if (user !== null && token !== '') {
-      navigate('/main/member')
-    }
-    axios.defaults.headers.common['Authorization'] = token
-  }, [user, token])
-
+    getMember()
+  }, [])
   return (
     <LoginContext.Provider value={{ auth, user, setLoginState, loginState, getMember, getLoginOut, token }}>
       {children}

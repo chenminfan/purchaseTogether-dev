@@ -30,7 +30,6 @@ export default function Member({ }: Props) {
     setIsConfirmUserDelete(true)
     document.cookie = 'myHexSchoolDEV='
     deleteUser(user).then(() => {
-      getMember()
       getLoginOut(true)
 
       setTimeout(() => {
@@ -44,7 +43,6 @@ export default function Member({ }: Props) {
       displayName: userData, photoURL: userImgData
     }).then(() => {
       setIsButtonOpen(true)
-      getMember()
       window.location.reload();
     }).catch((error) => {
       // An error occurred
@@ -87,6 +85,8 @@ export default function Member({ }: Props) {
   useEffect(() => {
     if (token === '' && user === null) {
       navigate('/main/memberLogin')
+    } else {
+      navigate('/main/member')
     }
   }, [user, token])
 

@@ -4,6 +4,7 @@ import { getOrdersApi } from '@api/Apis';
 import { dataValue, telValue, nameValue } from '@api/utilities/dataValue';
 import { OrdersType } from '@app/typeTS/Orders';
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
+import NotDataState from '@components/frontend/NotDataState'
 import './order.scss'
 
 export default function Order() {
@@ -13,6 +14,7 @@ export default function Order() {
   const getCoupon = async () => {
     try {
       const codeRes = await getOrdersApi()
+      // setOrderData(codeRes.data.orders)
       setOrderData(codeRes.data.orders)
     } catch (error) {
     }
@@ -20,10 +22,7 @@ export default function Order() {
   const USER_DATA = Array.from(new Set(orderData.filter((item) => item))).filter(item => item.user.name.match(user.uid))
   useEffect(() => {
     getCoupon()
-    if ((token === '' || token === undefined) && user === null) {
-      navigate('/main/memberLogin')
-    }
-  }, [user, token])
+  }, [])
 
   return (
     <div className="order_page">
@@ -32,8 +31,8 @@ export default function Order() {
           <div className="col-lg-12 col-md-12">
             <h4 className="fw-bold mb-4">我的訂單</h4>
             <div className='order-box'>
-              <div className="accordion" id="accordionExample">
-                {USER_DATA.map((order, orderIndex) => {
+              {USER_DATA.length === 0 ? (<NotDataState notStateIcon="bi-card-checklist" notStateTitle="尚無訂單成立" />) : (<div className="accordion" id="accordionExample">
+                {USER_DATA && USER_DATA.map((order, orderIndex) => {
                   return (
                     <div className="accordion-item" key={`order_${order.id}`}>
                       <h2 className="accordion-header">
@@ -65,7 +64,7 @@ export default function Order() {
                     </div>
                   )
                 })}
-              </div>
+              </div>)}
             </div>
           </div>
 

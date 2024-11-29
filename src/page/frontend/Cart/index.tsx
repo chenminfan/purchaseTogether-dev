@@ -55,7 +55,6 @@ export default function Cart() {
       }
       checkout()
     }
-
   }
   return (
     <div className="cart_page">
