@@ -14,12 +14,12 @@ type contextType = {
   trackList?: string[],
 }
 export default function Track() {
-  const [windowHeight]: number[] = useScreen();
   const [prods, setProds] = useState<ProductsType[]>([])
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
+
   const getProds = async () => {
     try {
       const prodRes = await getProductsAllApi();
@@ -28,6 +28,7 @@ export default function Track() {
       const errorRes = error
     }
   }
+
   const SEARCH_DATA = useMemo(() => {
     return [...prods]
       .filter(prods => trackList?.find(track => track == prods.id))
@@ -37,6 +38,7 @@ export default function Track() {
     isLoadingRef.current = false
     setLoadingPage(false)
   }, [])
+
   const handleAddCart = async (prod, type = '') => {
     const addCart = {
       product_id: prod,
@@ -51,6 +53,7 @@ export default function Track() {
       handleSnackbarError(dispatch, error);
     }
   }
+
   return (
     <div className="prods_page">
       <div className='container-fluid py-2'>

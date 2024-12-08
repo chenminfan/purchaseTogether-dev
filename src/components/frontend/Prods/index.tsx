@@ -1,5 +1,5 @@
 import React from 'react'
-import LazyLoadImg from "@components/hook/LazyLoadImage";
+import LazyLoadImg from "@components/common/LazyLoadImage";
 import { ProductsType } from '@typeTS/Products'
 import './prods.scss'
 

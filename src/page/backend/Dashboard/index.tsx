@@ -13,9 +13,7 @@ import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import {
-  postUserCheckApi,
-} from '@api/Apis'
+import { postUserCheckApi } from '@api/Apis'
 import './backend.scss'
 import HeaderNav from '@components/backend/HeaderNav'
 import CSnackbar from '@components/backend/Snackbar';

@@ -11,10 +11,11 @@ type TextAreaType = {
   register?;
   errors?;
   disabled?: boolean,
+  readonly?: boolean,
 }
 
 export default function TextArea(props: TextAreaType) {
-  const { id, labelText, type, rules, register, errors, placeholder, value, handleChange = () => { }, name, disabled } = props;
+  const { id, labelText, type, rules, register, errors, placeholder, value, handleChange = () => { }, name, disabled, readonly } = props;
   return (
     <div className={labelText ? 'my-2' : ''}>
       {labelText && <label htmlFor={id} className='form-label'>
@@ -31,6 +32,7 @@ export default function TextArea(props: TextAreaType) {
           onChange={handleChange}
           autoComplete={type === 'password' ? 'new-password' : ''}
           disabled={disabled}
+          readOnly={readonly}
         />
       ) : (
         <input

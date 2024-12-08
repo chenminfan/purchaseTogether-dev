@@ -46,7 +46,7 @@ export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
     },
     num: 0
   }, tampDataALL = [], handleClose, getOrders, theme, color, orderType } = props;
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
 
   const handleOrdersDelete = async () => {
     try {

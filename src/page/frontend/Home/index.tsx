@@ -1,11 +1,10 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useForm } from "react-hook-form"
 import { useScreen } from '@api/utilities/useScreen'
-import LazyLoadImg from "@components/hook/LazyLoadImage";
+import LazyLoadImg from "@components/common/LazyLoadImage";
 import Input from '@components/frontend/InputFrom/Input';
 import { getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
-
 import './home.scss'
 
 const Home = () => {
@@ -20,7 +19,7 @@ const Home = () => {
     imageUrl2: "https://images.unsplash.com/photo-1448932223592-d1fc686e76ea?q=80&w=1738&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   }]
   const [prod, setProd] = useState<ProductsType[]>([])
-  const [couponData, setCouponData] = useState('Buy together Buy');
+  const COUPON_CODE = 'Buy together Buy';
   const [isShow, setIsShow] = useState(false);
 
   const getData = async () => {
@@ -36,7 +35,7 @@ const Home = () => {
   } = useForm()
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(couponData)
+    navigator.clipboard.writeText(COUPON_CODE)
     setIsShow((show) => !show)
   }
   const PROD_RANDOM = useMemo(() => {
@@ -142,7 +141,7 @@ const Home = () => {
                 <div className="coupons-text">
                   <div className="box-input">
                     <Input
-                      register={register} errors={errors} id="code" labelText="" type="text" value={couponData} />
+                      register={register} errors={errors} id="code" labelText="" type="text" value={COUPON_CODE} readonly />
                     <button type='button' className='btn btn-primary' onClick={() => { handleCopy() }}>
                       複製
                     </button>

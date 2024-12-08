@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react'
-import LazyLoadImg from "@components/hook/LazyLoadImage";
+import LazyLoadImg from "@components/common/LazyLoadImage";
 import InputStepper from '@components/frontend/InputStepper'
 import { postCartApi } from '@api/Apis';
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
@@ -17,7 +17,7 @@ type Props = {
 export default function CartProdCard(props: Props) {
   const { cart, checkout, isTool = true, handleTrack = () => { }, trackList } = props
   const [inputStepperNum, setInputStepperNum] = useState<number>(cart.qty)
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const inputStepperValue = useRef(0)
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(false);
