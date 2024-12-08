@@ -115,7 +115,7 @@ export default function CartProdCard(props: Props) {
               </div>
             )}
           </div>
-          <div className="card-checkInfo">
+          {(cart.product.price || cart?.coupon?.code) && (<div className="card-checkInfo">
             <div className="card-total">
               <div className="card-price">
                 <div className="card-total-title">單價</div>
@@ -135,7 +135,7 @@ export default function CartProdCard(props: Props) {
                 <div className="card-code-tag">折價券</div>
                 <div className="card-code-text">{cart?.coupon?.code}</div></div>
             )}
-          </div>
+          </div>)}
         </div>
       </div>
       <div className="card-checkInfo">

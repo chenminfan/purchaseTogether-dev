@@ -25,7 +25,9 @@ export default function Products() {
     category: ''
   })
   const isLoadingRef = useRef(true)
-  const [loadingPage, setLoadingPage] = useState<boolean>(true);
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
+  const isLoadingAPI_Ref = useRef(true)
+  const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
   const [categoryId, setCategoryId] = useState<string>('all')
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
@@ -40,14 +42,14 @@ export default function Products() {
         setProds(prodRes.data.products.sort(() => {
           return 0.5 - Math.random();
         }))
-        setProdAll(prodAllRes.data.products)
         isLoadingRef.current = false
         setLoadingPage(false)
+        setProdAll(prodAllRes.data.products)
       } else {
+        isLoadingRef.current = false
+        setLoadingPage(false)
         setProds(prodRes.data.products)
         setProdAll(prodAllRes.data.products)
-        isLoadingRef.current = false
-        setLoadingPage(false)
       }
 
       setPage(prodRes.data.pagination)
@@ -65,7 +67,6 @@ export default function Products() {
 
   const handleClick = (item) => {
     if (item === 'all') {
-
       getProds(1, '')
     } else {
       getProds(1, item)
@@ -78,8 +79,12 @@ export default function Products() {
       product_id: prod,
       qty: 1,
     }
+    isLoadingAPI_Ref.current = loadingAPI
+    setLoadingAPI(true)
     try {
       const res = await postCartApi(type, addCart)
+      isLoadingAPI_Ref.current = false
+      setLoadingAPI(false)
       checkout();
       handleSnackbarSuccess(dispatch, res);
 
@@ -117,12 +122,15 @@ export default function Products() {
             <div className="prods_box">
               {prods.map((item) => {
                 return (
-                  <Prods key={item.id} prod={item} isLoading={loadingPage}
+                  <Prods key={item.id} prod={item}
+                    isLoadingPage={loadingPage}
+                    isLoading={loadingAPI}
                     handleTrack={handleTrack}
                     trackList={trackList}
                     handleClick={() => {
                       handleAddCart(item?.id, 'addCart')
-                    }} />
+                    }}
+                  />
                 )
               })}
             </div>

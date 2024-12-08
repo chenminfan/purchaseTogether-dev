@@ -32,9 +32,11 @@ export default function ProductDetail() {
     imageUrl: '',
     imagesUrl: [],
   })
-  const isLoadingRef = useRef(true)
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
-  const [loadingPage, setLoadingPage] = useState<boolean>(true);
+  const isLoadingRef = useRef(true)
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
+  const isLoadingAPI_Ref = useRef(true)
+  const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const [cartQty, setCartQty] = useState(1)
 
@@ -73,13 +75,18 @@ export default function ProductDetail() {
   };
 
   const handleAddCart = async (prod, type = '') => {
+
     const addCart = {
       product_id: prod,
       qty: type === 'addCartMore' ? cartQty : 1,
     }
+    isLoadingAPI_Ref.current = loadingAPI
+    setLoadingAPI(true)
     try {
       if (type !== '') {
         const res = await postCartApi(type, addCart)
+        isLoadingAPI_Ref.current = false
+        setLoadingAPI(false)
         checkout()
         handleSnackbarSuccess(dispatch, res);
       }
@@ -229,7 +236,8 @@ export default function ProductDetail() {
         <div className="carouselBox">
           {moreProds.map((more) => (
             <Prods key={more.id} prod={more}
-              isLoading={loadingPage}
+              isLoadingPage={loadingPage}
+              isLoading={loadingAPI}
               handleClick={() => {
                 handleAddCart(more?.id, 'addCart')
               }}

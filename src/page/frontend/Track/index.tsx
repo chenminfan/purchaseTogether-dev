@@ -17,6 +17,8 @@ export default function Track() {
   const [prods, setProds] = useState<ProductsType[]>([])
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
+  const isLoadingAPI_Ref = useRef(true)
+  const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
 
@@ -46,8 +48,12 @@ export default function Track() {
       product_id: prod,
       qty: 1,
     }
+    isLoadingAPI_Ref.current = loadingAPI
+    setLoadingAPI(true)
     try {
       const res = await postCartApi(type, addCart)
+      isLoadingAPI_Ref.current = false
+      setLoadingAPI(false)
       checkout();
       handleSnackbarSuccess(dispatch, res);
 
@@ -71,7 +77,8 @@ export default function Track() {
                     {SEARCH_DATA.map((item) => {
                       return (
                         <Prods key={item.id} prod={item}
-                          isLoading={loadingPage}
+                          isLoadingPage={loadingPage}
+                          isLoading={loadingAPI}
                           handleTrack={handleTrack}
                           trackList={trackList}
                           handleClick={() => {

@@ -6,18 +6,19 @@ import './prods.scss'
 type ProdsType = {
   prod: ProductsType,
   isLoading: boolean,
+  isLoadingPage: boolean,
   handleClick: () => void,
   handleTrack?: (string) => {},
   trackList?: string[],
 }
 
 export default function Prods(props: ProdsType) {
-  const { prod, isLoading, handleClick, handleTrack = () => { }, trackList } = props;
+  const { prod, isLoadingPage,isLoading, handleClick, handleTrack = () => { }, trackList } = props;
   const handleTrackClick = (prodID) => {
     handleTrack(prodID)
   }
   const trackID = trackList?.find((item) => item.match(prod.id))
-  if (isLoading) {
+  if (isLoadingPage) {
     return (
       <div className="card prods" aria-hidden="true">
         <div className="card-body">
@@ -39,7 +40,7 @@ export default function Prods(props: ProdsType) {
 
 
           <div className="prods-tool">
-            <button className="btn btn-primary prods-btn-add" aria-disabled="true">
+            <button className="btn btn-primary prods-btn-add" aria-disabled="true" disabled={isLoading}>
               <span className='prods-cart-icon'>
                 <i className="bi bi-cart-check-fill"></i>
               </span>
@@ -84,7 +85,7 @@ export default function Prods(props: ProdsType) {
 
 
         <div className="prods-tool" onClick={handleClick}>
-          <button type="button" className="btn btn-primary prods-btn-add" role="button"><span className='prods-cart-icon'>
+          <button type="button" className="btn btn-primary prods-btn-add" role="button" disabled={isLoading}><span className='prods-cart-icon'>
             <i className="bi bi-cart-check-fill"></i>
           </span></button>
         </div>
