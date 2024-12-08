@@ -15,6 +15,8 @@ export default function Order() {
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const getCoupon = async () => {
     const codeRes = await getOrdersApi()
+    isLoadingRef.current = true
+    setLoadingPage(true)
     try {
       setOrderData(
         [...codeRes.data.orders.filter((item) => item)]
