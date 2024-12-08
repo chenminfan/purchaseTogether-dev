@@ -42,6 +42,7 @@ export default function CartCheckoutInfo() {
   } = useForm()
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
+
   const handleFormSubmit = handleSubmit(async (data) => {
     const { name, tel, email, address, message } = data;
     const dataFrom = {
@@ -60,17 +61,20 @@ export default function CartCheckoutInfo() {
         setCartStep(2)
       }, 1500)
       handleSnackbarSuccess(dispatch, res);
+      checkout()
 
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }
   })
+
   useEffect(() => {
     if (loggedIn && USER_TOKEN !== '') {
       window.scrollTo(0, 0)
     }
     setCartStep(1)
   }, [loggedIn])
+
 
   return (
     <div className="cart_page">
