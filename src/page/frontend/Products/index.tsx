@@ -5,6 +5,7 @@ import { postCartApi, getProductsApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import { PaginationType } from '@typeTS/PaginationType'
 import Pagination from '@components/backend/Pagination';
+import LoadingState from '@components/frontend/LoadingState';
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './products.scss'
 
@@ -30,6 +31,8 @@ export default function Products() {
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
 
   const getProds = async (getPage = 1, category = '') => {
+    isLoadingRef.current = loadingPage
+    setLoadingPage(true)
     try {
       const prodRes = await getProductsApi(getPage, category);
       const prodAllRes = await getProductsAllApi();
@@ -38,9 +41,13 @@ export default function Products() {
           return 0.5 - Math.random();
         }))
         setProdAll(prodAllRes.data.products)
+        isLoadingRef.current = false
+        setLoadingPage(false)
       } else {
         setProds(prodRes.data.products)
         setProdAll(prodAllRes.data.products)
+        isLoadingRef.current = false
+        setLoadingPage(false)
       }
 
       setPage(prodRes.data.pagination)
@@ -54,12 +61,11 @@ export default function Products() {
   const Id = category.find((item) => item)
   useEffect(() => {
     getProds()
-    isLoadingRef.current = false
-    setLoadingPage(false)
   }, [])
 
   const handleClick = (item) => {
     if (item === 'all') {
+
       getProds(1, '')
     } else {
       getProds(1, item)
@@ -105,7 +111,7 @@ export default function Products() {
         </ul >
       </nav >
 
-      <div className='container-fluid py-2'>
+      {loadingPage ? (<LoadingState loadingStateTitle="太多商品了....你等等呀！" loadingStateIcon="bi-box2-heart" />) : (<div className='container-fluid py-2'>
         <div className="row">
           <div className="col-md-12">
             <div className="prods_box">
@@ -124,7 +130,7 @@ export default function Products() {
         </div>
 
         <Pagination page={page} getPagination={getProds} pageLink="#/main/prods" />
-      </div>
+      </div>)}
     </div >
   )
 }

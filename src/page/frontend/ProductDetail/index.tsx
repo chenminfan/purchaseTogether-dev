@@ -39,11 +39,15 @@ export default function ProductDetail() {
   const [cartQty, setCartQty] = useState(1)
 
   const getProds = async (prodId) => {
+    isLoadingRef.current = true
+    setLoadingPage(true)
     try {
       const prodRes = await getProductsIdApi(prodId);
       const prodAllRes = await getProductsAllApi();
       setDetail(prodRes.data.product)
       setCategoryProds(prodAllRes.data.products)
+      isLoadingRef.current = false
+      setLoadingPage(false)
     } catch (error) {
       const errorRes = error
     }
@@ -51,8 +55,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     getProds(id)
-    isLoadingRef.current = false
-    setLoadingPage(false)
+
     window.scrollTo(0, 0)
   }, [id])
 
@@ -146,7 +149,31 @@ export default function ProductDetail() {
                   <span className="placeholder col-4"></span>
                   <span className="placeholder col-6"></span>
                   <span className="placeholder col-8"></span>
+                  <span className="placeholder col-7"></span>
+                  <span className="placeholder col-4"></span>
+                  <span className="placeholder col-4"></span>
+                  <span className="placeholder col-6"></span>
+                  <span className="placeholder col-8"></span>
                 </p>
+
+                <p className="card-text placeholder-glow text-end">
+                  <span className="placeholder col-7"></span>
+                  <span className="placeholder col-6"></span>
+                </p>
+
+                <div className="card-text placeholder-glow d-flex justify-content-between">
+                  <span className="placeholder col-4 rounded-3"></span>
+                  <div>
+                    <button className="btn btn-primary" type="button" disabled>
+                      <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                      <span className='ms-2' role="status">Loading...</span>
+                    </button>
+                    <button className="btn btn-outline-primary ms-2" type="button" disabled>
+                      <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    </button>
+                  </div>
+
+                </div>
               </div>
             </div>
           ) : (
@@ -211,7 +238,6 @@ export default function ProductDetail() {
             />
           ))}
         </div>
-
       </div>
     </div >
   )

@@ -6,6 +6,7 @@ import NotDataState from '@components/frontend/NotDataState'
 import { postCartApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
+import LoadingState from '@components/frontend/LoadingState';
 import './track.scss'
 
 type contextType = {
@@ -21,9 +22,13 @@ export default function Track() {
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
 
   const getProds = async () => {
+    isLoadingRef.current = true
+    setLoadingPage(true)
     try {
       const prodRes = await getProductsAllApi();
       setProds(prodRes.data.products)
+      isLoadingRef.current = false
+      setLoadingPage(false)
     } catch (error) {
       const errorRes = error
     }
@@ -35,8 +40,7 @@ export default function Track() {
   }, [prods, trackList])
   useEffect(() => {
     getProds()
-    isLoadingRef.current = false
-    setLoadingPage(false)
+
   }, [])
 
   const handleAddCart = async (prod, type = '') => {
@@ -62,24 +66,29 @@ export default function Track() {
             <h4 className="fw-bold p-4">追蹤商品</h4>
           </div>
           <div className="col-md-12">
-            {SEARCH_DATA.length !== 0 ? (
-              <div className="prods_box">
-                {SEARCH_DATA.map((item) => {
-                  return (
-                    <Prods key={item.id} prod={item}
-                      isLoading={loadingPage}
-                      handleTrack={handleTrack}
-                      trackList={trackList}
-                      handleClick={() => {
-                        handleAddCart(item?.id, 'addCart')
-                      }}
-                    />
-                  )
-                })}
-              </div>
-            ) : (
-              <NotDataState notStateIcon="bi-bookmarks" notStateTitle="趕快來逛逛你有興趣的商品！" />
-            )}
+            {!loadingPage ? (<LoadingState loadingStateTitle="追蹤太多喜愛的商品了，讓我追追追追追!" loadingStateIcon="bi-bag-heart" />) :
+              (<>
+                {SEARCH_DATA.length !== 0 ? (
+                  <div className="prods_box">
+                    {SEARCH_DATA.map((item) => {
+                      return (
+                        <Prods key={item.id} prod={item}
+                          isLoading={loadingPage}
+                          handleTrack={handleTrack}
+                          trackList={trackList}
+                          handleClick={() => {
+                            handleAddCart(item?.id, 'addCart')
+                          }}
+                        />
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <NotDataState notStateIcon="bi-bookmarks" notStateTitle="趕快來逛逛你有興趣的商品！" />
+                )}
+              </>)
+            }
+
           </div>
         </div>
       </div>
