@@ -31,6 +31,7 @@ export default function Pay() {
     },
     num: 0
   })
+
   const getCart = async (orderId) => {
     try {
       const res = await getOrdersIdApi(orderId)
@@ -38,6 +39,7 @@ export default function Pay() {
     } catch (error) {
     }
   }
+
   const handleClickPay = async (orderId) => {
     try {
       await postPayApi(orderId)
@@ -45,11 +47,13 @@ export default function Pay() {
     }
     getCart(orderId)
   }
+
   useEffect(() => {
     getCart(orderId)
     window.scrollTo(0, 0)
     saveOrder.is_paid ? setCartStep(3) : setCartStep(2)
   }, [orderId, saveOrder.is_paid])
+
   return (
     <div className="pay_page" >
       <div className="container-fluid py-2">

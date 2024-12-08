@@ -2,7 +2,7 @@ $borderRadius: 18px;
 .checkout {
   &-card {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: 8px 0;
     border-radius: $borderRadius;
     border: 0.5px solid $primary;
@@ -27,6 +27,9 @@ $borderRadius: 18px;
       &-image {
         width: 120px;
         height: 120px;
+        > .card-btn {
+          display: none;
+        }
       }
       &-title {
         padding-right: 72px;
@@ -54,9 +57,7 @@ $borderRadius: 18px;
         }
       }
       &-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         @include media-breakpoint-down(md) {
           flex-direction: column;
           align-items: flex-start;
@@ -66,8 +67,81 @@ $borderRadius: 18px;
   }
 
   .card {
-    &-title {
+    &-code {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 8px;
+      width: 100%;
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+      &-text {
+        color: $primary;
+        width: calc(100% - 100px);
+      }
+      &-tag {
+        margin-right: 8px;
+        padding: 0 4px;
+        font-size: 14px;
+        color: $white;
+        border-radius: 4px;
+        background-color: $primary;
+      }
+    }
+    &-toolBar {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      + .card {
+        &-checkInfo {
+          display: none;
+          @include media-breakpoint-down(md) {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 8px 16px 16px 16px;
+          }
+        }
+      }
+    }
+    &-content {
+      display: flex;
+      flex-direction: column;
       font-size: 14px;
+      @include media-breakpoint-down(md) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      + .card {
+        &-checkInfo {
+          @include media-breakpoint-down(md) {
+            display: none;
+          }
+        }
+      }
+    }
+    &-checkInfo {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      margin-top: 4px;
+      @include media-breakpoint-down(md) {
+        align-items: flex-end;
+        margin-top: 8px;
+        border-top: 1px solid $gray-300;
+      }
+    }
+    &-total {
+      display: flex;
+      justify-content: space-between;
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+    }
+    &-title {
+      font-size: 18px;
+      margin-bottom: 8px;
       @include text-line-truncate(2, 100%, auto, 1.5);
     }
     &-info {
@@ -77,7 +151,12 @@ $borderRadius: 18px;
       flex: 1;
       position: relative;
       margin-left: 16px;
-      padding: 8px;
+      padding: 8px 16px 8px 0;
+      width: calc(100% - 800px);
+      @include media-breakpoint-down(md) {
+        padding-left: 16px;
+        margin-left: 0px;
+      }
     }
     &-info {
       .card {
@@ -90,13 +169,15 @@ $borderRadius: 18px;
     }
     &-image {
       position: relative;
-      width: 100px;
+      width: 150px;
       overflow: hidden;
       border-radius: $borderRadius 4px 4px $borderRadius;
+      flex-shrink: 0;
       @include media-breakpoint-down(md) {
-        min-height: 190px;
+        width: 100px;
       }
       .img_box {
+        padding-bottom: 100%;
         @include media-breakpoint-down(md) {
           padding-bottom: 100%;
         }
@@ -119,9 +200,8 @@ $borderRadius: 18px;
       }
     }
     &-inputStepper {
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(sm) {
         display: flex;
-        justify-content: center;
         width: 100%;
       }
       .inputStepper.rounded {
@@ -134,10 +214,15 @@ $borderRadius: 18px;
       display: flex;
       white-space: nowrap;
       margin-top: 4px;
-      min-width: 150px;
       color: $gray-600;
       @include media-breakpoint-down(md) {
         margin-top: 8px;
+        min-width: 150px;
+      }
+      @include media-breakpoint-down(sm) {
+        &:first-child {
+          margin-top: 0;
+        }
       }
 
       &-total {

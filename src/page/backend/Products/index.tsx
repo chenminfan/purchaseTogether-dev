@@ -46,26 +46,17 @@ export default function BackendProducts() {
   const [tamp, setTamp] = useState<ProductsType>(state.dataTamp);
 
   const COLUMNS: TableColumns[] = [
-    {
-      field: 'imageUrl',
-      headerName: '圖片',
-      width: 90,
-      // valueGetter: (value, row) => `${prodData.firstName || ''} ${prodData.lastName || ''}`,
-    },
+    { field: 'imageUrl', headerName: '圖片', width: 90, },
     { field: 'title', headerName: '品名', width: 180 },
-    // { field: 'category', headerName: '分類', width: 120 },
-    // { field: 'content', headerName: '內容', width: 200 },
     { field: 'imagesUrl', headerName: '小圖', width: 200, },
     { field: 'is_enabled', headerName: '狀態', width: 90, },
     { field: 'origin_price', headerName: '價格', width: 90, },
     { field: 'price', headerName: '售價', width: 90, },
-
   ];
 
   // 搜尋
   const [search, setSearch] = useState('')
   const [searchBTN, setSearchBTN] = useState('')
-
   // 搜尋
 
   // 排序 start
@@ -133,6 +124,7 @@ export default function BackendProducts() {
       setOpen(false);
     }
   };
+
   const theme = createTheme({
     palette: {
       primary: {
@@ -140,6 +132,7 @@ export default function BackendProducts() {
       },
     },
   });
+
   const handleClickDelete = (type: string) => {
     setOpen(true);
     setTableType(type)
@@ -155,6 +148,7 @@ export default function BackendProducts() {
       }
     })
   }
+
   const handleChangeCheckAll = (e, data) => {
     dispatch({
       type: 'TABLE_CHECKBOX_ALL',
@@ -175,6 +169,7 @@ export default function BackendProducts() {
       </Box>
     )
   } else if (searchBTN !== categoryId && prodData.length === 0) {
+
     return (
       <CTableFrom
         isSearch
@@ -263,7 +258,7 @@ export default function BackendProducts() {
                 </TableHead>
                 <TableBody>
                   {SEARCH_DATA.map((row) => {
-                    const Filter_IMAGE = row.imagesUrl?.filter((item) => item.length > 0 && item.includes('https://' || 'http://'))
+                    const Filter_IMAGE = row.imagesUrl?.filter((item) => item.length > 0 && (item.includes('https://') || item.includes('http://')))
                     return (
                       <TableRow key={row.id}>
                         <TableCell padding="checkbox">

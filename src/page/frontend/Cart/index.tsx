@@ -8,13 +8,13 @@ import Tooltip from '@components/frontend/Tooltip';
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './checkout.scss'
-import { CartCheckType } from '@typeTS/CartCheck'
+import { CartCheckProdType } from '@typeTS/CartCheck'
 
 type CartCheckoutType = {
   checkout: () => void,
   cartData: {
     id: string,
-    carts: CartCheckType[],
+    carts: CartCheckProdType[],
     final_total: number,
     total: number,
   }
@@ -40,18 +40,21 @@ export default function Cart() {
   const handleClickCoupon = async (code) => {
     checkout()
     cartData.carts.length === 0 ? setCartStep(-1) : setCartStep(0)
-    const data = {
-      code: code
-    }
-    try {
-      const codeRes = await postCouponApi(data)
-      setCouponInfo({
-        info: code,
-        infoState: codeRes.data.success,
-      })
-      handleSnackbarSuccess(dispatch, codeRes);
-    } catch (error) {
-      handleSnackbarError(dispatch, error);
+    if (couponCode !== '') {
+      const data = {
+        code: code
+      }
+      try {
+        const codeRes = await postCouponApi(data)
+        console.log(codeRes)
+        setCouponInfo({
+          info: code,
+          infoState: codeRes.data.success,
+        })
+        handleSnackbarSuccess(dispatch, codeRes);
+      } catch (error) {
+        handleSnackbarError(dispatch, error);
+      }
     }
     checkout()
   }
@@ -92,7 +95,7 @@ export default function Cart() {
                         onClick={() => handleClickCoupon(couponCode)}
                       >
                         {couponInfo.infoState ? (<i className="bi bi-check2-square"></i>)
-                          : (<i className="bi bi-pencil"></i>)}
+                          : (<i className="bi bi-tags-fill"></i>)}
                       </button>
                     </div>
                   </div>

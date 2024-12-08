@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useEffect, useState, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { useScreen } from '@api/utilities/useScreen'
 import Prods from '@components/frontend/Prods'
 import NotDataState from '@components/frontend/NotDataState'
 import { postCartApi, getProductsAllApi } from '@api/Apis'
@@ -14,29 +13,30 @@ type contextType = {
   trackList?: string[],
 }
 export default function Track() {
-  const [windowHeight]: number[] = useScreen();
   const [prods, setProds] = useState<ProductsType[]>([])
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
+
   const getProds = async () => {
     try {
       const prodRes = await getProductsAllApi();
       setProds(prodRes.data.products)
     } catch (error) {
-      const errorRes = error
     }
   }
+
   const SEARCH_DATA = useMemo(() => {
     return [...prods]
-      .filter(prods => trackList?.find(track => track == prods.id))
+      .filter(prods => trackList?.find(track => track === prods.id))
   }, [prods, trackList])
   useEffect(() => {
     getProds()
     isLoadingRef.current = false
     setLoadingPage(false)
   }, [])
+
   const handleAddCart = async (prod, type = '') => {
     const addCart = {
       product_id: prod,
@@ -51,6 +51,7 @@ export default function Track() {
       handleSnackbarError(dispatch, error);
     }
   }
+
   return (
     <div className="prods_page">
       <div className='container-fluid py-2'>

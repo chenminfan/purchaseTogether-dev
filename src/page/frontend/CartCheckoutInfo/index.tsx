@@ -12,22 +12,16 @@ import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@pr
 import { ProductsType } from '@typeTS/Products';
 import { postOrdersApi } from '@api/Apis';
 import './checkoutInfo.scss';
+import { CartCheckProdType } from '@typeTS/CartCheck'
 
-
-type CartCheckoutItemType = {
-  final_total: number,
-  id: string,
-  product: ProductsType,
-  qty: number,
-  total: number
-}
 type CartCheckoutType = {
   checkout: () => void,
   cartData: {
     id: string,
-    carts: CartCheckoutItemType[],
+    carts: CartCheckProdType[],
     final_total: number,
-    total: number
+    total: number,
+
   }
   cartStep: number,
   setCartStep: (number) => void,
@@ -71,11 +65,11 @@ export default function CartCheckoutInfo() {
   useEffect(() => {
     if (USER_MEMBER) {
       setCartStep(1)
-    window.scrollTo(0, 0)
+      window.scrollTo(0, 0)
     } else {
       navigate('/main/memberLogin')
     }
-    
+
   }, [])
   return (
     <div className="cart_page">

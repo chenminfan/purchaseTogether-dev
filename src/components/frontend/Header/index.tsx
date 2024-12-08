@@ -38,7 +38,7 @@ export default function Header(props) {
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
   const handleMouseLeave = () => setIsNavCollapsed(true);
   const navText = [
-    { navName: 'store', navID: 'store', className: '', link: '#/main/prods', icon: 'bi-signpost-split' },
+    { navName: '全站商品', navID: 'store', className: '', link: '#/main/prods', icon: 'bi-signpost-split' },
     { navName: '追蹤商品', navID: 'trackProds', className: '', link: '#/main/track', icon: 'bi-bookmark-heart-fill' },
     { navName: '訂單明細', navID: 'orderList', className: 'nav-item-mobile', link: '#/main/order', icon: 'bi-card-checklist' },
     { navName: '我的會員', navID: 'member', className: 'nav-item-mobile', link: '#/main/memberLogin', icon: 'bi-person' },

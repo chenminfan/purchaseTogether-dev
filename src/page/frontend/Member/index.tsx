@@ -2,21 +2,19 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { dataValue } from '@api/utilities/dataValue';
 import { updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
-import LazyLoadImg from "@components/hook/LazyLoadImage";
+import LazyLoadImg from "@components/common/LazyLoadImage";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import Input from '@components/frontend/InputFrom/Input';
 import './member.scss'
 
-type Props = {}
-
-export default function Member({ }: Props) {
+export default function Member() {
   const { auth, USER_MEMBER, getMember, USER_TOKEN, getLoginOut } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const [userData, setUserData] = useState('');
   const [userImgData, setUserImgData] = useState('');
   const [isUserDelete, setIsUserDelete] = useState(false);
   const [isUserConfirmDelete, setIsConfirmUserDelete] = useState(false);
-  const [isButtonOpe, setIsButtonOpen] = useState(false);
+  const [isButtonOpen, setIsButtonOpen] = useState(false);
   const [isVerifyCheck, setIsVerifyCheck] = useState(false);
   const [isNewPassword, setIsNewPassword] = useState(false);
   const [isCheckPassword, setIsCheckPassword] = useState(false);
@@ -62,20 +60,19 @@ export default function Member({ }: Props) {
   // 更新密碼
   const handlePassword = (newString) => {
     updatePassword(USER_MEMBER, newString).then(() => {
-      // Update successful.
       setIsCheckPassword(true)
       setIsNewPassword(false)
     }).catch((error) => {
     });
-
   }
 
   useEffect(() => {
     getMember()
-    if ((USER_MEMBER === null || USER_MEMBER === '') && USER_TOKEN === '') {
+    if (USER_TOKEN === '') {
       navigate('/main/memberLogin')
     }
-  }, [USER_MEMBER, USER_TOKEN])
+  }, [USER_TOKEN])
+
   useEffect(() => {
     if ((USER_MEMBER?.displayName === null) || (USER_MEMBER?.photoURL === null)) {
       setUserData(USER_MEMBER?.displayName)
@@ -91,7 +88,7 @@ export default function Member({ }: Props) {
     <div className='memberUser_page'>
       <div className="container-fluid">
         <div className="row is-animation">
-          <div className={`${(isButtonOpe || isUserDelete || isNewPassword) ? ' col-md-6' : 'col-12'}`}>
+          <div className={`${(isButtonOpen || isUserDelete || isNewPassword) ? ' col-md-6' : 'col-12'}`}>
             {USER_MEMBER && (
               <div key={`member_${USER_MEMBER.email}`} className='memberUser-box'>
                 <div className="col-md-12">
@@ -113,7 +110,7 @@ export default function Member({ }: Props) {
                         {USER_MEMBER.displayName && (<div className="memberUser-userName">{USER_MEMBER.displayName}</div>)}
                       </div>
                     </li>
-                    {!isButtonOpe && (
+                    {!isButtonOpen && (
                       <li className="list-group-item">
                         <button className="btn btn-primary" type='button'
                           onClick={() => {
@@ -174,8 +171,8 @@ export default function Member({ }: Props) {
               </div>
             )}
           </div>
-          {(isButtonOpe || isUserDelete || isNewPassword) && (<div className="col-md-6">
-            {isButtonOpe && (
+          {(isButtonOpen || isUserDelete || isNewPassword) && (<div className="col-md-6">
+            {isButtonOpen && (
               <div className="memberUser-box">
                 <div className='memberUser-tool'>
                   <div className='d-flex align-items-center mb-2'>

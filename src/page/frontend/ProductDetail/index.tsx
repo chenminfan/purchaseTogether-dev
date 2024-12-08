@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import LazyLoadImg from "@components/hook/LazyLoadImage";
+import LazyLoadImg from "@components/common/LazyLoadImage";
 import { useParams } from 'react-router-dom'
 import InputStepper from '@components/frontend/InputStepper'
 import { getProductsIdApi, getProductsAllApi, postCartApi } from '@api/Apis'
@@ -35,7 +35,7 @@ export default function ProductDetail() {
   const isLoadingRef = useRef(true)
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
-  const [, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const [cartQty, setCartQty] = useState(1)
 
   const getProds = async (prodId) => {
@@ -56,9 +56,10 @@ export default function ProductDetail() {
     window.scrollTo(0, 0)
   }, [id])
 
-  const IS_IMAGES = detail.imagesUrl?.filter((item) => item.length > 0 && item.includes('https://' || 'http://'))
+  const IS_IMAGES = detail.imagesUrl?.filter((item) => item.length > 0 && (item.includes('https://') || item.includes('http://')))
   const moreProds = categoryProds.filter((item) => item.category.match(detail.category))
-  const breadcrumbData = {
+
+  const BREADCRUMB_DATA = {
     HomeId: 'home',
     HomeName: 'home',
     HomeUrl: '#/',
@@ -84,7 +85,9 @@ export default function ProductDetail() {
       handleSnackbarError(dispatch, error);
     }
   }
+
   const trackID = trackList?.find((item) => item.match(detail.id))
+
   return (
     <div className="detail_page">
       <div className='container-fluid'>
@@ -92,8 +95,8 @@ export default function ProductDetail() {
           <div className="col-12">
             <nav aria-label="breadcrumb" className='detail-breadcrumb'>
               <ol className="breadcrumb mb-0">
-                <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
-                <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl} role="link" aria-label="breadcrumb-link">{breadcrumbData.ProdsName}</a></li>
+                <li className="breadcrumb-item"><a className="text-muted" href={BREADCRUMB_DATA.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
+                <li className="breadcrumb-item"><a className="text-muted" href={BREADCRUMB_DATA.ProdsUrl} role="link" aria-label="breadcrumb-link">{BREADCRUMB_DATA.ProdsName}</a></li>
                 <li className="breadcrumb-item active text-primary" aria-current="page">{detail.category}</li>
               </ol>
             </nav>

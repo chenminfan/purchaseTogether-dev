@@ -26,8 +26,9 @@ export default function Products() {
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<string>('all')
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
+
   const getProds = async (getPage = 1, category = '') => {
     try {
       const prodRes = await getProductsApi(getPage, category);
@@ -47,7 +48,9 @@ export default function Products() {
       const errorRes = error
     }
   }
+
   const category = Array.from(new Set(prodAll.map((item) => item.category)))
+
   const Id = category.find((item) => item)
   useEffect(() => {
     getProds()
@@ -78,6 +81,7 @@ export default function Products() {
       handleSnackbarError(dispatch, error);
     }
   }
+
   return (
     <div className="prods_page">
       <nav className="navbar navbar-expand-lg">
