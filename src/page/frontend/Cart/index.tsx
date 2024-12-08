@@ -24,7 +24,7 @@ type CartCheckoutType = {
   setCartStep: (number) => void,
 }
 export default function Cart() {
-  const { USER_MEMBER, token } = useContext<any>(LoginContext)
+  const { USER_MEMBER } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const { cartData, checkout, handleTrack, trackList, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const [couponCode, setCouponCode] = useState('')
@@ -32,13 +32,15 @@ export default function Cart() {
     info: '',
     infoState: false,
   })
+
   useEffect(() => {
     checkout()
     cartData.carts.length === 0 ? setCartStep(-1) : setCartStep(0)
   }, [cartData.carts.length])
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+
+  const [_, dispatch] = useContext<any>(SnackbarContent);
+
   const handleClickCoupon = async (code) => {
-    checkout()
     cartData.carts.length === 0 ? setCartStep(-1) : setCartStep(0)
     if (couponCode !== '') {
       const data = {
@@ -58,6 +60,7 @@ export default function Cart() {
     }
     checkout()
   }
+
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
@@ -91,7 +94,7 @@ export default function Cart() {
                       value={couponCode}
                       onChange={(e) => { setCouponCode(e.target.value) }} />
                     <div className="input-group-append">
-                      <button className="btn btn-primary rounded-0" type="button"
+                      <button className="btn btn-primary rounded-0" type="button" disabled={couponCode === ''}
                         onClick={() => handleClickCoupon(couponCode)}
                       >
                         {couponInfo.infoState ? (<i className="bi bi-check2-square"></i>)
@@ -125,7 +128,6 @@ export default function Cart() {
                       <button className="btn btn-primary checkout-btn" type="button" onClick={() => {
                         if (USER_MEMBER) {
                           navigate('/main/cart/info')
-
                           setCartStep(1)
                         } else {
                           navigate('/main/memberLogin')

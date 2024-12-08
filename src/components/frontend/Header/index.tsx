@@ -32,11 +32,12 @@ const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, classNam
 })
 
 export default function Header(props) {
-  const { USER_MEMBER, USER_TOKEN, getLoginOut, getMember } = useContext<any>(LoginContext)
+  const { USER_TOKEN, getLoginOut, loggedIn } = useContext<any>(LoginContext)
   const { headerLink = '#', cartData, trackList } = props;
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
   const handleMouseLeave = () => setIsNavCollapsed(true);
+
   const navText = [
     { navName: '全站商品', navID: 'store', className: '', link: '#/main/prods', icon: 'bi-signpost-split' },
     { navName: '追蹤商品', navID: 'trackProds', className: '', link: '#/main/track', icon: 'bi-bookmark-heart-fill' },
@@ -48,9 +49,7 @@ export default function Header(props) {
     { navName: '我的會員', navID: 'member', className: 'nav-item-mobile', link: '#/main/memberLogin', icon: 'bi-person' },
     { navName: '訂單', navID: 'order', className: 'nav-item-mobile', link: '#/main/order', icon: 'bi-card-checklist' },
   ]
-  useEffect(() => {
-    getMember()
-  }, [])
+
   return (
     <header>
       <nav className="navbar navbar-expand-lg"
@@ -111,7 +110,7 @@ export default function Header(props) {
                 </RouterLink>
               ))}
 
-              {(USER_MEMBER !== null || USER_MEMBER !== '') && USER_TOKEN !== '' && <li className="nav-item">
+              {USER_TOKEN !== '' && <li className="nav-item">
                 <button type='button' className="nav-link" aria-label="prods-category" role="link" onClick={() => {
                   getLoginOut()
                 }}>

@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { dataValue } from '@api/utilities/dataValue';
-import { updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
+import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
 import LazyLoadImg from "@components/common/LazyLoadImage";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import Input from '@components/frontend/InputFrom/Input';
 import './member.scss'
 
 export default function Member() {
-  const { auth, USER_MEMBER, getMember, USER_TOKEN, getLoginOut } = useContext<any>(LoginContext)
+  const { loggedIn, auth, USER_MEMBER, USER_TOKEN, getLoginOut } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const [userData, setUserData] = useState('');
   const [userImgData, setUserImgData] = useState('');
@@ -19,6 +19,7 @@ export default function Member() {
   const [isNewPassword, setIsNewPassword] = useState(false);
   const [isCheckPassword, setIsCheckPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  const [reNewPassword, setReNewPassword] = useState('');
 
   const getDeleteUser = () => {
     setIsUserDelete(true)
@@ -41,7 +42,7 @@ export default function Member() {
       displayName: userData, photoURL: userImgData
     }).then(() => {
       setIsButtonOpen(true)
-      window.location.reload();
+
     }).catch((error) => {
       // An error occurred
       // ...
@@ -62,16 +63,29 @@ export default function Member() {
     updatePassword(USER_MEMBER, newString).then(() => {
       setIsCheckPassword(true)
       setIsNewPassword(false)
+      getRePRovide(reNewPassword)
     }).catch((error) => {
     });
   }
 
+  // 重新驗證
+  const getRePRovide = (rePassword) => {
+    const credential = EmailAuthProvider.credential(USER_MEMBER.auth.currentUser.email, rePassword);
+
+    reauthenticateWithCredential(USER_MEMBER.auth.currentUser, credential)
+      .then(() => {
+        // User re-authenticated.
+      }).catch((error) => {
+        // An error ocurred
+        // ...
+      });
+  }
+
   useEffect(() => {
-    getMember()
-    if (USER_TOKEN === '') {
+    if (!loggedIn && USER_TOKEN === '') {
       navigate('/main/memberLogin')
     }
-  }, [USER_TOKEN])
+  }, [loggedIn, USER_TOKEN])
 
   useEffect(() => {
     if ((USER_MEMBER?.displayName === null) || (USER_MEMBER?.photoURL === null)) {
@@ -82,7 +96,6 @@ export default function Member() {
       setUserImgData(USER_MEMBER?.photoURL)
     }
   }, [USER_MEMBER])
-
 
   return (
     <div className='memberUser_page'>
@@ -126,6 +139,8 @@ export default function Member() {
                             setIsNewPassword((isNewPassword => !isNewPassword))
                             setIsButtonOpen(false)
                             setIsUserDelete(false)
+                            setNewPassword('')
+                            setReNewPassword('')
                           }}>修改密碼</button>
                       </li>)}
                     {!isUserDelete && <li className="list-group-item">
@@ -134,6 +149,8 @@ export default function Member() {
                           getDeleteUser()
                           setIsNewPassword(false)
                           setIsButtonOpen(false)
+                          setNewPassword('')
+                          setReNewPassword('')
                         }}>註銷使用者
                       </button>
                     </li>}
@@ -197,6 +214,8 @@ export default function Member() {
                     <button className="btn btn-primary" type='button'
                       onClick={() => {
                         setIsButtonOpen((isButtonOpeImg => !isButtonOpeImg))
+                        setNewPassword('')
+                        setReNewPassword('')
                       }}>取消</button>
                   </div>
                 </div>
@@ -212,13 +231,29 @@ export default function Member() {
                 ) : (
                   <div className="memberUser-tool">
                     <div className="memberUser-note text-danger">請再次確認，是否註銷帳號？</div>
+                    <div className="memberUser-note">
+                      <Input
+                        id="password" labelText="再次輸入舊密碼" type="text"
+                        value={reNewPassword}
+                        placeholder="請輸入新密碼"
+                        handleChange={(e) => {
+                          setReNewPassword(e.target.value)
+                        }}
+                      />
+                    </div>
                     <div className="memberUser-btn">
+
                       <button className="btn btn-primary" type='button'
-                        onClick={() => { handleDeleteUser() }}>確定
+                        onClick={() => {
+                          handleDeleteUser()
+                          getRePRovide(reNewPassword)
+                        }}>確定
                       </button>
                       <button className="btn btn-primary" type='button'
                         onClick={() => {
                           setIsUserDelete((isUserDelete => !isUserDelete))
+                          setNewPassword('')
+                          setReNewPassword('')
                         }}>取消</button>
                     </div>
 
@@ -237,11 +272,21 @@ export default function Member() {
                         placeholder="請輸入新密碼"
                         handleChange={(e) => setNewPassword(e.target.value)}
                       />
+                      <Input
+                        id="password" labelText="再次輸入舊密碼" type="text"
+                        value={reNewPassword}
+                        placeholder="請輸入新密碼"
+                        handleChange={(e) => {
+                          setReNewPassword(e.target.value)
+                        }}
+                      />
                       <div className="memberUser-btn">
-                        <button type="submit" className="btn btn-primary" disabled={newPassword === ''} >修改密碼</button>
+                        <button type="submit" className="btn btn-primary" disabled={newPassword === '' || reNewPassword === ''} >修改密碼</button>
                         <button className="btn btn-primary" type='button'
                           onClick={() => {
                             setIsNewPassword((isNewPassword => !isNewPassword))
+                            setNewPassword('')
+                            setReNewPassword('')
                           }}>取消</button>
                       </div>
                     </form>
