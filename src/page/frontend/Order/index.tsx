@@ -8,34 +8,33 @@ import NotDataState from '@components/frontend/NotDataState'
 import './order.scss'
 
 export default function Order() {
-  const { USER_MEMBER, USER_TOKEN, USER_ID, getMember } = useContext<any>(LoginContext)
+  const { USER_MEMBER, loggedIn, USER_TOKEN, USER_ID } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const [orderData, setOrderData] = useState<OrdersType[]>([])
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const getCoupon = async () => {
-    getMember()
     const codeRes = await getOrdersApi()
-    if (USER_MEMBER) {
-      try {
-        setOrderData(
-          [...codeRes.data.orders.filter((item) => item)]
-            .filter(item => item.user.name.match(USER_ID))
-        )
-        isLoadingRef.current = false
-        setLoadingPage(false)
-      } catch (error) {
-      }
+    try {
+      setOrderData(
+        [...codeRes.data.orders.filter((item) => item)]
+          .filter(item => item.user.name.match(USER_ID))
+      )
+      isLoadingRef.current = false
+      setLoadingPage(false)
+    } catch (error) {
+      isLoadingRef.current = true
+      setLoadingPage(true)
     }
 
   }
   useEffect(() => {
-    if ((USER_MEMBER !== null || USER_MEMBER !== '') && USER_TOKEN !== '') {
+    if (USER_TOKEN !== '') {
       getCoupon()
     } else {
       navigate('/main/memberLogin')
     }
-  }, [])
+  }, [USER_TOKEN])
   return (
     <div className="order_page">
       <div className='container-fluid py-2'>
@@ -89,9 +88,9 @@ export default function Order() {
                               <li className="list-group-item">聯絡人電話：{telValue(order.user.tel)}</li>
                               <li className="list-group-item">訂單付款狀態：<a href={`#/main/cart/pay/${order.id}`}>{order.is_paid ? '已付款' : '未付款'}</a></li>
                               <li className="list-group-item">
-                                {order.products && Object.values(order.products).map((item) => {
+                                {order.products && Object.values(order.products).map((item, index) => {
                                   return (
-                                    <div className='order-prod' key={`prod_${item.product.id}`}>
+                                    <div className='order-prod' key={`order-prod${index}_${item.product.id}`}>
                                       <div className="order-prod-title"><span className='order-prod-note'>{item.product.category}</span> ／{item.product.title}</div>
                                       <div className="order-prod-qty">× {item.qty}{item.product.unit}</div>
                                     </div>

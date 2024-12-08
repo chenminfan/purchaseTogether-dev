@@ -1,41 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { firebaseApp } from '@api/Firebase';
-import { getAuth, onAuthStateChanged, signOut, getIdToken, UserInfo } from "firebase/auth";
+import { getAuth, signOut, getIdToken, UserInfo, User } from "firebase/auth";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
 type loginStateType = {
   username: string,
   password: string,
 }
 export const LoginContentProvider = (props) => {
   const { children } = props
-  const [loginState, setLoginState] = useState<loginStateType[] | any>({});
+  const isLoggedInRef = useRef(false)
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [loginState, setLoginState] = useState<loginStateType[]>([]);
   const [userState, setUserState] = useState<UserInfo>();
   const auth = getAuth(firebaseApp);
   const USER_MEMBER = userState;
-  const USER_ID = userState?.uid;
+
+
+
   const navigate = useNavigate()
-  const getMember = () => {
-    // 取得目前登入的使用者
-    getAuth(firebaseApp).onAuthStateChanged(async (user) => {
-      if (user) {
-        const token = await getIdToken(user);
-        document.cookie = `myHexSchoolDEV=${token};}`
-        setUserState(user)
-      }
-    });
-  }
+
   const getLoginOut = (isRouter = true) => {
     signOut(auth).then(async () => {
       document.cookie = 'myHexSchoolDEV='
       getMember()
       navigate('/main/memberLogin')
+      isLoggedInRef.current = true;
+      setLoggedIn(true);
     }).catch((error) => {
     });
     if (!isRouter) {
       navigate('/')
+      isLoggedInRef.current = false;
+      setLoggedIn(false);
     }
   }
   const USER_TOKEN = document.cookie
@@ -43,11 +40,32 @@ export const LoginContentProvider = (props) => {
     .find((row) => row.startsWith("myHexSchoolDEV="))
     ?.split("=")[1];
 
+  const getMember = () => {
+    // 取得目前登入的使用者
+    isLoggedInRef.current = loggedIn;
+    getAuth(firebaseApp).onAuthStateChanged(async (user) => {
+      if (user) {
+        const token = await getIdToken(user);
+        document.cookie = `myHexSchoolDEV=${token};}`
+        isLoggedInRef.current = true;
+        setLoggedIn(true);
+        setUserState(user)
+      } else {
+        isLoggedInRef.current = false;
+        setLoggedIn(false);
+      }
+    });
+  }
+  // 重新驗證
+  
+
+
   useEffect(() => {
     getMember()
   }, [])
+
   return (
-    <LoginContext.Provider value={{ auth, USER_MEMBER, USER_ID, setLoginState, loginState, getMember, getLoginOut, USER_TOKEN }}>
+    <LoginContext.Provider value={{ getMember, loggedIn, auth, USER_MEMBER, setLoginState, loginState, getLoginOut, USER_TOKEN }}>
       {children}
     </LoginContext.Provider>
   )

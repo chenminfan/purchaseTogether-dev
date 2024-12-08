@@ -17,7 +17,7 @@ export default function MemberLogin() {
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const { auth, USER_MEMBER, getMember, loginState, setLoginState, USER_TOKEN } = useContext<any>(LoginContext)
+  const { auth, getMember, loggedIn, loginState, setLoginState, USER_TOKEN } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const nav = [{ navName: '登入', navID: 'login' },
   { navName: '註冊', navID: 'create' }]
@@ -116,10 +116,12 @@ export default function MemberLogin() {
   })
 
   useEffect(() => {
-    if ((USER_MEMBER !== null || USER_MEMBER !== '') && USER_TOKEN !== '') {
+    if (loggedIn && USER_TOKEN !== '') {
       navigate('/main/member')
+    } else {
+      navigate('/main/memberLogin')
     }
-  }, [USER_MEMBER, USER_TOKEN])
+  }, [loggedIn, USER_TOKEN])
 
   return (
     <section className="memberLogin_page">
@@ -291,9 +293,7 @@ export default function MemberLogin() {
                     />
                   </div>
                   <div className="d-grid gap-2 mt-3">
-                    <button type="submit" className="btn btn-primary"
-
-                    >註冊</button>
+                    <button type="submit" className="btn btn-primary">註冊</button>
                   </div>
                 </form>
               </>

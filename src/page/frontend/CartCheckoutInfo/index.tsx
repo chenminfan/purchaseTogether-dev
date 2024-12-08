@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
+import { User, getAuth } from "firebase/auth";
 import { useForm } from "react-hook-form"
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import CartStep from '@components/frontend/CartStep';
@@ -13,7 +14,6 @@ import { ProductsType } from '@typeTS/Products';
 import { postOrdersApi } from '@api/Apis';
 import './checkoutInfo.scss';
 
-
 type CartCheckoutItemType = {
   final_total: number,
   id: string,
@@ -21,7 +21,10 @@ type CartCheckoutItemType = {
   qty: number,
   total: number
 }
+
 type CartCheckoutType = {
+  AUTH_STATE: User | null,
+  loggedIn: boolean,
   checkout: () => void,
   cartData: {
     id: string,
@@ -34,22 +37,22 @@ type CartCheckoutType = {
 }
 
 export default function CartCheckoutInfo() {
-  const { USER_MEMBER, USER_ID } = useContext<any>(LoginContext)
+  const { USER_MEMBER, USER_TOKEN } = useContext<any>(LoginContext)
   const navigate = useNavigate()
-  const { cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
+  const { loggedIn, cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const cardInfo = cartData.carts.filter((item) => item)
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
   const handleFormSubmit = handleSubmit(async (data) => {
     const { name, tel, email, address, message } = data;
     const dataFrom = {
       user: {
-        name: USER_MEMBER.displayName === null ? `${name}+ ${USER_ID}` : `${USER_MEMBER.displayName}+ ${USER_ID}`,
+        name: USER_MEMBER.displayName === null ? `${name}+ ${USER_MEMBER.uid}` : `${USER_MEMBER.displayName}+ ${USER_MEMBER.uid}`,
         email: USER_MEMBER.email === null ? email : USER_MEMBER.email,
         tel: USER_MEMBER.phoneNumber === null ? tel : USER_MEMBER.phoneNumber,
         address
@@ -69,14 +72,12 @@ export default function CartCheckoutInfo() {
     }
   })
   useEffect(() => {
-    if (USER_MEMBER) {
-      setCartStep(1)
-    window.scrollTo(0, 0)
-    } else {
-      navigate('/main/memberLogin')
+    if (loggedIn && USER_TOKEN !== '') {
+      window.scrollTo(0, 0)
     }
-    
-  }, [])
+    setCartStep(1)
+  }, [loggedIn])
+
   return (
     <div className="cart_page">
       <div className='container-fluid py-2'>
@@ -89,7 +90,7 @@ export default function CartCheckoutInfo() {
               <form action="" onSubmit={handleFormSubmit}>
                 <h4 className="fw-bold mb-4">結帳資訊</h4>
                 <div className="checkout-body">
-                  {USER_MEMBER !== null && (
+                  {getAuth().currentUser && (
                     <>{USER_MEMBER.displayName ? (
                       <Input id="name" labelText="聯絡人" type="text" value={USER_MEMBER.displayName} disabled={USER_MEMBER.displayName !== null} />) : (<Input
                         register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
@@ -126,7 +127,8 @@ export default function CartCheckoutInfo() {
                           message: '電話不大於 12 碼',
                         }
                       }} />)}
-                    </>)}
+                    </>
+                  )}
 
                   <Input register={register} errors={errors} id="address" labelText="聯繫地址" type="address"
                     rules={{

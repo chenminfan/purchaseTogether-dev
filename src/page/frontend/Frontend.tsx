@@ -28,7 +28,7 @@ export default function Frontend() {
   }, [])
 
   const LOCALSTORAGE_NAME = 'trackProd';
-  const [trackList, setTrackList] = useState<any>([]);
+  const [trackList, setTrackList] = useState<string[]>([]);
   useEffect(() => {
     const items = localStorage.getItem(LOCALSTORAGE_NAME);
     if (items) setTrackList(JSON.parse(items));
@@ -37,6 +37,7 @@ export default function Frontend() {
   useEffect(() => {
     localStorage.setItem(LOCALSTORAGE_NAME, JSON.stringify(trackList));
   }, [trackList]);
+  
 
   const handleTrack = (isTrack: string) => {
     const index = trackList.findIndex((item) => item === isTrack)
