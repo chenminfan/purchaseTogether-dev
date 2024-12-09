@@ -4,10 +4,11 @@ import './notDataState.scss'
 type Props = {
   notStateTitle: string,
   notStateIcon: string,
+  children: JSX.Element | JSX.Element[] | string,
 }
 
 export default function NotDataState(props: Props) {
-  const { notStateTitle, notStateIcon } = props
+  const { notStateTitle, notStateIcon, children } = props
   return (
     <div className='notState'>
       <div className="notState-box">
@@ -17,6 +18,7 @@ export default function NotDataState(props: Props) {
         <div className="notState-title">
           {notStateTitle}
         </div>
+        {children}
       </div>
 
     </div>
