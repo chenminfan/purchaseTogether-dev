@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useRef, useState, useContext, useEffect } from 'react'
 import { User, getAuth } from "firebase/auth";
 import { useForm } from "react-hook-form"
 import { useOutletContext, useNavigate } from 'react-router-dom'
@@ -42,8 +42,12 @@ export default function CartCheckoutInfo() {
   } = useForm()
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
+  const isLoadingRef = useRef(true)
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
 
   const handleFormSubmit = handleSubmit(async (data) => {
+    isLoadingRef.current = loadingPage
+    setLoadingPage(true)
     const { name, tel, email, address, message } = data;
     const dataFrom = {
       user: {
@@ -56,13 +60,16 @@ export default function CartCheckoutInfo() {
     }
     try {
       const res = await postOrdersApi(dataFrom)
+
+      isLoadingRef.current = false
+      setLoadingPage(false)
       setTimeout(() => {
         navigate(`/main/cart/pay/${res.data.orderId}`)
         setCartStep(2)
+
       }, 1500)
       handleSnackbarSuccess(dispatch, res);
       checkout()
-
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }
@@ -153,7 +160,9 @@ export default function CartCheckoutInfo() {
                       <div className="modal-content">
                         <div className="modal-header">
                           <h1 className="modal-title fs-5" id="checkModalLabel">隱私權</h1>
-                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+                          </button>
                         </div>
                         <div className="modal-body">
                           行銷隱私權是指在行銷過程中，保護消費者的個人隱私和數據安全。這包括以下幾個方面：
@@ -176,8 +185,13 @@ export default function CartCheckoutInfo() {
                     <Tooltip text="請再次確認您的填寫資訊">
                       <button type='submit' className='btn btn-primary' onClick={() => {
                         setCartStep(2)
-                      }}>
-                        送出填寫資訊
+                      }} disabled={loadingPage}>
+                        {loadingPage ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span className="ms-2" role="status">Loading...送出填寫資訊中！</span>
+                          </>
+                        ) : "送出填寫資訊"}
                       </button>
                     </Tooltip>
                   </div>

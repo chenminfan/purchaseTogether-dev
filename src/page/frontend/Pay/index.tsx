@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from 'react'
+import React, { useRef, useEffect, useState, } from 'react'
 import { useParams, useOutletContext } from 'react-router-dom'
 import { postPayApi, getOrdersIdApi } from '@api/Apis';
 import { dataValue } from '@api/utilities/dataValue';
@@ -10,6 +10,8 @@ type CartCheckoutType = {
 }
 export default function Pay() {
   const { orderId } = useParams()
+  const isLoadingRef = useRef(true)
+  const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const { cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const [saveOrder, setSaveOrder] = useState({
     create_at: 0,
@@ -33,16 +35,24 @@ export default function Pay() {
   })
 
   const getCart = async (orderId) => {
+    isLoadingRef.current = loadingPage
+    setLoadingPage(true)
     try {
       const res = await getOrdersIdApi(orderId)
+      isLoadingRef.current = false
+      setLoadingPage(false)
       setSaveOrder(res.data.order)
     } catch (error) {
     }
   }
 
   const handleClickPay = async (orderId) => {
+    isLoadingRef.current = loadingPage
+    setLoadingPage(true)
     try {
       await postPayApi(orderId)
+      isLoadingRef.current = false
+      setLoadingPage(false)
     } catch (error) {
     }
     getCart(orderId)
@@ -120,9 +130,18 @@ export default function Pay() {
                 </div>
                 {saveOrder.is_paid ? '' : (<div className="pay-btn d-grid gap-2">
                   <button className='btn btn-primary btn-lg'
-                    onClick={() => { handleClickPay(saveOrder.id) }}>
-                    <i className="bi bi-cash-coin"></i>
-                    <span>前往付款</span>
+                    onClick={() => { handleClickPay(saveOrder.id) }}
+                    disabled={loadingPage}>
+                    {loadingPage ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span role="status">Loading...付款中！</span>
+                      </>
+                    ) : (<>
+                      <i className="bi bi-cash-coin"></i>
+                      <span>前往付款</span>
+                    </>)}
+
                   </button>
                 </div>)}
 

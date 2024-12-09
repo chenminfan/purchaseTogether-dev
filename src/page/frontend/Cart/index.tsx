@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useRef, useEffect, useState, useContext } from 'react'
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import { postCouponApi } from '@api/Apis';
 import CartStep from '@components/frontend/CartStep';
@@ -39,16 +39,21 @@ export default function Cart() {
   }, [cartData.carts.length])
 
   const [_, dispatch] = useContext<any>(SnackbarContent);
+  const isLoadingRef = useRef(true)
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
 
   const handleClickCoupon = async (code) => {
     cartData.carts.length === 0 ? setCartStep(-1) : setCartStep(0)
     if (couponCode !== '') {
+      isLoadingRef.current = loadingPage
+      setLoadingPage(true)
       const data = {
         code: code
       }
       try {
         const codeRes = await postCouponApi(data)
-        console.log(codeRes)
+        isLoadingRef.current = false
+        setLoadingPage(false)
         setCouponInfo({
           info: code,
           infoState: codeRes.data.success,
@@ -94,7 +99,7 @@ export default function Cart() {
                       value={couponCode}
                       onChange={(e) => { setCouponCode(e.target.value) }} />
                     <div className="input-group-append">
-                      <button className="btn btn-primary rounded-0" type="button" disabled={couponCode === ''}
+                      <button className="btn btn-primary rounded-0" type="button" disabled={couponCode === '' || loadingPage}
                         onClick={() => handleClickCoupon(couponCode)}
                       >
                         {couponInfo.infoState ? (<i className="bi bi-check2-square"></i>)
@@ -132,8 +137,13 @@ export default function Cart() {
                         } else {
                           navigate('/main/memberLogin')
                         }
-                      }}>
-                        填寫資料
+                      }} disabled={loadingPage}>
+                        {loadingPage ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span className="ms-2" role="status">Loading...填寫資料中！</span>
+                          </>
+                        ) : "填寫資料"}
                       </button>
                     </Tooltip>
                   </div>
