@@ -13,10 +13,10 @@ const Home = () => {
   const boxImageText = [{
     title: '你是最好的品牌嗎？你是最好的..？....',
     text: '各大品牌，各大商品，歡迎與我們一起攜手共同推廣，開箱嚴格評比，給你最棒的商品，啾咪。 ',
-    imageUrl: "https://images.unsplash.com/photo-1487611459768-bd414656ea10?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "home/home-img-boxImage-1.jpg",
     title2: '良心好貨Ｘ實惠好物Ｘ資訊安全',
     text2: '良心商品，實質又優惠，除了商品安全品質外，我們高度重視你我資訊交易安全，致力於保護消費者資訊，持續提升資訊防護，加強提醒，保護你我每一人',
-    imageUrl2: "https://images.unsplash.com/photo-1448932223592-d1fc686e76ea?q=80&w=1738&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    imageUrl2: "home/home-img-boxImage-2.jpg"
   }]
   const [prod, setProd] = useState<ProductsType[]>([])
   const COUPON_CODE = 'Buy together Buy';
@@ -137,7 +137,7 @@ const Home = () => {
             </h4>
             <div className="box-content">
               <div className="coupons">
-                <div className="coupons-image"><div className="img_box"><LazyLoadImg className="" src="https://images.unsplash.com/photo-1651439372230-6a8f1c2aa597?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="code" /></div></div>
+                <div className="coupons-image"><div className="img_box"><LazyLoadImg className="" src={require('../../../assets/images/home/home-img-code-1.jpg')} alt="code" /></div></div>
                 <div className="coupons-text">
                   <div className="box-input">
                     <Input
@@ -173,12 +173,12 @@ const Home = () => {
                 </div>
               </div>
               <div className="col-md-6 col-sm-12">
-                <div className="img_box"><LazyLoadImg className="" src={info.imageUrl2} alt={info.title2} /></div>
+                <div className="img_box"><LazyLoadImg className="" src={require(`../../../assets/images/${info.imageUrl2}`)} alt={info.title2} /></div>
               </div >
             </div>
             <div className="row">
               <div className="col-md-6 col-sm-12">
-                <div className="img_box"><LazyLoadImg className="" src={info.imageUrl} alt={info.title} /></div>
+                <div className="img_box"><LazyLoadImg className="" src={require(`../../../assets/images/${info.imageUrl}`)} alt={info.title} /></div>
               </div >
               <div className="col-md-6 col-sm-12">
                 <div className="home-box home-imgBox">
