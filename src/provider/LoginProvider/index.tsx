@@ -3,6 +3,8 @@ import { firebaseApp } from '@api/Firebase';
 import { getAuth, signOut, getIdToken, UserInfo, User } from "firebase/auth";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 type loginStateType = {
   username: string,
   password: string,
@@ -39,7 +41,7 @@ export const LoginContentProvider = (props) => {
     .split("; ")
     .find((row) => row.startsWith("myHexSchoolDEV="))
     ?.split("=")[1];
-
+  axios.defaults.headers.common['Authorization'] = USER_TOKEN
   const getMember = () => {
     // 取得目前登入的使用者
     isLoggedInRef.current = loggedIn;
@@ -57,7 +59,7 @@ export const LoginContentProvider = (props) => {
     });
   }
   // 重新驗證
-  
+
 
 
   useEffect(() => {

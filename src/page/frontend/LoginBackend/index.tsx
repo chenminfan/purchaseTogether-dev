@@ -21,11 +21,11 @@ export default function Login() {
   const [loginState, setLoginState] = useState<loginStateType[] | any>({});
 
   const handleChange = (e) => {
-    e.preventDefault()
     const { name, value } = e.target;
     setData({ ...data, [name]: value })
   }
   const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       const res = await postLoginApi(data)
       if (res.data.success) {
@@ -48,6 +48,9 @@ export default function Login() {
       ?.split("=")[1];
 
     axios.defaults.headers.common['Authorization'] = token
+    if (token) {
+      navigate('/backend')
+    }
   }, [])
 
   return (
@@ -59,7 +62,6 @@ export default function Login() {
           alertMessage={loginState.message}>
           <div className="loginBackend-from">
             <form action="" onSubmit={(e) => {
-              e.preventDefault()
               handleSubmit(e)
             }}>
               <div className="loginBackend-label">
@@ -91,12 +93,14 @@ export default function Login() {
                   handleChange={(e) => handleChange(e)}
                 />
               </div>
+
+              <div className="d-grid gap-2 mt-3">
+                <button type="submit" className="btn btn-primary">登入</button>
+              </div>
             </form>
           </div>
 
-          <div className="d-grid gap-2 mt-3">
-            <button type="submit" className="btn btn-primary">登入</button>
-          </div>
+
         </BoxSection>
       </div>
 

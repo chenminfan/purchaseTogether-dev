@@ -34,6 +34,7 @@ export default function Dashboard(props) {
     ?.split("=")[1];
 
   axios.defaults.headers.common['Authorization'] = token
+
   useEffect(() => {
     if (!token) {
       return navigate('/')
@@ -52,8 +53,9 @@ export default function Dashboard(props) {
   const CONTAINER =
     window !== undefined ? () => window().document.body : undefined;
   const navItems = [
-    { nameId: 1, name: '公告資訊', icon: 'bi-box-seam', link: '/backend' },
-    { nameId: 2, name: '登出', icon: 'bi-ticket-perforated', link: '/', handleClick: logout }];
+    { nameId: 1, name: '回前台', icon: 'bi-shop', link: '/' },
+    { nameId: 1, name: '公告資訊', icon: 'bi-newspaper', link: '#/backend' },
+    { nameId: 2, name: '登出', icon: '', link: '/', handleClick: logout }];
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -112,8 +114,9 @@ export default function Dashboard(props) {
               <Box sx={{ ml: 'auto' }}>
                 {navItems.map((navItem) => (
                   <Button
-                    key={navItem.nameId}
-                    href={`#/main${navItem.link}`}
+                    key={navItem.icon}
+                    startIcon={<i className={`bi ${navItem.icon}`} />}
+                    href={`${navItem.link}`}
                     variant="outlined"
                     sx={{ color: '#000' }}
                     onClick={navItem.handleClick}>
@@ -198,7 +201,7 @@ export default function Dashboard(props) {
               className="backend"
               sx={{
                 flexGrow: 1,
-                width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+                width: { sm: `calc(100 % - ${DRAWER_WIDTH}px)` },
               }}
             >
               <TableProvider>
