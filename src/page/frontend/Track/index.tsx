@@ -64,7 +64,7 @@ export default function Track() {
 
   return (
     <div className="prods_page">
-      <div className='container-fluid py-2'>
+      <div className='container-xl py-2'>
         <div className="row">
           <div className="col-md-12">
             <h4 className="fw-bold p-4">追蹤商品</h4>

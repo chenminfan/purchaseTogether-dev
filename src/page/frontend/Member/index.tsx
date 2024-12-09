@@ -99,7 +99,7 @@ export default function Member() {
 
   return (
     <div className='memberUser_page'>
-      <div className="container-fluid">
+      <div className="container-xl">
         <div className="row is-animation">
           <div className={`${(isButtonOpen || isUserDelete || isNewPassword) ? ' col-md-6' : 'col-12'}`}>
             {USER_MEMBER && (

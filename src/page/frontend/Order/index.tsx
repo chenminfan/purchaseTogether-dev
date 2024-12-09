@@ -40,7 +40,7 @@ export default function Order() {
   }, [USER_TOKEN])
   return (
     <div className="order_page">
-      <div className='container-fluid py-2'>
+      <div className='container-xl py-2'>
         <div className="row">
           <div className="col-lg-12 col-md-12">
             <h4 className="fw-bold mb-4">我的訂單</h4>

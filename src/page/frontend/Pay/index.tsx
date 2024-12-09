@@ -66,7 +66,7 @@ export default function Pay() {
 
   return (
     <div className="pay_page" >
-      <div className="container-fluid py-2">
+      <div className="container-xl py-2">
         <div className="row">
           <CartStep active={cartStep} />
         </div>
