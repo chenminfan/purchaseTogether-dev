@@ -4,7 +4,7 @@ import './notDataState.scss'
 type Props = {
   notStateTitle: string,
   notStateIcon: string,
-  children: JSX.Element | JSX.Element[] | string,
+  children?: JSX.Element | JSX.Element[] | string,
 }
 
 export default function NotDataState(props: Props) {

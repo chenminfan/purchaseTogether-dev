@@ -11,13 +11,14 @@ export type NavLeftItemsType = {
   icon: string,
   link: string,
   children?: JSX.Element | JSX.Element[],
+  handleMouseLeave?: () => void,
 };
-const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, className, navID, link, icon, children }: NavLeftItemsType, ref) => {
+const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, className, navID, link, icon, children, handleMouseLeave }: NavLeftItemsType, ref) => {
   const location = useLocation();
   return (
     <li className={`nav-item ${className}`} ref={ref}>
       {link === '#/main/memberLogin' ? (
-        <a className={`nav-link ${(`#${location.pathname}` === '#/main/memberLogin') || (`#${location.pathname}` === '#/main/member') ? 'active' : ''}`} href={link} aria-label={navID} role="link">
+        <a className={`nav-link ${(`#${location.pathname}` === '#/main/memberLogin') || (`#${location.pathname}` === '#/main/member') ? 'active' : ''}`} href={link} aria-label={navID} role="link" onMouseLeave={handleMouseLeave}>
           <i className={`bi ${icon}`}></i>{name}
           {children}
         </a>
@@ -52,9 +53,7 @@ export default function Header(props) {
 
   return (
     <header>
-      <nav className="navbar navbar-expand-lg"
-        onMouseLeave={handleMouseLeave}
-      >
+      <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
           <button className={`navbar-toggler fade ${!isNavCollapsed ? '' : 'collapsed'}`} type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded={!isNavCollapsed ? true : false} aria-label="Toggle-Link" role="button" onClick={handleNavCollapse} >
             <span className="navbar-toggler-icon"></span>
@@ -63,7 +62,10 @@ export default function Header(props) {
           <div className={`collapse fade navbar-collapse navbar-box collapse ${!isNavCollapsed ? 'show' : ''}`} id="navbarTogglerDemo01">
             <ul className="navbar-nav">
               {navText.map((text) => (
-                <RouterLink key={text.navID} className={text.className} link={text.link} icon={text.icon} navID={text.navID} name={text.navName}>
+                <RouterLink key={text.navID} className={text.className} link={text.link} icon={text.icon} navID={text.navID} name={text.navName}
+                  handleMouseLeave={() => {
+                    handleMouseLeave()
+                  }}>
                   <>
                     {text.navID === 'trackProds' && (
                       <>
@@ -91,7 +93,10 @@ export default function Header(props) {
           <div className="navbar-collapse navbar-icon">
             <ul className="navbar-nav">
               {navIcon.map((navItem) => (
-                <RouterLink key={navItem.navID} className={navItem.className} link={navItem.link} icon={navItem.icon} navID={navItem.navID}>
+                <RouterLink key={navItem.navID} className={navItem.className} link={navItem.link} icon={navItem.icon} navID={navItem.navID}
+                  handleMouseLeave={() => {
+                    handleMouseLeave()
+                  }}>
                   <>
                     {navItem.navID === 'cart' && (
                       <>

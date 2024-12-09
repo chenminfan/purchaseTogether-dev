@@ -13,6 +13,7 @@ export default function Order() {
   const [orderData, setOrderData] = useState<OrdersType[]>([])
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
+
   const getCoupon = async () => {
     const codeRes = await getOrdersApi()
     isLoadingRef.current = true
@@ -28,8 +29,8 @@ export default function Order() {
       isLoadingRef.current = true
       setLoadingPage(true)
     }
-
   }
+
   useEffect(() => {
     if (USER_TOKEN !== '') {
       getCoupon()

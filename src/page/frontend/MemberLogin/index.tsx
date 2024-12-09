@@ -219,8 +219,7 @@ export default function MemberLogin() {
 
                             />
                             <div className="memberLogin-btn position-absolute">
-                              <button type="submit" className="btn btn-primary btn-sm "
-                              >寄出</button>
+                              <button type="submit" className="btn btn-primary btn-sm">寄出</button>
                               <button type="button" className="btn btn-primary btn-sm" onClick={() => {
                                 setIsPassword(isPassword => !isPassword)
                               }}

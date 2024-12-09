@@ -46,7 +46,8 @@
           opacity: 0;
           padding: 4px;
           border-radius: 4px;
-          font-size: 12px;
+          font-size: 14px;
+          font-weight: 500;
           &.is-show {
             opacity: 1;
           }
@@ -202,7 +203,8 @@
     }
   }
   &-subContent {
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 500;
   }
 
   &-group {
@@ -250,6 +252,9 @@
       padding: 0px;
     }
     .box {
+      h3 {
+        font-size: 24px;
+      }
       &-title {
         @include media-breakpoint-down(md) {
           font-size: 16px;

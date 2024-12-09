@@ -58,7 +58,10 @@ export default function Login() {
           isAlert={loginState.success}
           alertMessage={loginState.message}>
           <div className="loginBackend-from">
-            <form action="" onSubmit={(e) => { handleSubmit(e) }}>
+            <form action="" onSubmit={(e) => {
+              e.preventDefault()
+              handleSubmit(e)
+            }}>
               <div className="loginBackend-label">
                 <Input
                   labelText="帳號"
