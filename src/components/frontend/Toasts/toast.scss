@@ -1,6 +1,7 @@
 .toast {
-  bottom: 20px;
+  top: 80px;
   right: 20px;
+  z-index: 999;
   @include media-breakpoint-down(md) {
     width: calc(100% - 32px);
     left: 16px;

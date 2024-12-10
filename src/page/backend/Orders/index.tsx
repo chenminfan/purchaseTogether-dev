@@ -53,6 +53,8 @@ export default function BackendOrders() {
   const [tableType, setTableType] = useState('');
   const [tamp, setTamp] = useState<OrdersType>(state.dataTamp);
   const getOrders = async (getPage = 1) => {
+    isLoadingRef.current = true;
+    setLoadingPage(true)
     const orderRes = await getBackendOrdersApi(getPage)
     setOrdersData(orderRes.data.orders)
     setOrdersProdData(orderRes.data.orders.products)

@@ -43,14 +43,15 @@ export default function BackendCoupon() {
   const [sortOrderID, setSortOrderID] = useState('');
   const [tableType, setTableType] = useState('');
   const [tamp, setTamp] = useState<CouponType>(state.dataTamp);
+
   const COLUMNS: TableColumns[] = [
     { field: 'title', headerName: '優惠券名稱', width: 120 },
     { field: 'percent', headerName: '折扣數', width: 120, },
     { field: 'due_date', headerName: '使用期限', width: 120, },
     { field: 'code', headerName: '優惠碼', width: 120, },
     { field: 'is_enabled', headerName: '狀態', width: 120, },
-
   ];
+
   const getCoupon = async (getPage = 1) => {
     const couponRes = await getBackendCouponApi(getPage)
     setCouponData(couponRes.data.coupons)
@@ -63,6 +64,7 @@ export default function BackendCoupon() {
       tableData: couponData,
     })
   }
+
   // 排序 start
   const handleSortOrder = handleTableOrder(sortOrderID, sortOrder, setSortOrder, setSortOrderID)
   const newSortOrder = handleTableSort()
@@ -142,6 +144,7 @@ export default function BackendCoupon() {
       </Box>
     )
   }
+
   return (
     <>
       <CTableFrom

@@ -9,12 +9,17 @@ header {
   .navbar-expand-lg {
     .nav {
       &bar {
+        &-toggler {
+          display: none;
+          @include media-breakpoint-down(md) {
+            display: block;
+          }
+        }
         &-nav {
           .nav {
             &-link {
-              padding: 16px;
+              padding: 16px 8px;
               @include media-breakpoint-down(md) {
-                padding: 16px 4px;
                 font-size: 14px;
               }
             }
@@ -29,14 +34,7 @@ header {
       @include media-breakpoint-down(md) {
         position: relative;
       }
-      .fade {
-        &.navbar-toggler:not(.show) {
-          opacity: 1;
-        }
-        &.navbar-collapse {
-          opacity: 1;
-        }
-      }
+
       .nav {
         &-item {
           display: flex;
@@ -146,7 +144,7 @@ header {
           width: 100%;
           width: auto;
           background: #fff;
-          border-bottom: 1px solid #6c757d;
+          border-bottom: 1px solid $gray-300;
         }
         .nav {
           &-item {
@@ -230,11 +228,26 @@ header {
   }
   .navbar-collapse {
     &:not(.navbar-icon) {
+      opacity: 1;
+      display: block;
+      @include media-breakpoint-down(md) {
+        height: 0;
+        opacity: 0;
+        &.show {
+          display: block;
+          opacity: 1;
+          height: auto;
+        }
+      }
+
       .navbar-nav {
         @include media-breakpoint-down(md) {
           display: flex;
           flex-direction: column;
         }
+      }
+      i {
+        margin-left: 8px;
       }
 
       .nav {

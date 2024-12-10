@@ -40,7 +40,7 @@ my-app
 └── src                            // 放置即將被編譯檔案的資料夾
 │    ├── assets
 │        ├── image                 // 圖檔資源(img,icon)
-│        ├── mixins                // bootstarp變數參數
+│        ├── mixins                // bootstrap變數參數
 │        └── style                 // Style 共用區
 │    ├── components                // **元件**
 │    ├    ├── common               // 共用元件

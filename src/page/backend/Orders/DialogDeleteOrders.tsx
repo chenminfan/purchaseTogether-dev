@@ -1,5 +1,5 @@
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import Dialog from '@components/backend/Dialog'
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -46,7 +46,7 @@ export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
     },
     num: 0
   }, tampDataALL = [], handleClose, getOrders, theme, color, orderType } = props;
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
 
   const handleOrdersDelete = async () => {
     try {
