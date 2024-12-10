@@ -1,19 +1,75 @@
 $borderRadius: 18px;
 .checkout {
   &-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    margin: 8px 0;
+    margin: 16px 0;
     border-radius: $borderRadius;
     border: 0.5px solid $primary;
     background-color: $white;
     &:first-child {
       margin-top: 0;
+      @include media-breakpoint-down(md) {
+        margin-top: 16px;
+      }
     }
     &.checkout {
       &-tool {
-        margin: 16px 0;
+        position: relative;
+        margin: 8px 0;
         box-shadow: 0px 0 9px $gray-300;
+        .card {
+          &-content {
+            a {
+              width: 100%;
+              @include media-breakpoint-down(sm) {
+                margin: 8px;
+              }
+            }
+          }
+
+          &-title {
+            margin-bottom: 0;
+            padding: 0;
+          }
+          &-toolBar {
+            display: flex;
+            flex-wrap: wrap;
+            @include media-breakpoint-down(sm) {
+              flex-direction: column;
+              align-items: center;
+              padding: 8px 8px 0;
+            }
+          }
+          &-info {
+            @include media-breakpoint-down(sm) {
+              width: 100%;
+            }
+          }
+          &-code {
+            margin-top: 0;
+          }
+          &-checkInfo {
+            left: 166px;
+            bottom: 16px;
+            margin-top: 0;
+            @include media-breakpoint-down(md) {
+              margin-top: 16px;
+            }
+            &-tool {
+              width: 100%;
+            }
+          }
+          &-image {
+            width: 150px;
+            height: 180px;
+            @include media-breakpoint-down(md) {
+              width: 120px;
+              height: 120px;
+            }
+          }
+        }
       }
     }
   }
@@ -75,14 +131,13 @@ $borderRadius: 18px;
       align-items: flex-start;
       margin-top: 8px;
       width: 100%;
-      @include media-breakpoint-down(sm) {
-        flex-direction: column;
-      }
       &-text {
         color: $primary;
-        width: calc(100% - 100px);
+        width: 100%;
+        @include text-one-line-truncate(100%, auto, 1.5);
       }
       &-tag {
+        flex-shrink: 0;
         margin-right: 8px;
         padding: 0 4px;
         font-size: 14px;
@@ -96,16 +151,9 @@ $borderRadius: 18px;
       flex-direction: row;
       justify-content: flex-end;
       align-items: flex-start;
-      + .card {
-        &-checkInfo {
-          display: none;
-          @include media-breakpoint-down(md) {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 8px 16px 16px 16px;
-          }
-        }
+      @include media-breakpoint-down(md) {
+        flex-wrap: wrap;
+        justify-content: normal;
       }
     }
     &-content {
@@ -113,37 +161,52 @@ $borderRadius: 18px;
       flex-direction: column;
       font-size: 14px;
       @include media-breakpoint-down(md) {
-        flex-direction: column;
         align-items: flex-start;
-      }
-      + .card {
-        &-checkInfo {
-          @include media-breakpoint-down(md) {
-            display: none;
-          }
-        }
       }
     }
     &-checkInfo {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      left: 196px;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       font-size: 14px;
-      margin-top: 4px;
+      margin-top: 16px;
       @include media-breakpoint-down(md) {
+        position: static;
         align-items: flex-end;
+        flex-direction: column;
+        width: 100%;
         margin-top: 8px;
+        padding: 8px;
         border-top: 1px solid $gray-300;
+      }
+      &-tool {
+        width: calc(100% - 200px);
+        @include media-breakpoint-down(md) {
+          width: 100%;
+        }
+      }
+    }
+    &-inputStepper {
+      @include media-breakpoint-down(md) {
+        width: 100%;
+        margin-top: 16px;
+      }
+      .inputStepper.rounded {
+        @include media-breakpoint-down(md) {
+          max-width: 100%;
+        }
       }
     }
     &-total {
       display: flex;
-      justify-content: space-between;
-      @include media-breakpoint-down(sm) {
-        flex-direction: column;
-      }
+      flex-direction: column;
     }
     &-title {
       font-size: 18px;
+      font-weight: 500;
       margin-bottom: 8px;
       @include text-line-truncate(2, 100%, auto, 1.5);
     }
@@ -152,10 +215,9 @@ $borderRadius: 18px;
       flex-direction: column;
       justify-content: space-between;
       flex: 1;
-      position: relative;
       margin-left: 16px;
       padding: 8px 16px 8px 0;
-      width: calc(100% - 800px);
+      width: calc(100% - 180px);
       @include media-breakpoint-down(md) {
         padding-left: 16px;
         margin-left: 0px;
@@ -172,12 +234,12 @@ $borderRadius: 18px;
     }
     &-image {
       position: relative;
-      width: 150px;
+      width: 180px;
       overflow: hidden;
       border-radius: $borderRadius 4px 4px $borderRadius;
       flex-shrink: 0;
       @include media-breakpoint-down(md) {
-        width: 100px;
+        width: 150px;
       }
       .img_box {
         padding-bottom: 100%;
@@ -200,17 +262,6 @@ $borderRadius: 18px;
       i {
         font-size: 14px;
         font-weight: 600;
-      }
-    }
-    &-inputStepper {
-      @include media-breakpoint-down(sm) {
-        display: flex;
-        width: 100%;
-      }
-      .inputStepper.rounded {
-        @include media-breakpoint-down(md) {
-          max-width: 100%;
-        }
       }
     }
     &-price {

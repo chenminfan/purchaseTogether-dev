@@ -200,7 +200,7 @@ export default function CartCheckoutInfo() {
             </div>
           </div>
           <div className="col-lg-5 col-md">
-            <div className="checkout-list p-3">
+            <div className="checkout-list">
               <h4 className="fw-bold">結帳明細</h4>
               <div className="checkout-body">
 

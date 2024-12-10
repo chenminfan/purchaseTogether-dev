@@ -67,7 +67,6 @@ export default function CartProdCard(props: Props) {
     handleTrack(prodID)
   }
   const trackID = trackList?.find((item) => item.match(cart.product.id))
-
   return (
     <div className={`checkout checkout-card ${isTool ? '' : 'checkout-tool'}`} >
       <div className="card-toolBar">
@@ -84,10 +83,35 @@ export default function CartProdCard(props: Props) {
         <div className="card-info">
           <div className="card-content">
             {isTool && <button className="btn text-primary card-btn btn-sm" type="button" onClick={() => { handleDelete(cart) }}><i className="bi bi-x-lg"></i></button>}
-
-            <a href={`#/main/prods/detail/${cart.id}`}>
+            <a href={`#/main/prods/detail/${cart.product.id}`}>
               <span className="card-title">{cart.product.title}</span>
             </a>
+            <div className="card-total">
+              <div className="card-price">
+                <div className="card-total-title">單價</div>
+                <div className="card-total-content">NT$ {cart.product.price.toLocaleString('zh-TW')}</div>
+              </div>
+              <div className={`card-price ${cart.final_total !== cart.total ? 'card-price-total' : ''}`}>
+                <div className="card-total-title">小計</div>
+                <div className="card-total-content">NT$ {cart.total.toLocaleString('zh-TW')}</div>
+              </div>
+              {cart.final_total !== cart.total && <div className="card-price card-price-code">
+                <div className="card-total-title">折扣後 </div>
+                <div className="card-total-content">NT$ {cart.final_total.toLocaleString('zh-TW')}</div>
+              </div>}
+            </div>
+          </div>
+
+        </div>
+        {(cart?.coupon?.code || isTool) && (
+          <div className="card-checkInfo">
+            <div className="card-checkInfo-tool">
+              {cart?.coupon?.code && (
+                <div className="card-code">
+                  <div className="card-code-tag">折價券</div>
+                  <div className="card-code-text">{cart?.coupon?.code}</div></div>
+              )}
+            </div>
 
             {isTool && (
               <div className="card-inputStepper">
@@ -114,51 +138,7 @@ export default function CartProdCard(props: Props) {
                 />
               </div>
             )}
-          </div>
-          {(cart.product.price || cart?.coupon?.code) && (<div className="card-checkInfo">
-            <div className="card-total">
-              <div className="card-price">
-                <div className="card-total-title">單價</div>
-                <div className="card-total-content">NT$ {cart.product.price.toLocaleString('zh-TW')}</div>
-              </div>
-              <div className={`card-price ${cart.final_total !== cart.total ? 'card-price-total' : ''}`}>
-                <div className="card-total-title">小計</div>
-                <div className="card-total-content">NT$ {cart.total.toLocaleString('zh-TW')}</div>
-              </div>
-              {cart.final_total !== cart.total && <div className="card-price card-price-code">
-                <div className="card-total-title">折扣後 </div>
-                <div className="card-total-content">NT$ {cart.final_total.toLocaleString('zh-TW')}</div>
-              </div>}
-            </div>
-            {cart?.coupon?.code && (
-              <div className="card-code">
-                <div className="card-code-tag">折價券</div>
-                <div className="card-code-text">{cart?.coupon?.code}</div></div>
-            )}
           </div>)}
-        </div>
-      </div>
-      <div className="card-checkInfo">
-        <div className="card-total">
-          <div className="card-price">
-            <div className="card-total-title">單價</div>
-            <div className="card-total-content">NT$ {cart.product.price.toLocaleString('zh-TW')}</div>
-          </div>
-          <div className={`card-price ${cart.final_total !== cart.total ? 'card-price-total' : ''}`}>
-            <div className="card-total-title">小計</div>
-            <div className="card-total-content">NT$ {cart.total.toLocaleString('zh-TW')}</div>
-          </div>
-          {cart.final_total !== cart.total && <div className="card-price card-price-code">
-            <div className="card-total-title">折扣後 </div>
-            <div className="card-total-content">NT$ {cart.final_total.toLocaleString('zh-TW')}</div>
-          </div>}
-        </div>
-
-        {cart?.coupon?.code && (
-          <div className="card-code">
-            <div className="card-code-tag">折價券</div>
-            <div className="card-code-text">{cart?.coupon?.code}</div></div>
-        )}
       </div>
 
     </div>
