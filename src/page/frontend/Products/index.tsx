@@ -116,7 +116,7 @@ export default function Products() {
         </ul >
       </nav >
 
-      {loadingPage ? (<LoadingState loadingStateTitle="太多商品了....你等等呀！" loadingStateIcon="bi-box2-heart" />) : (<div className='container-fluid py-2'>
+      {loadingPage ? (<LoadingState loadingStateTitle="太多商品了....你等等呀！" loadingStateIcon="bi-box2-heart" />) : (<div className='container-xl py-2'>
         <div className="row">
           <div className="col-md-12">
             <div className="prods_box">

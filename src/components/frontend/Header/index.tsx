@@ -1,7 +1,8 @@
-import React, { useState, useContext, forwardRef, useEffect } from 'react'
+import React, { useState, useContext, forwardRef } from 'react'
 import { useLocation } from 'react-router-dom';
 import LogoBUY from '@components/frontend/LogoBUY';
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
+import { useRWD } from '@api/utilities/useRWD'
 import './header.scss';
 
 export type NavLeftItemsType = {
@@ -11,14 +12,14 @@ export type NavLeftItemsType = {
   icon: string,
   link: string,
   children?: JSX.Element | JSX.Element[],
-  handleMouseLeave?: () => void,
+  handleClick?: () => void,
 };
-const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, className, navID, link, icon, children, handleMouseLeave }: NavLeftItemsType, ref) => {
+const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, className, navID, link, icon, children, handleClick }: NavLeftItemsType, ref) => {
   const location = useLocation();
   return (
-    <li className={`nav-item ${className}`} ref={ref}>
+    <li className={`nav-item ${className}`} ref={ref} onClick={handleClick} >
       {link === '#/main/memberLogin' ? (
-        <a className={`nav-link ${(`#${location.pathname}` === '#/main/memberLogin') || (`#${location.pathname}` === '#/main/member') ? 'active' : ''}`} href={link} aria-label={navID} role="link" onMouseLeave={handleMouseLeave}>
+        <a className={`nav-link ${(`#${location.pathname}` === '#/main/memberLogin') || (`#${location.pathname}` === '#/main/member') ? 'active' : ''}`} href={link} aria-label={navID} role="link" >
           <i className={`bi ${icon}`}></i>{name}
           {children}
         </a>
@@ -27,17 +28,16 @@ const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, classNam
           <i className={`bi ${icon}`}></i>{name}
           {children}
         </a>
-      )}
-    </li>
+      )
+      }
+    </li >
   )
 })
 
 export default function Header(props) {
-  const { USER_TOKEN, getLoginOut, loggedIn } = useContext<any>(LoginContext)
+  const RWD_DEVICE = useRWD();
   const { headerLink = '#', cartData, trackList } = props;
-  const [isNavCollapsed, setIsNavCollapsed] = useState(true);
-  const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
-  const handleMouseLeave = () => setIsNavCollapsed(true);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
 
   const navText = [
     { navName: '全站商品', navID: 'store', className: '', link: '#/main/prods', icon: 'bi-signpost-split' },
@@ -55,17 +55,14 @@ export default function Header(props) {
     <header>
       <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
-          <button className={`navbar-toggler fade ${!isNavCollapsed ? '' : 'collapsed'}`} type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded={!isNavCollapsed ? true : false} aria-label="Toggle-Link" role="button" onClick={handleNavCollapse} >
+          <button className={`navbar-toggler ${isNavCollapsed ? '' : 'collapsed'}`} type="button" onClick={() => setIsNavCollapsed((isNavCollapsed) => !isNavCollapsed)}>
             <span className="navbar-toggler-icon"></span>
           </button>
-
-          <div className={`collapse fade navbar-collapse navbar-box collapse ${!isNavCollapsed ? 'show' : ''}`} id="navbarTogglerDemo01">
+          <div className={`collapse navbar-collapse navbar-box fade ${isNavCollapsed ? 'show' : ''}`} id="navbarTogglerDemo01">
             <ul className="navbar-nav">
               {navText.map((text) => (
                 <RouterLink key={text.navID} className={text.className} link={text.link} icon={text.icon} navID={text.navID} name={text.navName}
-                  handleMouseLeave={() => {
-                    handleMouseLeave()
-                  }}>
+                  handleClick={RWD_DEVICE !== 'desktop' ? () => setIsNavCollapsed(false) : () => { }}>
                   <>
                     {text.navID === 'trackProds' && (
                       <>
@@ -93,10 +90,7 @@ export default function Header(props) {
           <div className="navbar-collapse navbar-icon">
             <ul className="navbar-nav">
               {navIcon.map((navItem) => (
-                <RouterLink key={navItem.navID} className={navItem.className} link={navItem.link} icon={navItem.icon} navID={navItem.navID}
-                  handleMouseLeave={() => {
-                    handleMouseLeave()
-                  }}>
+                <RouterLink key={navItem.navID} className={navItem.className} link={navItem.link} icon={navItem.icon} navID={navItem.navID}>
                   <>
                     {navItem.navID === 'cart' && (
                       <>
@@ -114,14 +108,6 @@ export default function Header(props) {
                   </>
                 </RouterLink>
               ))}
-
-              {USER_TOKEN !== '' && <li className="nav-item">
-                <button type='button' className="nav-link" aria-label="prods-category" role="link" onClick={() => {
-                  getLoginOut()
-                }}>
-                  登出
-                </button>
-              </li>}
             </ul>
           </div>
         </div>

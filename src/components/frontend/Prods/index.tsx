@@ -13,7 +13,7 @@ type ProdsType = {
 }
 
 export default function Prods(props: ProdsType) {
-  const { prod, isLoadingPage,isLoading, handleClick, handleTrack = () => { }, trackList } = props;
+  const { prod, isLoadingPage, isLoading, handleClick, handleTrack = () => { }, trackList } = props;
   const handleTrackClick = (prodID) => {
     handleTrack(prodID)
   }
@@ -51,45 +51,43 @@ export default function Prods(props: ProdsType) {
     )
   }
   return (
-    <div className="card prods">
-      <div className="card-body">
-        <div className="prods-content">
-          <h5 className="card-title"><a href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="prod-link">{prod.title}</a></h5>
-          <div className="prods-price">
-            <div className="prods-item">
-              <div className="title">特價</div>
-              <span>${prod.price.toLocaleString('zh-TW')}</span>
-            </div>
-            <div className="prods-item">
-              <div className="title">原價</div>
-              <span className='origin-price'>${prod.origin_price.toLocaleString('zh-TW')}</span>
-            </div>
-          </div>
+    <a className="cardProds-link" href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="img-link">
+      <div className="card prods">
+        <div className="card-body">
+          <div className="card-prodImage">
+            <button className={`btn ${trackID === prod.id ? 'btn-primary' : 'btn-light'} card-btn card-btn-track `} type="button" onClick={() => {
+              handleTrackClick(prod.id)
+            }} >
+              {trackID === prod.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
+            </button>
 
-
-
-        </div>
-        <div className="card-prodImage">
-          <button className={`btn ${trackID === prod.id ? 'btn-primary' : 'btn-light'} card-btn card-btn-track `} type="button" onClick={() => {
-            handleTrackClick(prod.id)
-          }} >
-            {trackID === prod.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
-          </button>
-          <a href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="img-link">
 
             <div className="img_box">
               <LazyLoadImg className="card-img-top" src={prod.imageUrl} alt={prod.title} />
             </div>
-          </a>
-        </div>
+          </div>
 
+          <div className="prods-content">
+            <h5 className="card-title">{prod.title}</h5>
+            <div className="prods-price">
+              <div className="prods-item">
+                <div className="title">特價</div>
+                <span>${prod.price.toLocaleString('zh-TW')}</span>
+              </div>
+              <div className="prods-item">
+                <div className="title">原價</div>
+                <span className='origin-price'>${prod.origin_price.toLocaleString('zh-TW')}</span>
+              </div>
+            </div>
+          </div>
 
-        <div className="prods-tool" onClick={handleClick}>
-          <button type="button" className="btn btn-primary prods-btn-add" role="button" disabled={isLoading}><span className='prods-cart-icon'>
-            <i className="bi bi-cart-check-fill"></i>
-          </span></button>
+          <div className="prods-tool" onClick={handleClick}>
+            <button type="button" className="btn btn-primary prods-btn-add" role="button" disabled={isLoading}><span className='prods-cart-icon'>
+              <i className="bi bi-cart-check-fill"></i>
+            </span></button>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
   )
 }

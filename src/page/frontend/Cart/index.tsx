@@ -68,7 +68,7 @@ export default function Cart() {
 
   return (
     <div className="cart_page">
-      <div className='container-fluid py-2 px-5'>
+      <div className='container-xl py-2 px-5'>
         <div className="row">
           <CartStep active={cartStep} />
         </div>
