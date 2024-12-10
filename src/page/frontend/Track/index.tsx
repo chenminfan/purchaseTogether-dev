@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect, useState, useContext } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import Prods from '@components/frontend/Prods'
 import NotDataState from '@components/frontend/NotDataState'
 import { postCartApi, getProductsAllApi } from '@api/Apis'
@@ -14,6 +14,7 @@ type contextType = {
   trackList?: string[],
 }
 export default function Track() {
+  const navigate = useNavigate()
   const [prods, setProds] = useState<ProductsType[]>([])
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
@@ -23,6 +24,7 @@ export default function Track() {
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
 
   const getProds = async () => {
+
     isLoadingRef.current = true
     setLoadingPage(true)
     try {
@@ -89,7 +91,9 @@ export default function Track() {
                     })}
                   </div>
                 ) : (
-                  <NotDataState notStateIcon="bi-bookmarks" notStateTitle="趕快來逛逛你有興趣的商品！" />
+                  <NotDataState notStateIcon="bi-bookmarks" notStateTitle="趕快來逛逛你有興趣的商品！" ><button type="button" className="btn btn-primary mt-3" onClick={() => {
+                    navigate(`/main/prods`)
+                  }}>趕緊加入我的商品</button></NotDataState>
                 )}
               </>)
             }

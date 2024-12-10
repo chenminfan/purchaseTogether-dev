@@ -5,7 +5,6 @@
       padding: 4px 0;
     }
     .carousel {
-      margin: auto;
       height: 500px;
       width: calc(100% - 32px);
       @include media-breakpoint-down(md) {
@@ -15,14 +14,14 @@
 
     h2 {
       @include text-line-truncate(4, 100%, auto, 1.5);
-      margin: 8px 0;
+      margin: 0 0 8px;
     }
     h3 {
       padding: 0 20px;
     }
     .container-fluid {
-      .row + .row {
-        margin: 32px 0;
+      > .row + .row {
+        margin: 16px 0;
       }
     }
   }
@@ -32,22 +31,59 @@
     }
   }
   &-carouselBox {
-    overflow-x: auto;
-    .carouselBox {
-      display: flex;
-      padding-left: 16px;
-      .prods {
-        min-width: 200px;
-        max-width: 200px;
+    @include media-breakpoint-down(md) {
+      overflow-x: auto;
+      &::-webkit-scrollbar {
+        display: none;
       }
     }
-    &::-webkit-scrollbar {
-      display: none;
+
+    .carouselBox {
+      display: flex;
+      padding: 0 16px;
+      .card {
+        &Prods {
+          &-link {
+            margin: 8px 4px;
+            width: calc((100% - 40px) / 5);
+            @include media-breakpoint-down(md) {
+              min-width: 200px;
+              max-width: 200px;
+            }
+          }
+        }
+        &-title {
+          font-size: 16px;
+        }
+        .prods-item {
+          justify-content: center;
+          &:last-child {
+            display: none;
+          }
+        }
+      }
+      &-btn {
+        margin: auto;
+        width: 42px;
+        height: 42px;
+        border-radius: 100%;
+      }
+      &-content {
+        display: flex;
+        flex-wrap: wrap;
+        width: calc(100% - 84px);
+        height: 100%;
+        padding: 0 8px;
+      }
     }
   }
-
-  &-textInfo {
-    font-size: 14px;
+  &-info {
+    .inputStepper {
+      @include media-breakpoint-down(md) {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
   }
   &-tool {
     display: flex;
