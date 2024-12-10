@@ -17,11 +17,11 @@ export default function Footer() {
           <div className="col-md-6">
             <ul className="footer-icon">
               <li>
-                <a href="https://github.com/chenminfan/myHexschool-dev" className="text-white mx-3" role="link" aria-label="footer-link">
+                <a href="https://github.com/chenminfan/purchaseTogether-dev" className="text-white mx-3" role="link" aria-label="footer-link">
                   <i className="bi bi-github"></i></a>
               </li>
               <li>
-                <a href="https://chenminfan.github.io/myHexschool-dev/" className="text-white mx-3" role="link" aria-label="footer-link">
+                <a href="https://chenminfan.github.io/purchaseTogether-dev/" className="text-white mx-3" role="link" aria-label="footer-link">
                   <i className="bi bi-globe2"></i></a>
               </li>
               <li>
