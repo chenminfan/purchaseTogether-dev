@@ -23,6 +23,15 @@
           align-items: normal;
           padding: 8px 4px;
         }
+        &-tool {
+          .list-content {
+            margin: -8px 0;
+          }
+          .btn {
+            margin-right: 8px;
+            margin-top: 4px;
+          }
+        }
       }
       &-title {
         min-width: 120px;
