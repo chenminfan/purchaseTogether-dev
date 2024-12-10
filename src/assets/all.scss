@@ -37,3 +37,8 @@ input {
     -webkit-text-security: 'disc';
   }
 }
+.container-xl {
+  @include media-breakpoint-down(md) {
+    padding: 8px 24px !important;
+  }
+}

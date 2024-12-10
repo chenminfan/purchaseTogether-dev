@@ -5,7 +5,10 @@ export type CartCheckProdType = {
   id: string,
   product: ProductsType,
   qty: number,
-  total: number
+  total: number,
+  coupon?: {
+    code?: string,
+  }
 }
 export type CartCheckType = {
   create_at: number,

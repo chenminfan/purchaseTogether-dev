@@ -40,7 +40,7 @@ export default function Stepper(props: InputStepperType) {
 
   const handleChange = (e) => {
     const { value } = e.target
-    if (!/\d*/.test(value)) {
+    if (/[^0-9.]/g.test(value)) {
       return
     } else if (value.length > 4) {
       return
@@ -93,7 +93,7 @@ export default function Stepper(props: InputStepperType) {
             }}
             disabled={isDisabled}
           >
-            確認修改
+            更新
           </button>
         </div>
       }

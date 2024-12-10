@@ -1,4 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useRef, useState, useContext, useEffect } from 'react'
+import { User, getAuth } from "firebase/auth";
 import { useForm } from "react-hook-form"
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import CartStep from '@components/frontend/CartStep';
@@ -12,44 +13,45 @@ import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@pr
 import { ProductsType } from '@typeTS/Products';
 import { postOrdersApi } from '@api/Apis';
 import './checkoutInfo.scss';
+import { CartCheckProdType } from '@typeTS/CartCheck'
 
-
-type CartCheckoutItemType = {
-  final_total: number,
-  id: string,
-  product: ProductsType,
-  qty: number,
-  total: number
-}
 type CartCheckoutType = {
+  AUTH_STATE: User | null,
+  loggedIn: boolean,
   checkout: () => void,
   cartData: {
     id: string,
-    carts: CartCheckoutItemType[],
+    carts: CartCheckProdType[],
     final_total: number,
-    total: number
+    total: number,
+
   }
   cartStep: number,
   setCartStep: (number) => void,
 }
 
 export default function CartCheckoutInfo() {
-  const { USER_MEMBER, USER_ID } = useContext<any>(LoginContext)
+  const { USER_MEMBER, USER_TOKEN } = useContext<any>(LoginContext)
   const navigate = useNavigate()
-  const { cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
+  const { loggedIn, cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
   const cardInfo = cartData.carts.filter((item) => item)
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
+  const isLoadingRef = useRef(true)
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
+
   const handleFormSubmit = handleSubmit(async (data) => {
+    isLoadingRef.current = loadingPage
+    setLoadingPage(true)
     const { name, tel, email, address, message } = data;
     const dataFrom = {
       user: {
-        name: USER_MEMBER.displayName === null ? `${name}+ ${USER_ID}` : `${USER_MEMBER.displayName}+ ${USER_ID}`,
+        name: USER_MEMBER.displayName === null ? `${name}+ ${USER_MEMBER.uid}` : `${USER_MEMBER.displayName}+ ${USER_MEMBER.uid}`,
         email: USER_MEMBER.email === null ? email : USER_MEMBER.email,
         tel: USER_MEMBER.phoneNumber === null ? tel : USER_MEMBER.phoneNumber,
         address
@@ -58,28 +60,32 @@ export default function CartCheckoutInfo() {
     }
     try {
       const res = await postOrdersApi(dataFrom)
+
+      isLoadingRef.current = false
+      setLoadingPage(false)
       setTimeout(() => {
         navigate(`/main/cart/pay/${res.data.orderId}`)
         setCartStep(2)
+
       }, 1500)
       handleSnackbarSuccess(dispatch, res);
-
+      checkout()
     } catch (error: any) {
       handleSnackbarError(dispatch, error);
     }
   })
+
   useEffect(() => {
-    if (USER_MEMBER) {
-      setCartStep(1)
-    window.scrollTo(0, 0)
-    } else {
-      navigate('/main/memberLogin')
+    if (loggedIn && USER_TOKEN !== '') {
+      window.scrollTo(0, 0)
     }
-    
-  }, [])
+    setCartStep(1)
+  }, [loggedIn])
+
+
   return (
     <div className="cart_page">
-      <div className='container-fluid py-2'>
+      <div className='container-xl py-2 px-5'>
         <div className="row">
           <CartStep active={cartStep} />
         </div>
@@ -89,7 +95,7 @@ export default function CartCheckoutInfo() {
               <form action="" onSubmit={handleFormSubmit}>
                 <h4 className="fw-bold mb-4">結帳資訊</h4>
                 <div className="checkout-body">
-                  {USER_MEMBER !== null && (
+                  {getAuth().currentUser && (
                     <>{USER_MEMBER.displayName ? (
                       <Input id="name" labelText="聯絡人" type="text" value={USER_MEMBER.displayName} disabled={USER_MEMBER.displayName !== null} />) : (<Input
                         register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
@@ -126,7 +132,8 @@ export default function CartCheckoutInfo() {
                           message: '電話不大於 12 碼',
                         }
                       }} />)}
-                    </>)}
+                    </>
+                  )}
 
                   <Input register={register} errors={errors} id="address" labelText="聯繫地址" type="address"
                     rules={{
@@ -153,7 +160,9 @@ export default function CartCheckoutInfo() {
                       <div className="modal-content">
                         <div className="modal-header">
                           <h1 className="modal-title fs-5" id="checkModalLabel">隱私權</h1>
-                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+                          </button>
                         </div>
                         <div className="modal-body">
                           行銷隱私權是指在行銷過程中，保護消費者的個人隱私和數據安全。這包括以下幾個方面：
@@ -176,8 +185,13 @@ export default function CartCheckoutInfo() {
                     <Tooltip text="請再次確認您的填寫資訊">
                       <button type='submit' className='btn btn-primary' onClick={() => {
                         setCartStep(2)
-                      }}>
-                        送出填寫資訊
+                      }} disabled={loadingPage}>
+                        {loadingPage ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span className="ms-2" role="status">Loading...送出填寫資訊中！</span>
+                          </>
+                        ) : "送出填寫資訊"}
                       </button>
                     </Tooltip>
                   </div>
@@ -186,7 +200,7 @@ export default function CartCheckoutInfo() {
             </div>
           </div>
           <div className="col-lg-5 col-md">
-            <div className="checkout-list p-3">
+            <div className="checkout-list">
               <h4 className="fw-bold">結帳明細</h4>
               <div className="checkout-body">
 

@@ -1,7 +1,8 @@
-import React, { useState, useContext, forwardRef, useEffect } from 'react'
+import React, { useState, useContext, forwardRef } from 'react'
 import { useLocation } from 'react-router-dom';
 import LogoBUY from '@components/frontend/LogoBUY';
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
+import { useRWD } from '@api/utilities/useRWD'
 import './header.scss';
 
 export type NavLeftItemsType = {
@@ -11,13 +12,14 @@ export type NavLeftItemsType = {
   icon: string,
   link: string,
   children?: JSX.Element | JSX.Element[],
+  handleClick?: () => void,
 };
-const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, className, navID, link, icon, children }: NavLeftItemsType, ref) => {
+const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, className, navID, link, icon, children, handleClick }: NavLeftItemsType, ref) => {
   const location = useLocation();
   return (
-    <li className={`nav-item ${className}`} ref={ref}>
+    <li className={`nav-item ${className}`} ref={ref} onClick={handleClick} >
       {link === '#/main/memberLogin' ? (
-        <a className={`nav-link ${(`#${location.pathname}` === '#/main/memberLogin') || (`#${location.pathname}` === '#/main/member') ? 'active' : ''}`} href={link} aria-label={navID} role="link">
+        <a className={`nav-link ${(`#${location.pathname}` === '#/main/memberLogin') || (`#${location.pathname}` === '#/main/member') ? 'active' : ''}`} href={link} aria-label={navID} role="link" >
           <i className={`bi ${icon}`}></i>{name}
           {children}
         </a>
@@ -26,19 +28,19 @@ const RouterLink = forwardRef<HTMLLIElement, NavLeftItemsType>(({ name, classNam
           <i className={`bi ${icon}`}></i>{name}
           {children}
         </a>
-      )}
-    </li>
+      )
+      }
+    </li >
   )
 })
 
 export default function Header(props) {
-  const { USER_MEMBER, USER_TOKEN, getLoginOut, getMember } = useContext<any>(LoginContext)
+  const RWD_DEVICE = useRWD();
   const { headerLink = '#', cartData, trackList } = props;
-  const [isNavCollapsed, setIsNavCollapsed] = useState(true);
-  const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
-  const handleMouseLeave = () => setIsNavCollapsed(true);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+
   const navText = [
-    { navName: 'store', navID: 'store', className: '', link: '#/main/prods', icon: 'bi-signpost-split' },
+    { navName: '全站商品', navID: 'store', className: '', link: '#/main/prods', icon: 'bi-signpost-split' },
     { navName: '追蹤商品', navID: 'trackProds', className: '', link: '#/main/track', icon: 'bi-bookmark-heart-fill' },
     { navName: '訂單明細', navID: 'orderList', className: 'nav-item-mobile', link: '#/main/order', icon: 'bi-card-checklist' },
     { navName: '我的會員', navID: 'member', className: 'nav-item-mobile', link: '#/main/memberLogin', icon: 'bi-person' },
@@ -48,23 +50,19 @@ export default function Header(props) {
     { navName: '我的會員', navID: 'member', className: 'nav-item-mobile', link: '#/main/memberLogin', icon: 'bi-person' },
     { navName: '訂單', navID: 'order', className: 'nav-item-mobile', link: '#/main/order', icon: 'bi-card-checklist' },
   ]
-  useEffect(() => {
-    getMember()
-  }, [])
+
   return (
     <header>
-      <nav className="navbar navbar-expand-lg"
-        onMouseLeave={handleMouseLeave}
-      >
+      <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
-          <button className={`navbar-toggler fade ${!isNavCollapsed ? '' : 'collapsed'}`} type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded={!isNavCollapsed ? true : false} aria-label="Toggle-Link" role="button" onClick={handleNavCollapse} >
+          <button className={`navbar-toggler ${isNavCollapsed ? '' : 'collapsed'}`} type="button" onClick={() => setIsNavCollapsed((isNavCollapsed) => !isNavCollapsed)}>
             <span className="navbar-toggler-icon"></span>
           </button>
-
-          <div className={`collapse fade navbar-collapse navbar-box collapse ${!isNavCollapsed ? 'show' : ''}`} id="navbarTogglerDemo01">
+          <div className={`collapse navbar-collapse navbar-box fade ${isNavCollapsed ? 'show' : ''}`} id="navbarTogglerDemo01">
             <ul className="navbar-nav">
               {navText.map((text) => (
-                <RouterLink key={text.navID} className={text.className} link={text.link} icon={text.icon} navID={text.navID} name={text.navName}>
+                <RouterLink key={text.navID} className={text.className} link={text.link} icon={text.icon} navID={text.navID} name={text.navName}
+                  handleClick={RWD_DEVICE !== 'desktop' ? () => setIsNavCollapsed(false) : () => { }}>
                   <>
                     {text.navID === 'trackProds' && (
                       <>
@@ -110,14 +108,6 @@ export default function Header(props) {
                   </>
                 </RouterLink>
               ))}
-
-              {(USER_MEMBER !== null || USER_MEMBER !== '') && USER_TOKEN !== '' && <li className="nav-item">
-                <button type='button' className="nav-link" aria-label="prods-category" role="link" onClick={() => {
-                  getLoginOut()
-                }}>
-                  登出
-                </button>
-              </li>}
             </ul>
           </div>
         </div>

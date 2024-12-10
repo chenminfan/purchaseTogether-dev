@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import BoxSection from '@components/frontend/BoxSection'
 import Input from '@components/frontend/InputFrom/Input';
-import {
-  postLoginApi,
-} from '@api/Apis'
+import { postLoginApi } from '@api/Apis'
 import { useNavigate } from 'react-router-dom';
 import './loginBackend.scss'
 
@@ -26,7 +24,8 @@ export default function Login() {
     const { name, value } = e.target;
     setData({ ...data, [name]: value })
   }
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       const res = await postLoginApi(data)
       if (res.data.success) {
@@ -40,6 +39,7 @@ export default function Login() {
       setLoginState(error.response.data)
     }
   }
+
   // 取出token，清除
   useEffect(() => {
     const token = document.cookie
@@ -48,6 +48,9 @@ export default function Login() {
       ?.split("=")[1];
 
     axios.defaults.headers.common['Authorization'] = token
+    if (token) {
+      navigate('/backend')
+    }
   }, [])
 
   return (
@@ -58,28 +61,29 @@ export default function Login() {
           isAlert={loginState.success}
           alertMessage={loginState.message}>
           <div className="loginBackend-from">
-            <div className="loginBackend-label">
-              <Input
-                labelText="帳號"
-                placeholder="請輸入帳號"
-                type="email"
-                id="username"
-                name="username"
-                handleChange={(e) => handleChange(e)}
-              />
-            </div>
-
-            <div className="loginBackend-tool">
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input" id="forgetPassword" defaultChecked />
-                <label htmlFor="forgetPassword" className="form-check-label">記住帳號</label>
+            <form action="" onSubmit={(e) => {
+              handleSubmit(e)
+            }}>
+              <div className="loginBackend-label">
+                <Input
+                  labelText="帳號"
+                  placeholder="請輸入帳號"
+                  type="email"
+                  id="username"
+                  name="username"
+                  handleChange={(e) => handleChange(e)}
+                />
               </div>
 
-              <button type="button" className="btn btn-primary">忘記密碼</button>
-            </div>
+              <div className="loginBackend-tool">
+                <div className="form-check">
+                  <input type="checkbox" className="form-check-input" id="forgetPassword" defaultChecked />
+                  <label htmlFor="forgetPassword" className="form-check-label">記住帳號</label>
+                </div>
+                <button type="button" className="btn btn-primary">忘記密碼</button>
+              </div>
 
-            <div className="loginBackend-label">
-              <form>
+              <div className="loginBackend-label">
                 <Input
                   labelText="密碼"
                   placeholder="請輸入密碼"
@@ -88,13 +92,15 @@ export default function Login() {
                   name="password"
                   handleChange={(e) => handleChange(e)}
                 />
-              </form>
-            </div>
+              </div>
+
+              <div className="d-grid gap-2 mt-3">
+                <button type="submit" className="btn btn-primary">登入</button>
+              </div>
+            </form>
           </div>
 
-          <div className="d-grid gap-2 mt-3">
-            <button type="button" className="btn btn-primary" onClick={(e) => { submit(e) }}>登入</button>
-          </div>
+
         </BoxSection>
       </div>
 

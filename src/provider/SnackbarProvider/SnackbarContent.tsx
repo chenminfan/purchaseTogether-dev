@@ -44,6 +44,7 @@ function handleSnackbarClose(dispatch: any) {
     type: 'DIALOG_CLOSE',
   });
 }
+
 const snackbarReducer = (state, action) => {
   switch (action.type) {
     case "DIALOG_CLOSE":

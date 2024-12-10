@@ -26,6 +26,7 @@ $borderRadius: 18px;
     border-radius: $borderRadius;
     border: 1px solid $primary;
     min-height: 500px;
+    padding: 16px;
     @include media-breakpoint-down(md) {
       min-height: 310px;
     }
@@ -36,7 +37,6 @@ $borderRadius: 18px;
     justify-content: space-between;
   }
   &-body {
-    margin-top: 32px;
     color: $gray-600;
     min-height: 200px;
     @include media-breakpoint-down(md) {

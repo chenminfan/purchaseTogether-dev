@@ -4,6 +4,7 @@ import { SnackbarContent, snackbarReducer, snackbarState } from './SnackbarConte
 export default function SnackbarProvider(props) {
   const { children } = props
   const reducer = useReducer(snackbarReducer, snackbarState)
+
   return (
     <SnackbarContent.Provider value={reducer}>
       {children}

@@ -24,7 +24,7 @@ type DialogNewOrderType = {
 }
 export default function DialogNewOrder(props: DialogNewOrderType) {
   const { open, page, getOrders, handleClose, tampData } = props;
-  const [, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [formData, setFormData] = useState({
