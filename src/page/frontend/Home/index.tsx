@@ -11,7 +11,7 @@ const Home = () => {
   const [windowHeight]: number[] = useScreen();
 
   const boxImageText = [{
-    title: '你是最好的品牌嗎？你是最好的..？....',
+    title: '你是最好的品牌嗎？你是最好的!',
     text: '各大品牌，各大商品，歡迎與我們一起攜手共同推廣，開箱嚴格評比，給你最棒的商品，啾咪。 ',
     imageUrl: "home/home-img-boxImage-1.jpg",
     title2: '良心好貨Ｘ實惠好物Ｘ資訊安全',
@@ -21,6 +21,8 @@ const Home = () => {
   const [prod, setProd] = useState<ProductsType[]>([])
   const COUPON_CODE = 'Buy together Buy';
   const [isShow, setIsShow] = useState(false);
+  const [isShowSubscription, setIsShowSubscription] = useState(false);
+  const [valueSubscription, setValueSubscription] = useState('');
 
   const getData = async () => {
     try {
@@ -38,6 +40,11 @@ const Home = () => {
     navigator.clipboard.writeText(COUPON_CODE)
     setIsShow((show) => !show)
   }
+  const handleSubscription = () => {
+    if (valueSubscription !== "") {
+      setIsShowSubscription((isShowSubscription) => !isShowSubscription)
+    }
+  }
   const PROD_RANDOM = useMemo(() => {
     return [...prod]
       .sort(() => {
@@ -46,10 +53,13 @@ const Home = () => {
       .slice(0, 6);
   }, [prod])
   const [sortOrder, setSortOrder] = useState<boolean>(true);
-  const PROD_SORT = prod.filter((product) => {
-    return product.id;
-  })
-    .sort((a: any, b: any) => { return sortOrder ? a.id - b.id : b - a.id });
+  const detail = Array.from(prod.map((item) => item.category))
+  const PROD_SORT = [...prod].filter((item) => item.title)
+    .sort((a, b) => {
+      if (!detail.includes(a.title)) return 1
+      if (!detail.includes(b.title)) return -1
+      return detail.indexOf(a.title) - detail.indexOf(b.title)
+    })
 
   useEffect(() => {
     getData()
@@ -70,7 +80,7 @@ const Home = () => {
                       </div>
                     </h2>
                     <div className="box-content">
-                      <p>基本回饋3％，點數無上限，最高回饋21%，購物站內筆筆享最高1%，購物站外折扣天天送折價券</p>
+                      <div>基本回饋3％，點數無上限，最高回饋21%，購物站內筆筆享最高1%，購物站外折扣天天送折價券</div>
                       <p>限時到達，立即下單～立即送到</p>
                       <p>～品牌加碼無上限～</p>
 
@@ -145,7 +155,7 @@ const Home = () => {
                     <button type='button' className='btn btn-primary' onClick={() => { handleCopy() }}>
                       複製
                     </button>
-                    <div className={`box-input-icon border-success text-opacity-75 bg-success-subtle text-success-emphasis fade ${isShow ? 'is-show' : ''}`}><i className="bi bi-check2-circle"></i>已複製</div>
+                    <div className={`box-input-icon border-success text-opacity-75 bg-success-subtle text-success-emphasis fade ${isShow ? 'is-show' : ''}`}><i className="bi bi-check2-circle me-2"></i>已複製</div>
                   </div>
 
                   <p>直接key 直接折抵，無時效，請盡情購物</p>
@@ -206,18 +216,22 @@ const Home = () => {
             </h4>
             <div className="box-content">
               為消費者提供互動化，個性化的購物體驗，或許相關度高的商品消息，作伙買，作伙Buy，共享美好生活。誠摯歡迎各界廠商跨領域合作，凡行銷活動、商品贊助、廣告互惠，歡迎洽談～
+
             </div>
             <div className="home-subContent">
               本公司提供多樣化的商品及服務，滿足消費者，為商家提供銷售平台，不定期推出相關促銷活動。
             </div>
-            <div className="box-input">
-              <Input
-                register={register} errors={errors} id="email" labelText="" type="email" placeholder="您的信箱" />
-              <button type='button' className='btn btn-primary'>
-                訂閱
-              </button>
-            </div>
+            <div className="box-tool">
+              <div className="box-input">
+                <Input
+                  register={register} errors={errors} id="email" labelText="" type="email" placeholder="您的信箱" handleChange={(e) => { setValueSubscription(e.target.value) }} />
+                <button type='button' className='btn btn-primary' onClick={() => { handleSubscription() }}>
+                  訂閱
+                </button>
+                <div className={`box-input-icon border-success text-opacity-75 bg-success-subtle text-success-emphasis fade  ${isShowSubscription ? 'is-show' : ''}`}><i className="bi bi-bookmark-plus me-2"></i>已訂閱</div>
+              </div>
 
+            </div>
           </div>
         </div>
       </section>

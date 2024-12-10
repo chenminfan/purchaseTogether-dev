@@ -43,8 +43,12 @@ footer {
         text-align: center;
       }
     }
+    &-copyright,
+    &-info {
+      text-align: center;
+    }
     &-note {
-      font-size: 14px;
+      font-size: 12px;
       margin: 0;
       margin-left: 16px;
     }
