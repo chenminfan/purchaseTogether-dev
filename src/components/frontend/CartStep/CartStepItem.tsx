@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import './cartStep.scss'
 

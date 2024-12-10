@@ -32,7 +32,7 @@ export default function DialogDeleteProds(props: DialogDeleteProdsType) {
     is_enabled: 0,
     imageUrl: ''
   }, tampDataALL = [], handleClose, getProds, theme, color, prodType } = props;
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
 
   const handleProdDelete = async () => {
     try {

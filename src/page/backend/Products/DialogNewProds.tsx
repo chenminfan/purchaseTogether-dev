@@ -30,7 +30,7 @@ type DialogNewProdsType = {
 
 export default function DialogNewProds(props: DialogNewProdsType) {
   const { open, page, searchWord, dialogTitle, dialogSubmitBtnText, getProds, handleClose = () => { }, prodType, tampData } = props;
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [imageUpdate, setImageUpdate] = useState<string>('');

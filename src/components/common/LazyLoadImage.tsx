@@ -9,7 +9,7 @@ type LazyLoadImgType = {
   height?: number,
 }
 const LazyLoadImg = (props: LazyLoadImgType) => {
-  const { alt, src, width = 800, height = 500, className, } = props
+  const { alt, src, className, } = props
   return (
     <LazyLoadImage
       alt={alt}

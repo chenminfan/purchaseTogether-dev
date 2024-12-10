@@ -19,7 +19,6 @@ import BackendProducts from '@pageBackend/Products';
 import BackendCoupon from '@pageBackend/Coupon';
 import BackendOrders from '@pageBackend/Orders';
 
-
 export default function App() {
   return (
     <Routes>

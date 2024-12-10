@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useState, useContext } from 'react'
+import React, { useMemo, useRef, useEffect, useState, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import LazyLoadImg from "@components/hook/LazyLoadImage";
+import LazyLoadImg from "@components/common/LazyLoadImage";
 import { useParams } from 'react-router-dom'
+import { useRWD } from '@api/utilities/useRWD'
 import InputStepper from '@components/frontend/InputStepper'
 import { getProductsIdApi, getProductsAllApi, postCartApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
@@ -18,6 +19,7 @@ type contextType = {
 }
 export default function ProductDetail() {
   const { id } = useParams();
+  const RWD_DEVICE = useRWD();
   const [categoryProds, setCategoryProds] = useState<ProductsType[]>([])
   const [detail, setDetail] = useState<ProductsType>({
     id: '',
@@ -32,18 +34,24 @@ export default function ProductDetail() {
     imageUrl: '',
     imagesUrl: [],
   })
-  const isLoadingRef = useRef(true)
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
-  const [loadingPage, setLoadingPage] = useState<boolean>(true);
-  const [, dispatch] = useContext<any>(SnackbarContent);
+  const isLoadingRef = useRef(true)
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
+  const isLoadingAPI_Ref = useRef(true)
+  const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const [cartQty, setCartQty] = useState(1)
 
   const getProds = async (prodId) => {
+    isLoadingRef.current = true
+    setLoadingPage(true)
     try {
       const prodRes = await getProductsIdApi(prodId);
       const prodAllRes = await getProductsAllApi();
       setDetail(prodRes.data.product)
       setCategoryProds(prodAllRes.data.products)
+      isLoadingRef.current = false
+      setLoadingPage(false)
     } catch (error) {
       const errorRes = error
     }
@@ -51,14 +59,14 @@ export default function ProductDetail() {
 
   useEffect(() => {
     getProds(id)
-    isLoadingRef.current = false
-    setLoadingPage(false)
+
     window.scrollTo(0, 0)
   }, [id])
 
-  const IS_IMAGES = detail.imagesUrl?.filter((item) => item.length > 0 && item.includes('https://' || 'http://'))
+  const IS_IMAGES = detail.imagesUrl?.filter((item) => item.length > 0 && (item.includes('https://') || item.includes('http://')))
   const moreProds = categoryProds.filter((item) => item.category.match(detail.category))
-  const breadcrumbData = {
+
+  const BREADCRUMB_DATA = {
     HomeId: 'home',
     HomeName: 'home',
     HomeUrl: '#/',
@@ -69,13 +77,18 @@ export default function ProductDetail() {
   };
 
   const handleAddCart = async (prod, type = '') => {
+
     const addCart = {
       product_id: prod,
       qty: type === 'addCartMore' ? cartQty : 1,
     }
+    isLoadingAPI_Ref.current = loadingAPI
+    setLoadingAPI(true)
     try {
       if (type !== '') {
         const res = await postCartApi(type, addCart)
+        isLoadingAPI_Ref.current = false
+        setLoadingAPI(false)
         checkout()
         handleSnackbarSuccess(dispatch, res);
       }
@@ -84,7 +97,57 @@ export default function ProductDetail() {
       handleSnackbarError(dispatch, error);
     }
   }
+
   const trackID = trackList?.find((item) => item.match(detail.id))
+  const TOTAL_ITEM = moreProds.length;
+  const SHOW_ITEM = 5;
+  const AVERAGE_PAGE = Math.ceil(moreProds.length / SHOW_ITEM) - 1;
+  const [currentItem, setCurrentItem] = useState<number>(0);
+  const [indexPage, setIndexPage] = useState<number>(0);
+  // const range = useMemo(() => {
+  //   // const rangeNumber: any[] = []
+  //   // const int = Math.ceil(1 + showItem / moreProds.length + 1)
+  //   // if (moreProds.length) {
+  //   //   for (let index = 1; index <= int; index += 1) {
+  //   //     rangeNumber.push(index);
+  //   //   }
+  //   // }
+
+  //   // return rangeNumber
+  // }, [])
+  // console.log(moreProds)
+  // console.log('TOTAL_ITEM' + TOTAL_ITEM)
+  // console.log('AVERAGE_PAGE' + AVERAGE_PAGE)
+  // console.log('currentItem' + currentItem)
+  const handleClickPrev = (value) => {
+    setIndexPage(Math.ceil(value / SHOW_ITEM) === 1 ? 0 : Math.ceil(value / SHOW_ITEM))
+    if (indexPage <= AVERAGE_PAGE) {
+      setCurrentItem(0)
+    } else {
+      setCurrentItem((value) => {
+        if (value >= TOTAL_ITEM - 1) {
+          return 0;
+        } else {
+          return value - SHOW_ITEM;
+        }
+      })
+    }
+
+  }
+  const handleClickNext = (value) => {
+    setIndexPage(Math.ceil(value / SHOW_ITEM))
+    if (indexPage >= AVERAGE_PAGE) {
+      setCurrentItem(currentItem)
+    } else {
+      setCurrentItem((value) => {
+        if (value >= TOTAL_ITEM - 1) {
+          return 0;
+        } else {
+          return value + SHOW_ITEM;
+        }
+      })
+    }
+  }
   return (
     <div className="detail_page">
       <div className='container-fluid'>
@@ -92,8 +155,8 @@ export default function ProductDetail() {
           <div className="col-12">
             <nav aria-label="breadcrumb" className='detail-breadcrumb'>
               <ol className="breadcrumb mb-0">
-                <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
-                <li className="breadcrumb-item"><a className="text-muted" href={breadcrumbData.ProdsUrl} role="link" aria-label="breadcrumb-link">{breadcrumbData.ProdsName}</a></li>
+                <li className="breadcrumb-item"><a className="text-muted" href={BREADCRUMB_DATA.HomeUrl} role="link" aria-label="breadcrumb-link"><i className="bi bi-shop"></i></a></li>
+                <li className="breadcrumb-item"><a className="text-muted" href={BREADCRUMB_DATA.ProdsUrl} role="link" aria-label="breadcrumb-link">{BREADCRUMB_DATA.ProdsName}</a></li>
                 <li className="breadcrumb-item active text-primary" aria-current="page">{detail.category}</li>
               </ol>
             </nav>
@@ -123,7 +186,7 @@ export default function ProductDetail() {
           </div>
           {loadingPage ? (
             <div className="col-md-6">
-              <div className="detail-info py-2 px-4" aria-hidden="true">
+              <div className="detail-info px-4" aria-hidden="true">
                 <h2 className="card-title placeholder-glow">
                   <span className="placeholder col-12"></span>
                 </h2>
@@ -143,12 +206,36 @@ export default function ProductDetail() {
                   <span className="placeholder col-4"></span>
                   <span className="placeholder col-6"></span>
                   <span className="placeholder col-8"></span>
+                  <span className="placeholder col-7"></span>
+                  <span className="placeholder col-4"></span>
+                  <span className="placeholder col-4"></span>
+                  <span className="placeholder col-6"></span>
+                  <span className="placeholder col-8"></span>
                 </p>
+
+                <p className="card-text placeholder-glow text-end">
+                  <span className="placeholder col-7"></span>
+                  <span className="placeholder col-6"></span>
+                </p>
+
+                <div className="card-text placeholder-glow d-flex justify-content-between">
+                  <span className="placeholder col-4 rounded-3"></span>
+                  <div>
+                    <button className="btn btn-primary" type="button" disabled>
+                      <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                      <span className='ms-2' role="status">Loading...</span>
+                    </button>
+                    <button className="btn btn-outline-primary ms-2" type="button" disabled>
+                      <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    </button>
+                  </div>
+
+                </div>
               </div>
             </div>
           ) : (
             <div className="col-md-6">
-              <div className="detail-info py-2">
+              <div className="detail-info">
                 <h2 className="fw-bold h1">{detail.title}</h2>
                 <div className="row my-2">
                   <p>{detail.content}</p>
@@ -164,10 +251,10 @@ export default function ProductDetail() {
                   </div>
                 </div>
                 <div className="row align-items-center">
-                  <div className="col-6">
+                  <div className={`col-md-6 py-2 ${RWD_DEVICE === "mobile" ? "d-flex justify-content-center" : ''}`}>
                     <InputStepper inputStepperNum={cartQty} setInputStepperNum={setCartQty} />
                   </div>
-                  <div className="col-6">
+                  <div className="col-md-6 py-2">
                     <div className="detail-tool">
                       <button type="button" className="text-nowrap btn btn-primary w-100 py-2" role="link" aria-label="cart-add-link"
                         onClick={() => {
@@ -185,30 +272,64 @@ export default function ProductDetail() {
                 </div >
               </div >
             </div >
-          )
-          }
-
+          )}
         </div >
 
-        <div className="row">
-
-        </div>
       </div >
-      <h3 className="fw-bold">其他 {detail.category} 的商品</h3>
+      <h3 className="fw-bold">其他 <span className="text-primary">{detail.category}</span> 的商品</h3>
       <div className="detail-carouselBox">
-        <div className="carouselBox">
-          {moreProds.map((more) => (
-            <Prods key={more.id} prod={more}
-              isLoading={loadingPage}
-              handleClick={() => {
-                handleAddCart(more?.id, 'addCart')
-              }}
-              handleTrack={handleTrack}
-              trackList={trackList}
-            />
-          ))}
-        </div>
+        {RWD_DEVICE !== "desktop" ? (
+          <div className="carouselBox">
+            {loadingPage ? (<>
+              {[...Array(5)].map((more, index) => (
+                <Prods key={index} prod={more}
+                  isLoadingPage={loadingPage}
+                  isLoading={loadingAPI}
 
+                />
+              ))}
+            </>) : (<>{moreProds.map((more) => (
+              <Prods key={more.id} prod={more}
+                isLoadingPage={loadingPage}
+                isLoading={loadingAPI}
+                handleClick={() => {
+                  handleAddCart(more?.id, 'addCart')
+                }}
+                handleTrack={handleTrack}
+                trackList={trackList}
+              />
+            ))}</>)}
+
+          </div>
+        ) : (
+          <div className="carouselBox">
+            <button className="btn btn-primary carouselBox-btn" onClick={() => { handleClickPrev(currentItem - 1) }} disabled={0 === indexPage && indexPage <= AVERAGE_PAGE}><i className="bi bi-caret-left-fill"></i></button>
+            <div className="carouselBox-content">
+
+              {loadingPage ? (<>
+                {[...Array(5)].map((more, index) => (
+                  <Prods key={index} prod={more}
+                    isLoadingPage={loadingPage}
+                    isLoading={loadingAPI}
+                  />
+                ))}</>) : (<>
+                  {moreProds.slice(0 + currentItem, SHOW_ITEM + currentItem).map((more) => (
+                    <Prods key={more.id} prod={more}
+                      isLoadingPage={loadingPage}
+                      isLoading={loadingAPI}
+                      handleClick={() => {
+                        handleAddCart(more?.id, 'addCart')
+                      }}
+                      handleTrack={handleTrack}
+                      trackList={trackList}
+                    />
+                  ))}
+                </>)}
+
+            </div>
+            <button className="btn btn-primary carouselBox-btn" onClick={() => { handleClickNext(currentItem + 1) }} disabled={indexPage >= AVERAGE_PAGE}><i className="bi bi-caret-right-fill"></i></button>
+          </div>
+        )}
       </div>
     </div >
   )

@@ -5,6 +5,7 @@ import { postCartApi, getProductsApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import { PaginationType } from '@typeTS/PaginationType'
 import Pagination from '@components/backend/Pagination';
+import LoadingState from '@components/frontend/LoadingState';
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './products.scss'
 
@@ -24,11 +25,16 @@ export default function Products() {
     category: ''
   })
   const isLoadingRef = useRef(true)
-  const [loadingPage, setLoadingPage] = useState<boolean>(true);
+  const [loadingPage, setLoadingPage] = useState<boolean>(false);
+  const isLoadingAPI_Ref = useRef(true)
+  const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
   const [categoryId, setCategoryId] = useState<string>('all')
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
+
   const getProds = async (getPage = 1, category = '') => {
+    isLoadingRef.current = loadingPage
+    setLoadingPage(true)
     try {
       const prodRes = await getProductsApi(getPage, category);
       const prodAllRes = await getProductsAllApi();
@@ -36,8 +42,12 @@ export default function Products() {
         setProds(prodRes.data.products.sort(() => {
           return 0.5 - Math.random();
         }))
+        isLoadingRef.current = false
+        setLoadingPage(false)
         setProdAll(prodAllRes.data.products)
       } else {
+        isLoadingRef.current = false
+        setLoadingPage(false)
         setProds(prodRes.data.products)
         setProdAll(prodAllRes.data.products)
       }
@@ -47,12 +57,12 @@ export default function Products() {
       const errorRes = error
     }
   }
+
   const category = Array.from(new Set(prodAll.map((item) => item.category)))
+
   const Id = category.find((item) => item)
   useEffect(() => {
     getProds()
-    isLoadingRef.current = false
-    setLoadingPage(false)
   }, [])
 
   const handleClick = (item) => {
@@ -69,8 +79,12 @@ export default function Products() {
       product_id: prod,
       qty: 1,
     }
+    isLoadingAPI_Ref.current = loadingAPI
+    setLoadingAPI(true)
     try {
       const res = await postCartApi(type, addCart)
+      isLoadingAPI_Ref.current = false
+      setLoadingAPI(false)
       checkout();
       handleSnackbarSuccess(dispatch, res);
 
@@ -78,6 +92,7 @@ export default function Products() {
       handleSnackbarError(dispatch, error);
     }
   }
+
   return (
     <div className="prods_page">
       <nav className="navbar navbar-expand-lg">
@@ -101,18 +116,21 @@ export default function Products() {
         </ul >
       </nav >
 
-      <div className='container-fluid py-2'>
+      {loadingPage ? (<LoadingState loadingStateTitle="太多商品了....你等等呀！" loadingStateIcon="bi-box2-heart" />) : (<div className='container-xl py-2'>
         <div className="row">
           <div className="col-md-12">
             <div className="prods_box">
               {prods.map((item) => {
                 return (
-                  <Prods key={item.id} prod={item} isLoading={loadingPage}
+                  <Prods key={item.id} prod={item}
+                    isLoadingPage={loadingPage}
+                    isLoading={loadingAPI}
                     handleTrack={handleTrack}
                     trackList={trackList}
                     handleClick={() => {
                       handleAddCart(item?.id, 'addCart')
-                    }} />
+                    }}
+                  />
                 )
               })}
             </div>
@@ -120,7 +138,7 @@ export default function Products() {
         </div>
 
         <Pagination page={page} getPagination={getProds} pageLink="#/main/prods" />
-      </div>
+      </div>)}
     </div >
   )
 }

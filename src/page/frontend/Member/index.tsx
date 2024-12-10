@@ -1,30 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { dataValue } from '@api/utilities/dataValue';
-import { updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
-import LazyLoadImg from "@components/hook/LazyLoadImage";
+import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
+import LazyLoadImg from "@components/common/LazyLoadImage";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import Input from '@components/frontend/InputFrom/Input';
 import './member.scss'
 
-type Props = {}
-
-export default function Member({ }: Props) {
-  const { auth, USER_MEMBER, getMember, USER_TOKEN, getLoginOut } = useContext<any>(LoginContext)
+export default function Member() {
+  const { loggedIn, auth, USER_MEMBER, USER_TOKEN, getLoginOut } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const [userData, setUserData] = useState('');
   const [userImgData, setUserImgData] = useState('');
   const [isUserDelete, setIsUserDelete] = useState(false);
   const [isUserConfirmDelete, setIsConfirmUserDelete] = useState(false);
-  const [isButtonOpe, setIsButtonOpen] = useState(false);
+  const [isUserLogOut, setIsUserLogOut] = useState(false);
+  const [isUserOpen, setIsUserOpen] = useState(false);
   const [isVerifyCheck, setIsVerifyCheck] = useState(false);
   const [isNewPassword, setIsNewPassword] = useState(false);
   const [isCheckPassword, setIsCheckPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  const [reNewPassword, setReNewPassword] = useState('');
 
   const getDeleteUser = () => {
     setIsUserDelete(true)
-    setIsButtonOpen(false)
+    setIsUserOpen(false)
   }
   const handleDeleteUser = () => {
     setIsConfirmUserDelete(true)
@@ -42,8 +42,8 @@ export default function Member({ }: Props) {
     updateProfile(auth.currentUser, {
       displayName: userData, photoURL: userImgData
     }).then(() => {
-      setIsButtonOpen(true)
-      window.location.reload();
+      setIsUserOpen(true)
+
     }).catch((error) => {
       // An error occurred
       // ...
@@ -62,20 +62,32 @@ export default function Member({ }: Props) {
   // 更新密碼
   const handlePassword = (newString) => {
     updatePassword(USER_MEMBER, newString).then(() => {
-      // Update successful.
       setIsCheckPassword(true)
       setIsNewPassword(false)
+      getRePRovide(reNewPassword)
     }).catch((error) => {
     });
+  }
 
+  // 重新驗證
+  const getRePRovide = (rePassword) => {
+    const credential = EmailAuthProvider.credential(USER_MEMBER.auth.currentUser.email, rePassword);
+
+    reauthenticateWithCredential(USER_MEMBER.auth.currentUser, credential)
+      .then(() => {
+        // User re-authenticated.
+      }).catch((error) => {
+        // An error ocurred
+        // ...
+      });
   }
 
   useEffect(() => {
-    getMember()
-    if ((USER_MEMBER === null || USER_MEMBER === '') && USER_TOKEN === '') {
+    if (!loggedIn && USER_TOKEN === '') {
       navigate('/main/memberLogin')
     }
-  }, [USER_MEMBER, USER_TOKEN])
+  }, [loggedIn, USER_TOKEN])
+
   useEffect(() => {
     if ((USER_MEMBER?.displayName === null) || (USER_MEMBER?.photoURL === null)) {
       setUserData(USER_MEMBER?.displayName)
@@ -86,12 +98,11 @@ export default function Member({ }: Props) {
     }
   }, [USER_MEMBER])
 
-
   return (
     <div className='memberUser_page'>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col">
+      <div className="container-xl">
+        <div className="row is-animation">
+          <div className={`${(isUserOpen || isUserDelete || isNewPassword) ? ' col-md-6' : 'col-12'}`}>
             {USER_MEMBER && (
               <div key={`member_${USER_MEMBER.email}`} className='memberUser-box'>
                 <div className="col-md-12">
@@ -113,33 +124,7 @@ export default function Member({ }: Props) {
                         {USER_MEMBER.displayName && (<div className="memberUser-userName">{USER_MEMBER.displayName}</div>)}
                       </div>
                     </li>
-                    {!isButtonOpe && (
-                      <li className="list-group-item">
-                        <button className="btn btn-primary" type='button'
-                          onClick={() => {
-                            setIsButtonOpen((isButtonOpeImg => !isButtonOpeImg))
-                            setIsNewPassword(false)
-                            setIsUserDelete(false)
-                          }}>修改使用者</button>
-                      </li>)}
-                    {!isNewPassword && (
-                      <li className="list-group-item">
-                        <button className="btn btn-primary" type='button'
-                          onClick={() => {
-                            setIsNewPassword((isNewPassword => !isNewPassword))
-                            setIsButtonOpen(false)
-                            setIsUserDelete(false)
-                          }}>修改密碼</button>
-                      </li>)}
-                    {!isUserDelete && <li className="list-group-item">
-                      <button className="btn btn-primary" type='button'
-                        onClick={() => {
-                          getDeleteUser()
-                          setIsNewPassword(false)
-                          setIsButtonOpen(false)
-                        }}>註銷使用者
-                      </button>
-                    </li>}
+
                     <li className="list-group-item">
                       <div className='list-title'>ID</div>
                       <div className='list-content'>{USER_MEMBER.email}</div>
@@ -169,15 +154,60 @@ export default function Member({ }: Props) {
                       <div className='list-title'>註冊時間</div>
                       <div className='list-content'>{dataValue(USER_MEMBER.metadata.createdAt)}</div>
                     </li>
+                    <li className="list-group-item list-group-item-tool">
+                      <div className='list-title'>其他</div>
+                      <div className='list-content'>
+                        {!isUserOpen && (
+                          <button className="btn btn-primary" type='button'
+                            onClick={() => {
+                              setIsUserOpen((isButtonOpeImg => !isButtonOpeImg))
+                              setIsNewPassword(false)
+                              setIsUserDelete(false)
+                            }}>修改會員資訊</button>
+                        )}
+                        {!isNewPassword && (
+
+                          <button className="btn btn-primary" type='button'
+                            onClick={() => {
+                              setIsNewPassword((isNewPassword => !isNewPassword))
+                              setIsUserOpen(false)
+                              setIsUserDelete(false)
+                              setNewPassword('')
+                              setReNewPassword('')
+                            }}>修改密碼</button>
+                        )}
+                        {!isUserDelete &&
+                          <button className="btn btn-primary" type='button'
+                            onClick={() => {
+                              getDeleteUser()
+                              setIsNewPassword(false)
+                              setIsUserOpen(false)
+                              setNewPassword('')
+                              setReNewPassword('')
+                            }}>註銷帳號
+                          </button>
+                        }
+                        {!isUserLogOut &&
+                          <button className="btn btn-primary" type='button'
+                            onClick={() => {
+                              getLoginOut()
+                              setIsNewPassword(false)
+                              setIsUserOpen(false)
+                              setIsUserDelete(false)
+                              setNewPassword('')
+                              setReNewPassword('')
+                            }}>登出
+                          </button>
+                        }
+                      </div>
+                    </li>
                   </ul>
                 </div>
               </div>
             )}
           </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            {isButtonOpe && (
+          {(isUserOpen || isUserDelete || isNewPassword) && (<div className="col-md-6">
+            {isUserOpen && (
               <div className="memberUser-box">
                 <div className='memberUser-tool'>
                   <div className='d-flex align-items-center mb-2'>
@@ -201,12 +231,13 @@ export default function Member({ }: Props) {
                     <button className="btn btn-primary" type='button' disabled={(userData === USER_MEMBER?.displayName) && (userImgData === USER_MEMBER?.photoURL)} onClick={() => { handleUserName(auth) }}>更新</button>
                     <button className="btn btn-primary" type='button'
                       onClick={() => {
-                        setIsButtonOpen((isButtonOpeImg => !isButtonOpeImg))
+                        setIsUserOpen((isButtonOpeImg => !isButtonOpeImg))
+                        setNewPassword('')
+                        setReNewPassword('')
                       }}>取消</button>
                   </div>
                 </div>
               </div>
-
             )}
             {isUserDelete && (
               <div className="memberUser-box">
@@ -218,13 +249,29 @@ export default function Member({ }: Props) {
                 ) : (
                   <div className="memberUser-tool">
                     <div className="memberUser-note text-danger">請再次確認，是否註銷帳號？</div>
+                    <div className="memberUser-note">
+                      <Input
+                        id="password" labelText="再次輸入舊密碼" type="text"
+                        value={reNewPassword}
+                        placeholder="請輸入新密碼"
+                        handleChange={(e) => {
+                          setReNewPassword(e.target.value)
+                        }}
+                      />
+                    </div>
                     <div className="memberUser-btn">
+
                       <button className="btn btn-primary" type='button'
-                        onClick={() => { handleDeleteUser() }}>確定
+                        onClick={() => {
+                          handleDeleteUser()
+                          getRePRovide(reNewPassword)
+                        }}>確定
                       </button>
                       <button className="btn btn-primary" type='button'
                         onClick={() => {
                           setIsUserDelete((isUserDelete => !isUserDelete))
+                          setNewPassword('')
+                          setReNewPassword('')
                         }}>取消</button>
                     </div>
 
@@ -243,11 +290,21 @@ export default function Member({ }: Props) {
                         placeholder="請輸入新密碼"
                         handleChange={(e) => setNewPassword(e.target.value)}
                       />
+                      <Input
+                        id="password" labelText="再次輸入舊密碼" type="text"
+                        value={reNewPassword}
+                        placeholder="請輸入新密碼"
+                        handleChange={(e) => {
+                          setReNewPassword(e.target.value)
+                        }}
+                      />
                       <div className="memberUser-btn">
-                        <button type="submit" className="btn btn-primary" disabled={newPassword === ''} >修改密碼</button>
+                        <button type="submit" className="btn btn-primary" disabled={newPassword === '' || reNewPassword === ''} >修改密碼</button>
                         <button className="btn btn-primary" type='button'
                           onClick={() => {
                             setIsNewPassword((isNewPassword => !isNewPassword))
+                            setNewPassword('')
+                            setReNewPassword('')
                           }}>取消</button>
                       </div>
                     </form>
@@ -264,8 +321,7 @@ export default function Member({ }: Props) {
 
               </div>
             )}
-
-          </div>
+          </div>)}
         </div>
       </div>
 

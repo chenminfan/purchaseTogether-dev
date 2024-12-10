@@ -25,7 +25,7 @@ type DialogNewCouponType = {
 }
 export default function DialogNewCoupon(props: DialogNewCouponType) {
   const { open, page, getCoupon, dialogTitle, dialogSubmitBtnText, handleClose, couponType, tampData } = props;
-  const [state, dispatch] = useContext<any>(SnackbarContent);
+  const [_, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [newDate, setNewDate] = useState(new Date())
@@ -114,6 +114,7 @@ export default function DialogNewCoupon(props: DialogNewCouponType) {
     }
 
   }, [couponType, tampData])
+
   return (
     <Dialog
       open={open}
