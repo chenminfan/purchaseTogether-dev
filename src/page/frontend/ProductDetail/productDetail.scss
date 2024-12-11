@@ -42,14 +42,12 @@
       display: flex;
       padding: 0 16px;
       .card {
-        &Prods {
-          &-link {
-            margin: 8px 4px;
-            width: calc((100% - 40px) / 5);
-            @include media-breakpoint-down(md) {
-              min-width: 200px;
-              max-width: 200px;
-            }
+        &.prods {
+          margin: 8px 4px;
+          width: calc((100% - 40px) / 5);
+          @include media-breakpoint-down(md) {
+            min-width: 200px;
+            max-width: 200px;
           }
         }
         &-title {

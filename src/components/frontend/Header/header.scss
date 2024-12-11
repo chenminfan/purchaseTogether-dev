@@ -233,10 +233,12 @@ header {
       @include media-breakpoint-down(md) {
         height: 0;
         opacity: 0;
+        overflow: hidden;
         &.show {
           display: block;
           opacity: 1;
           height: auto;
+          overflow: unset;
         }
       }
 
