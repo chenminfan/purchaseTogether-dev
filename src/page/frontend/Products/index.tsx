@@ -5,7 +5,7 @@ import { postCartApi, getProductsApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import { PaginationType } from '@typeTS/PaginationType'
 import Pagination from '@components/backend/Pagination';
-import LoadingState from '@components/frontend/LoadingState';
+import Loading from '@components/frontend/Loading';
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
 import './products.scss'
 
@@ -26,9 +26,7 @@ export default function Products() {
   })
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(false);
-  const isLoadingAPI_Ref = useRef(true)
-  const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
-  const [categoryId, setCategoryId] = useState<string>('all')
+  const [currentCategory, setCurrentCategory] = useState<string>('all')
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
 
@@ -60,7 +58,6 @@ export default function Products() {
 
   const category = Array.from(new Set(prodAll.map((item) => item.category)))
 
-  const Id = category.find((item) => item)
   useEffect(() => {
     getProds()
   }, [])
@@ -71,7 +68,7 @@ export default function Products() {
     } else {
       getProds(1, item)
     }
-    setCategoryId(item)
+    setCurrentCategory(item)
   }
 
   const handleAddCart = async (prod, type = '') => {
@@ -79,12 +76,12 @@ export default function Products() {
       product_id: prod,
       qty: 1,
     }
-    isLoadingAPI_Ref.current = loadingAPI
-    setLoadingAPI(true)
+    isLoadingRef.current = loadingPage
+    setLoadingPage(true)
     try {
       const res = await postCartApi(type, addCart)
-      isLoadingAPI_Ref.current = false
-      setLoadingAPI(false)
+      isLoadingRef.current = false
+      setLoadingPage(false)
       checkout();
       handleSnackbarSuccess(dispatch, res);
 
@@ -101,7 +98,7 @@ export default function Products() {
             onClick={() => {
               handleClick('all')
             }}>
-            <a className={`nav-link ${categoryId === 'all' ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/main/prods" ><i className="bi bi-signpost-split-fill"></i></a>
+            <a className={`nav-link ${currentCategory === 'all' ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/main/prods" ><i className="bi bi-signpost-split-fill"></i></a>
           </li>
           {category.map((item) => (
             <li className='nav-item'
@@ -109,14 +106,14 @@ export default function Products() {
               onClick={() => {
                 handleClick(item)
               }}>
-              <a className={`nav-link ${item === (categoryId ? categoryId : Id) ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/main/prods" >{item}</a>
+              <a className={`nav-link ${item === currentCategory ? 'active' : ''}`} role="link" aria-label="prods-link" href="#/main/prods" >{item}</a>
             </li >
           ))
           }
         </ul >
       </nav >
 
-      {loadingPage ? (<LoadingState loadingStateTitle="太多商品了....你等等呀！" loadingStateIcon="bi-box2-heart" />) : (<div className='container-xl py-2'>
+      {loadingPage ? (<Loading loadingTitle="太多商品了....你等等呀！" loadingIcon="bi-box2-heart" />) : (<div className='container-xl py-2'>
         <div className="row">
           <div className="col-md-12">
             <div className="prods_box">
@@ -124,7 +121,7 @@ export default function Products() {
                 return (
                   <Prods key={item.id} prod={item}
                     isLoadingPage={loadingPage}
-                    isLoading={loadingAPI}
+                    isLoading={loadingPage}
                     handleTrack={handleTrack}
                     trackList={trackList}
                     handleClick={() => {

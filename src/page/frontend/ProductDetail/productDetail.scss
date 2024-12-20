@@ -12,17 +12,17 @@
       }
     }
 
+    .container-xl + .container-xl .row {
+      padding-top: 16px;
+      border-top: 1px solid $gray-400;
+    }
+
     h2 {
       @include text-line-truncate(4, 100%, auto, 1.5);
       margin: 0 0 8px;
     }
     h3 {
       padding: 0 20px;
-    }
-    .container-fluid {
-      > .row + .row {
-        margin: 16px 0;
-      }
     }
   }
   &-breadcrumb {
@@ -76,6 +76,10 @@
     }
   }
   &-info {
+    @include media-breakpoint-down(md) {
+      margin: 16px 0 32px;
+      text-align: center;
+    }
     .inputStepper {
       @include media-breakpoint-down(md) {
         max-width: 100%;
@@ -85,6 +89,13 @@
   }
   &-tool {
     display: flex;
+    @include media-breakpoint-down(md) {
+      margin-top: 24px;
+      height: 50px;
+      .btn {
+        min-width: 50px;
+      }
+    }
     .btn + .btn {
       margin-left: 16px;
     }

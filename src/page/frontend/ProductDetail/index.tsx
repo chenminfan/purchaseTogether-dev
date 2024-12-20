@@ -150,8 +150,8 @@ export default function ProductDetail() {
   }
   return (
     <div className="detail_page">
-      <div className='container-fluid'>
-        <div className="row">
+      <div className='container-xl px-5'>
+        <div className="row pt-2 pb-4">
           <div className="col-12">
             <nav aria-label="breadcrumb" className='detail-breadcrumb'>
               <ol className="breadcrumb mb-0">
@@ -276,44 +276,22 @@ export default function ProductDetail() {
         </div >
 
       </div >
-      <h3 className="fw-bold">其他 <span className="text-primary">{detail.category}</span> 的商品</h3>
-      <div className="detail-carouselBox">
-        {RWD_DEVICE !== "desktop" ? (
-          <div className="carouselBox">
-            {loadingPage ? (<>
-              {[...Array(5)].map((more, index) => (
-                <Prods key={index} prod={more}
-                  isLoadingPage={loadingPage}
-                  isLoading={loadingAPI}
+      <div className='container-xl pt-5 px-5'>
+        <div className="row">
+          <div className="col">
+            <h3 className="fw-bold">其他 <span className="text-primary">{detail.category}</span> 的商品</h3>
+            <div className="detail-carouselBox my-4">
+              {RWD_DEVICE !== "desktop" ? (
+                <div className="carouselBox">
+                  {loadingPage ? (<>
+                    {[...Array(5)].map((more, index) => (
+                      <Prods key={index} prod={more}
+                        isLoadingPage={loadingPage}
+                        isLoading={loadingAPI}
 
-                />
-              ))}
-            </>) : (<>{moreProds.map((more) => (
-              <Prods key={more.id} prod={more}
-                isLoadingPage={loadingPage}
-                isLoading={loadingAPI}
-                handleClick={() => {
-                  handleAddCart(more?.id, 'addCart')
-                }}
-                handleTrack={handleTrack}
-                trackList={trackList}
-              />
-            ))}</>)}
-
-          </div>
-        ) : (
-          <div className="carouselBox">
-            <button className="btn btn-primary carouselBox-btn" onClick={() => { handleClickPrev(currentItem - 1) }} disabled={0 === indexPage && indexPage <= AVERAGE_PAGE}><i className="bi bi-caret-left-fill"></i></button>
-            <div className="carouselBox-content">
-
-              {loadingPage ? (<>
-                {[...Array(5)].map((more, index) => (
-                  <Prods key={index} prod={more}
-                    isLoadingPage={loadingPage}
-                    isLoading={loadingAPI}
-                  />
-                ))}</>) : (<>
-                  {moreProds.slice(0 + currentItem, SHOW_ITEM + currentItem).map((more) => (
+                      />
+                    ))}
+                  </>) : (<>{moreProds.map((more) => (
                     <Prods key={more.id} prod={more}
                       isLoadingPage={loadingPage}
                       isLoading={loadingAPI}
@@ -323,14 +301,43 @@ export default function ProductDetail() {
                       handleTrack={handleTrack}
                       trackList={trackList}
                     />
-                  ))}
-                </>)}
+                  ))}</>)}
 
+                </div>
+              ) : (
+                <div className="carouselBox">
+                  <button className="btn btn-primary carouselBox-btn" onClick={() => { handleClickPrev(currentItem - 1) }} disabled={0 === indexPage && indexPage <= AVERAGE_PAGE}><i className="bi bi-caret-left-fill"></i></button>
+                  <div className="carouselBox-content">
+
+                    {loadingPage ? (<>
+                      {[...Array(5)].map((more, index) => (
+                        <Prods key={index} prod={more}
+                          isLoadingPage={loadingPage}
+                          isLoading={loadingAPI}
+                        />
+                      ))}</>) : (<>
+                        {moreProds.slice(0 + currentItem, SHOW_ITEM + currentItem).map((more) => (
+                          <Prods key={more.id} prod={more}
+                            isLoadingPage={loadingPage}
+                            isLoading={loadingAPI}
+                            handleClick={() => {
+                              handleAddCart(more?.id, 'addCart')
+                            }}
+                            handleTrack={handleTrack}
+                            trackList={trackList}
+                          />
+                        ))}
+                      </>)}
+
+                  </div>
+                  <button className="btn btn-primary carouselBox-btn" onClick={() => { handleClickNext(currentItem + 1) }} disabled={indexPage >= AVERAGE_PAGE}><i className="bi bi-caret-right-fill"></i></button>
+                </div>
+              )}
             </div>
-            <button className="btn btn-primary carouselBox-btn" onClick={() => { handleClickNext(currentItem + 1) }} disabled={indexPage >= AVERAGE_PAGE}><i className="bi bi-caret-right-fill"></i></button>
           </div>
-        )}
+        </div>
       </div>
+
     </div >
   )
 }
