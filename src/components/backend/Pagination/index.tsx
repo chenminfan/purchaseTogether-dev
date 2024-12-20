@@ -20,6 +20,7 @@ export default function PaginationComponents(props: PaginationComponentsType) {
     getPagination(page)
   }
   const handleClickRight = (page: any) => {
+    console.log(page)
     if (currentPage >= page.total_pages) {
       setCurrentPage(page.total_pages)
     } else {
@@ -35,6 +36,8 @@ export default function PaginationComponents(props: PaginationComponentsType) {
   //   setCurrentPage(value)
   //   getPagination(value)
   // }
+  console.log(currentPage)
+  console.log(page.current_page)
   return (
     <>
       <nav className='Page navigation'>
@@ -56,7 +59,7 @@ export default function PaginationComponents(props: PaginationComponentsType) {
               onClick={() => {
                 handleClickPage(index + 1)
               }}>
-              <a className={`page-link${currentPage === index + 1 ? ' active' : ''}`} href={pageLink} role="link" aria-label="page-link">{index + 1}</a>
+              <a className={`page-link${page.current_page === index + 1 ? ' active' : ''}`} href={pageLink} role="link" aria-label="page-link">{index + 1}</a>
             </li>
           ))}
           {page.has_next && (
