@@ -5,7 +5,7 @@ import NotDataState from '@components/frontend/NotDataState'
 import { postCartApi, getProductsAllApi } from '@api/Apis'
 import { ProductsType } from '@typeTS/Products'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
-import LoadingState from '@components/frontend/LoadingState';
+import Loading from '@components/frontend/Loading';
 import './track.scss'
 
 type contextType = {
@@ -72,7 +72,7 @@ export default function Track() {
             <h4 className="fw-bold p-4">追蹤商品</h4>
           </div>
           <div className="col-md-12">
-            {loadingPage ? (<LoadingState loadingStateTitle="追蹤太多喜愛的商品了，讓我追追追追追!" loadingStateIcon="bi-bag-heart" />) :
+            {loadingPage ? (<Loading loadingTitle="追蹤太多喜愛的商品了，讓我追追追追追!" loadingIcon="bi-bag-heart" />) :
               (<>
                 {SEARCH_DATA.length !== 0 ? (
                   <div className="prods_box">

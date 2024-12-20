@@ -2,12 +2,12 @@ import React from 'react'
 import './loadingState.scss'
 
 type Props = {
-  loadingStateTitle: string,
-  loadingStateIcon: string,
+  loadingTitle: string,
+  loadingIcon: string,
 }
 
-export default function LoadingState(props: Props) {
-  const { loadingStateTitle, loadingStateIcon } = props
+export default function Loading(props: Props) {
+  const { loadingTitle, loadingIcon } = props
   return (
     <div className='loadingState'>
       <div className="loadingState-box">
@@ -15,13 +15,13 @@ export default function LoadingState(props: Props) {
           <div className="loadingState-loading spinner-border spinner-border-sm" role="status">
           </div>
           <div className="loadingState-icon">
-            <i className={`bi ${loadingStateIcon}`}></i>
+            <i className={`bi ${loadingIcon}`}></i>
           </div>
         </div>
 
         <div className="loadingState-title">
           Loading...
-          <span className='loadingState-title-text'>{loadingStateTitle}</span>
+          <span className='loadingState-title-text'>{loadingTitle}</span>
         </div>
       </div>
 

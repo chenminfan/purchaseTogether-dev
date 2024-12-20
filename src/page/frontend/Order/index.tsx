@@ -8,7 +8,7 @@ import NotDataState from '@components/frontend/NotDataState'
 import './order.scss'
 
 export default function Order() {
-  const { USER_MEMBER, loggedIn, USER_TOKEN, USER_ID } = useContext<any>(LoginContext)
+  const { USER_TOKEN, USER_ID } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const [orderData, setOrderData] = useState<OrdersType[]>([])
   const isLoadingRef = useRef(true)
