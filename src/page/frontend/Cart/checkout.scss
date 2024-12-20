@@ -28,7 +28,7 @@ $borderRadius: 18px;
     min-height: 500px;
     padding: 16px;
     @include media-breakpoint-down(md) {
-      min-height: 310px;
+      min-height: auto;
     }
   }
   &-content {
@@ -49,6 +49,9 @@ $borderRadius: 18px;
     justify-content: flex-end;
     height: 100%;
     max-height: 120px;
+    @include media-breakpoint-down(md) {
+      max-height: inherit;
+    }
   }
   &-item {
     display: flex;

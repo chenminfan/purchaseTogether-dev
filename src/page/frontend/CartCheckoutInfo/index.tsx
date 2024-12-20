@@ -1,5 +1,6 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
 import { User, getAuth } from "firebase/auth";
+import { useRWD } from '@api/utilities/useRWD'
 import { useForm } from "react-hook-form"
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import CartStep from '@components/frontend/CartStep';
@@ -40,6 +41,7 @@ export default function CartCheckoutInfo() {
     handleSubmit,
     formState: { errors },
   } = useForm()
+  const RWD_DEVICE = useRWD();
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
   const isLoadingRef = useRef(true)
@@ -82,7 +84,6 @@ export default function CartCheckoutInfo() {
     setCartStep(1)
   }, [loggedIn])
 
-
   return (
     <div className="cart_page">
       <div className='container-xl py-2 px-5'>
@@ -97,7 +98,7 @@ export default function CartCheckoutInfo() {
                 <div className="checkout-body">
                   {getAuth().currentUser && (
                     <>{USER_MEMBER.displayName ? (
-                      <Input id="name" labelText="聯絡人" type="text" value={USER_MEMBER.displayName} disabled={USER_MEMBER.displayName !== null} />) : (<Input
+                      <Input id="name" labelText="聯絡人" isRequired type="text" value={USER_MEMBER.displayName} disabled={USER_MEMBER.displayName !== null} />) : (<Input
                         register={register} errors={errors} id="name" labelText="聯絡人" type="text" rules={{
                           required: {
                             value: true,
@@ -108,7 +109,7 @@ export default function CartCheckoutInfo() {
                             message: '聯絡人名稱不超過10個字長'
                           }
                         }} />)}
-                      {USER_MEMBER.email ? (<Input id="email" labelText="Email" type="text" value={USER_MEMBER.email} disabled={USER_MEMBER.email !== null} />) : (<Input register={register} errors={errors} id="email" labelText="Email" type="text" rules={{
+                      {USER_MEMBER.email ? (<Input id="email" labelText="Email" isRequired type="text" value={USER_MEMBER.email} disabled={USER_MEMBER.email !== null} />) : (<Input register={register} errors={errors} id="email" labelText="Email" isRequired type="text" rules={{
                         required: {
                           value: true,
                           message: '請輸入 Email'
@@ -118,7 +119,7 @@ export default function CartCheckoutInfo() {
                           message: 'Email 格式不正確'
                         }
                       }} />)}
-                      {USER_MEMBER.phoneNumber ? (<Input id="tel" labelText="聯絡電話" type="tel" value={USER_MEMBER.phoneNumber} disabled={USER_MEMBER.phoneNumber !== null} />) : (<Input register={register} errors={errors} id="tel" labelText="聯絡電話" type="tel" rules={{
+                      {USER_MEMBER.phoneNumber ? (<Input id="tel" labelText="聯絡電話" isRequired type="tel" value={USER_MEMBER.phoneNumber} disabled={USER_MEMBER.phoneNumber !== null} />) : (<Input register={register} errors={errors} id="tel" labelText="聯絡電話" isRequired type="tel" rules={{
                         required: {
                           value: true,
                           message: '請輸入 聯絡電話'
@@ -135,7 +136,7 @@ export default function CartCheckoutInfo() {
                     </>
                   )}
 
-                  <Input register={register} errors={errors} id="address" labelText="聯繫地址" type="address"
+                  <Input register={register} errors={errors} id="address" isRequired labelText="聯繫地址" type="address"
                     rules={{
                       required: {
                         value: true,
@@ -145,12 +146,13 @@ export default function CartCheckoutInfo() {
                   <TextArea register={register} errors={errors} id="message" rows={5} labelText="我要跟你說..." />
                   <Checkbox
                     id="checkbox"
+                    isRequired
                     checkboxText="請同意"
                     required
                     name="checkbox"
-                    type='checkbox' register={register} errors={errors} handleClick={e => setCheck(e.target.value)} value={check} rules={{ required: { value: true, message: '請同意隱私權' } }} >
+                    type='checkbox' register={register} errors={errors} handleClick={e => setCheck(e.target.value)} value={check} rules={{ required: { value: true, message: '請同意隱私權政策' } }} >
                     <Tooltip text="請確認您的權益">
-                      <a href="#" data-bs-toggle="modal" data-bs-target="#checkModal">隱私權</a>
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#checkModal">隱私權政策</a>
                     </Tooltip>
 
                   </Checkbox>
@@ -159,7 +161,7 @@ export default function CartCheckoutInfo() {
                     <div className="modal-dialog">
                       <div className="modal-content">
                         <div className="modal-header">
-                          <h1 className="modal-title fs-5" id="checkModalLabel">隱私權</h1>
+                          <h1 className="modal-title fs-5" id="checkModalLabel">隱私權政策</h1>
                           <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
 
                           </button>
@@ -228,6 +230,7 @@ export default function CartCheckoutInfo() {
                   <div className="checkout-title">Total</div>
                   <div className="checkout-content">NT ${Math.round(cartData.final_total).toLocaleString('zh-TW')}</div>
                 </div>
+                
               </div>
             </div>
           </div>

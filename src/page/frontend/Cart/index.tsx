@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from 'react'
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import { postCouponApi } from '@api/Apis';
+import { useRWD } from '@api/utilities/useRWD'
 import CartStep from '@components/frontend/CartStep';
 import CartProdCard from '@components/frontend/Cart/CartProdCard';
 import NotDataState from '@components/frontend/NotDataState'
@@ -32,6 +33,7 @@ export default function Cart() {
     info: '',
     infoState: false,
   })
+  const RWD_DEVICE = useRWD();
 
   useEffect(() => {
     checkout()
@@ -59,10 +61,15 @@ export default function Cart() {
           infoState: codeRes.data.success,
         })
         handleSnackbarSuccess(dispatch, codeRes);
+        isLoadingRef.current = false
+        setLoadingPage(false)
       } catch (error) {
         handleSnackbarError(dispatch, error);
+        isLoadingRef.current = false
+        setLoadingPage(false)
       }
     }
+
     checkout()
   }
 
@@ -144,6 +151,13 @@ export default function Cart() {
                           ) : "填寫資料"}
                         </button>
                       </Tooltip>
+                      {RWD_DEVICE === "mobile" && <button
+                        className='btn btn-outline-primary'
+                        onClick={() => {
+                          window.scrollTo(0, 0)
+                        }}>
+                        <i className="bi bi-arrow-up-circle"></i> 回Top<br />可再次檢查您的商品資訊
+                      </button>}
                     </div>
                   </div>
                 </>) : (
@@ -164,6 +178,6 @@ export default function Cart() {
         )}
 
       </div>
-    </div>
+    </div >
   )
 }

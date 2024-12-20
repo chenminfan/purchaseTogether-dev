@@ -107,7 +107,7 @@ $borderRadius: 18px;
           align-items: center;
         }
         &-title {
-          width: 60px;
+          width: 40px;
           text-align: right;
           margin-right: 8px;
         }
@@ -178,7 +178,7 @@ $borderRadius: 18px;
         align-items: flex-end;
         flex-direction: column;
         width: 100%;
-        margin-top: 8px;
+        margin: 16px;
         padding: 8px;
         border-top: 1px solid $gray-300;
       }
@@ -277,6 +277,11 @@ $borderRadius: 18px;
         &:first-child {
           margin-top: 0;
         }
+      }
+      @include media-breakpoint-between(xs, sm) {
+        display: flex;
+        flex-direction: column;
+        min-width: auto;
       }
 
       &-total {
