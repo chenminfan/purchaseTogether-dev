@@ -100,7 +100,7 @@ export default function Header(props) {
                           </span>
                         ) : (
                           <span className="badge rounded-pill text-bg-danger navbar-carIcon-number">
-                            <span className={cartData.carts.length === 0 ? "" : "visually-hidden"}>做伙下單</span>
+                            <span className={cartData.carts.length === 0 ? "" : "visually-hidden"}>{RWD_DEVICE !== 'mobile' ? "做伙下單" : '0'}</span>
                           </span>
                         )}
                       </>

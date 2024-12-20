@@ -70,6 +70,9 @@ header {
       &-carIcon {
         display: flex;
         align-items: center;
+        > a {
+          flex-direction: row-reverse;
+        }
         &-number.badge {
           min-width: 25px;
           height: 20px;
@@ -107,7 +110,7 @@ header {
         .logo {
           padding: 8px 32px;
           @include media-breakpoint-down(md) {
-            padding: 8px 12px;
+            padding: 8px;
           }
           &::before,
           &::after {
