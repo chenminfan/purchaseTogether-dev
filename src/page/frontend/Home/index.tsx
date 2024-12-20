@@ -33,6 +33,7 @@ const Home = () => {
   }
   const {
     register,
+    handleSubmit,
     formState: { errors },
   } = useForm()
 
@@ -40,11 +41,13 @@ const Home = () => {
     navigator.clipboard.writeText(COUPON_CODE)
     setIsShow((show) => !show)
   }
-  const handleSubscription = () => {
-    if (valueSubscription !== "") {
-      setIsShowSubscription((isShowSubscription) => !isShowSubscription)
+  const handleSubscription = handleSubmit(
+    () => {
+      if (valueSubscription !== "") {
+        setIsShowSubscription((isShowSubscription) => !isShowSubscription)
+      }
     }
-  }
+  )
   const PROD_RANDOM = useMemo(() => {
     return [...prod]
       .sort(() => {
@@ -63,7 +66,12 @@ const Home = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+    setTimeout(() => {
+      if (isShowSubscription) {
+        setIsShowSubscription((isShowSubscription) => !isShowSubscription)
+      }
+    }, 3000)
+  }, [isShowSubscription])
 
   return (
     <div className='home_page'>
@@ -222,15 +230,25 @@ const Home = () => {
               本公司提供多樣化的商品及服務，滿足消費者，為商家提供銷售平台，不定期推出相關促銷活動。
             </div>
             <div className="box-tool">
-              <div className="box-input">
-                <Input
-                  register={register} errors={errors} id="email" labelText="" type="email" placeholder="您的信箱" handleChange={(e) => { setValueSubscription(e.target.value) }} />
-                <button type='button' className='btn btn-primary' onClick={() => { handleSubscription() }}>
-                  訂閱
-                </button>
-                <div className={`box-input-icon border-success text-opacity-75 bg-success-subtle text-success-emphasis fade  ${isShowSubscription ? 'is-show' : ''}`}><i className="bi bi-bookmark-plus me-2"></i>已訂閱</div>
-              </div>
-
+              <form action="" onSubmit={handleSubscription}>
+                <div className="box-input">
+                  <Input
+                    register={register} errors={errors} id="email" labelText="" type="email" placeholder="您的信箱" handleChange={(e) => { setValueSubscription(e.target.value) }} rules={{
+                      required: {
+                        value: true,
+                        message: '請輸入 Email'
+                      },
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: 'Email 格式不正確'
+                      }
+                    }} />
+                  <button type='button' className='btn btn-primary' onClick={() => { handleSubscription() }}>
+                    訂閱
+                  </button>
+                  <div className={`box-input-icon border-success text-opacity-75 bg-success-subtle text-success-emphasis fade  ${isShowSubscription ? 'is-show' : ''}`}><i className="bi bi-bookmark-plus me-2"></i>已訂閱</div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
