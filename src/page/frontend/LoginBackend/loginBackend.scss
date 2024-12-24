@@ -1,0 +1,27 @@
+.loginBackend {
+  &_page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 24px;
+  }
+  &-box {
+    margin: 72px 0;
+    width: 100%;
+    max-width: 500px;
+    .boxSection {
+      border-radius: 12px;
+      box-shadow: 1px 1px 12px 0 #ccc;
+    }
+  }
+  &-tool {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+  }
+  &-from {
+    padding: 8px 16px;
+  }
+}

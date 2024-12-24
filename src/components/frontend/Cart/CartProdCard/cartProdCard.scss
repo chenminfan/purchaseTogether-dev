@@ -1,0 +1,298 @@
+$borderRadius: 18px;
+.checkout {
+  &-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 16px 0;
+    border-radius: $borderRadius;
+    border: 0.5px solid $primary;
+    background-color: $white;
+    &:first-child {
+      margin-top: 0;
+      @include media-breakpoint-down(md) {
+        margin-top: 16px;
+      }
+    }
+    &.checkout {
+      &-tool {
+        position: relative;
+        margin: 8px 0;
+        box-shadow: 0px 0 9px $gray-300;
+        .card {
+          &-content {
+            a {
+              width: 100%;
+              @include media-breakpoint-down(sm) {
+                margin: 8px;
+              }
+            }
+          }
+
+          &-title {
+            margin-bottom: 0;
+            padding: 0;
+          }
+          &-toolBar {
+            display: flex;
+            flex-wrap: wrap;
+            @include media-breakpoint-down(sm) {
+              flex-direction: column;
+              align-items: center;
+              padding: 8px 8px 0;
+            }
+          }
+          &-info {
+            @include media-breakpoint-down(sm) {
+              width: 100%;
+            }
+          }
+          &-code {
+            margin-top: 0;
+          }
+          &-checkInfo {
+            left: 166px;
+            bottom: 16px;
+            margin-top: 0;
+            @include media-breakpoint-down(md) {
+              margin-top: 16px;
+            }
+            &-tool {
+              width: 100%;
+            }
+          }
+          &-image {
+            width: 150px;
+            height: 180px;
+            @include media-breakpoint-down(md) {
+              width: 120px;
+              height: 120px;
+            }
+          }
+        }
+      }
+    }
+  }
+  &-tool {
+    .card {
+      &-inputStepper {
+        .inputStepper:not(.inputStepper-edit) {
+          max-width: 200px;
+        }
+      }
+      &-image {
+        width: 120px;
+        height: auto;
+        > .card-btn {
+          display: none;
+        }
+      }
+      &-title {
+        margin-bottom: 0;
+        font-size: 16px;
+        @include media-breakpoint-down(md) {
+          text-align: center;
+          padding-right: 40px;
+        }
+      }
+      &-total {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 14px;
+        padding-right: 8px;
+        @include media-breakpoint-down(md) {
+          padding: 0;
+          width: 100%;
+          align-items: center;
+        }
+        &-title {
+          width: 40px;
+          text-align: right;
+          margin-right: 8px;
+        }
+      }
+      &-content {
+        justify-content: flex-end;
+        @include media-breakpoint-down(md) {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+      &-checkInfo {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .card {
+    &-code {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 8px;
+      width: 100%;
+      &-text {
+        color: $primary;
+        width: 100%;
+        @include text-one-line-truncate(100%, auto, 1.5);
+      }
+      &-tag {
+        flex-shrink: 0;
+        margin-right: 8px;
+        padding: 0 4px;
+        font-size: 14px;
+        color: $white;
+        border-radius: 4px;
+        background-color: $primary;
+      }
+    }
+    &-toolBar {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      @include media-breakpoint-down(md) {
+        flex-wrap: wrap;
+        justify-content: normal;
+      }
+    }
+    &-content {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      @include media-breakpoint-down(md) {
+        align-items: flex-start;
+      }
+    }
+    &-checkInfo {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      left: 196px;
+      display: flex;
+      flex-direction: row;
+      font-size: 14px;
+      margin-top: 16px;
+      @include media-breakpoint-down(md) {
+        position: static;
+        align-items: flex-end;
+        flex-direction: column;
+        width: 100%;
+        margin: 16px;
+        padding: 8px;
+        border-top: 1px solid $gray-300;
+      }
+      &-tool {
+        width: calc(100% - 200px);
+        @include media-breakpoint-down(md) {
+          width: 100%;
+        }
+      }
+    }
+    &-inputStepper {
+      @include media-breakpoint-down(md) {
+        width: 100%;
+        margin-top: 16px;
+      }
+      .inputStepper.rounded {
+        @include media-breakpoint-down(md) {
+          max-width: 100%;
+        }
+      }
+    }
+    &-total {
+      display: flex;
+      flex-direction: column;
+    }
+    &-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      @include text-line-truncate(2, 100%, auto, 1.5);
+    }
+    &-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      margin-left: 16px;
+      padding: 8px 16px 8px 0;
+      width: calc(100% - 180px);
+      @include media-breakpoint-down(md) {
+        padding-left: 16px;
+        margin-left: 0px;
+      }
+    }
+    &-info {
+      .card {
+        &-btn {
+          top: 4px;
+          left: auto;
+          right: 8px;
+        }
+      }
+    }
+    &-image {
+      position: relative;
+      width: 180px;
+      overflow: hidden;
+      border-radius: $borderRadius 4px 4px $borderRadius;
+      flex-shrink: 0;
+      @include media-breakpoint-down(md) {
+        width: 150px;
+      }
+      .img_box {
+        padding-bottom: 100%;
+        @include media-breakpoint-down(md) {
+          padding-bottom: 100%;
+        }
+      }
+    }
+    &-image & {
+      &-btn {
+        left: 0;
+        border-radius: $borderRadius 0;
+      }
+    }
+    &-btn {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      i {
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+    &-price {
+      display: flex;
+      white-space: nowrap;
+      margin-top: 4px;
+      color: $gray-600;
+      @include media-breakpoint-down(md) {
+        margin-top: 8px;
+        min-width: 150px;
+      }
+      @include media-breakpoint-down(sm) {
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+      @include media-breakpoint-between(xs, sm) {
+        display: flex;
+        flex-direction: column;
+        min-width: auto;
+      }
+
+      &-total {
+        color: $gray-500;
+        font-weight: 500;
+        text-decoration-line: line-through;
+      }
+      &-code {
+        text-decoration-line: unset;
+        color: $danger;
+      }
+    }
+  }
+}

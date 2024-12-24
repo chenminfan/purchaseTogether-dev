@@ -1,0 +1,37 @@
+$frontendHeader: 56px;
+$frontendFooter: 200px;
+
+main {
+  &.frontend {
+    margin-top: $frontendHeader;
+    padding: 0;
+    color: $gray-900;
+    background-color: $gray-100;
+    min-height: calc(100vh - ($frontendHeader + $frontendFooter));
+    [class*='_page'] {
+      padding-bottom: 16px;
+    }
+    @include media-breakpoint-down(md) {
+      min-height: calc(100vh - ($frontendHeader + $frontendFooter));
+    }
+  }
+  .fade {
+    &.btn {
+      &-BUY {
+        &-top {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  .btn {
+    &-BUY {
+      &-top {
+        position: fixed;
+        bottom: 100px;
+        right: 16px;
+        border-radius: 100%;
+      }
+    }
+  }
+}

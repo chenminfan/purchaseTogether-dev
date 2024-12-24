@@ -1,0 +1,103 @@
+.detail {
+  &_page {
+    padding: 1rem 0;
+    @include media-breakpoint-down(md) {
+      padding: 4px 0;
+    }
+    .carousel {
+      height: 500px;
+      width: calc(100% - 32px);
+      @include media-breakpoint-down(md) {
+        max-height: 300px;
+      }
+    }
+
+    .container-xl + .container-xl .row {
+      padding-top: 16px;
+      border-top: 1px solid $gray-400;
+    }
+
+    h2 {
+      @include text-line-truncate(4, 100%, auto, 1.5);
+      margin: 0 0 8px;
+    }
+    h3 {
+      padding: 0 20px;
+    }
+  }
+  &-breadcrumb {
+    .breadcrumb {
+      padding: 0 16px;
+    }
+  }
+  &-carouselBox {
+    @include media-breakpoint-down(md) {
+      overflow-x: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .carouselBox {
+      display: flex;
+      padding: 0 16px;
+      .card {
+        &.prods {
+          margin: 8px 4px;
+          width: calc((100% - 40px) / 5);
+          @include media-breakpoint-down(md) {
+            min-width: 200px;
+            max-width: 200px;
+          }
+        }
+        &-title {
+          font-size: 16px;
+        }
+        .prods-item {
+          justify-content: center;
+          &:last-child {
+            display: none;
+          }
+        }
+      }
+      &-btn {
+        margin: auto;
+        width: 42px;
+        height: 42px;
+        border-radius: 100%;
+      }
+      &-content {
+        display: flex;
+        flex-wrap: wrap;
+        width: calc(100% - 84px);
+        height: 100%;
+        padding: 0 8px;
+      }
+    }
+  }
+  &-info {
+    @include media-breakpoint-down(md) {
+      margin: 16px 0 32px;
+      text-align: center;
+    }
+    .inputStepper {
+      @include media-breakpoint-down(md) {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  }
+  &-tool {
+    display: flex;
+    @include media-breakpoint-down(md) {
+      margin-top: 24px;
+      height: 50px;
+      .btn {
+        min-width: 50px;
+      }
+    }
+    .btn + .btn {
+      margin-left: 16px;
+    }
+  }
+}

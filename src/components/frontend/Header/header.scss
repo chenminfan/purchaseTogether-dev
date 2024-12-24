@@ -1,0 +1,270 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  box-shadow: 0px 0px 3px #555;
+  background-color: $white;
+  .navbar-expand-lg {
+    .nav {
+      &bar {
+        &-toggler {
+          display: none;
+          @include media-breakpoint-down(md) {
+            display: block;
+          }
+        }
+        &-nav {
+          .nav {
+            &-link {
+              padding: 16px 8px;
+              @include media-breakpoint-down(md) {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .nav {
+    &bar {
+      padding: 0;
+      @include media-breakpoint-down(md) {
+        position: relative;
+      }
+
+      .nav {
+        &-item {
+          display: flex;
+          align-items: center;
+        }
+        &-link {
+          position: relative;
+          transition: 0.5s;
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            left: 50%;
+            border-bottom: 3px solid transparent;
+            transition: 0.5s;
+          }
+          &.active {
+            color: $primary;
+            transition: 0.5s;
+            &::before {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              border-bottom: 3px solid $primary;
+              transition: 0.5s;
+            }
+          }
+        }
+      }
+      &-carIcon {
+        display: flex;
+        align-items: center;
+        > a {
+          flex-direction: row-reverse;
+        }
+        &-number.badge {
+          min-width: 25px;
+          height: 20px;
+          font-size: 12px;
+          border-radius: 4px;
+          padding: 4px 8px;
+        }
+      }
+      &-toggler {
+        padding: 2px 4px;
+        &-icon {
+          width: 24px;
+          height: 24px;
+        }
+      }
+      &-brand {
+        display: flex;
+        align-items: center;
+        margin-right: 0;
+        margin-bottom: 8px;
+        height: calc(100% - 8px);
+        position: absolute;
+        top: 0;
+        left: 50%;
+        color: $primary;
+        transform: translate(-50%, 0);
+        border-radius: 0 0 12px 12px;
+        background-color: $gray-200;
+        @include media-breakpoint-down(md) {
+          height: calc(100% - 12px);
+        }
+        &:hover {
+          color: rgb(85 31 31);
+        }
+        .logo {
+          padding: 8px 32px;
+          @include media-breakpoint-down(md) {
+            padding: 8px;
+          }
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            display: block;
+            height: 100%;
+            width: 32px;
+          }
+          &::before {
+            border-radius: 0 16px 0 0;
+            left: -32px;
+            box-shadow: 0 -16px 0 0 $gray-200;
+          }
+          &::after {
+            border-radius: 16px 0 0 0;
+            right: -32px;
+            box-shadow: 0 -16px 0 0 $gray-200;
+          }
+        }
+      }
+      &-box {
+        flex-basis: auto;
+        width: auto;
+        margin: 0;
+        @include media-breakpoint-down(md) {
+          flex-grow: inherit;
+          position: absolute;
+          top: 53px;
+          left: 0;
+          right: 0;
+          padding: 8px 16px;
+          width: 100%;
+          width: auto;
+          background: #fff;
+          border-bottom: 1px solid $gray-300;
+        }
+        .nav {
+          &-item {
+            @include media-breakpoint-down(md) {
+              margin: 0;
+            }
+            > a {
+              width: 100%;
+              margin: 0;
+            }
+          }
+          &-link {
+            @include media-breakpoint-down(md) {
+              &::before {
+                left: 0;
+                top: 50%;
+                bottom: 50%;
+                border-bottom: none;
+                border-left: 5px solid transparent;
+              }
+              &.active {
+                &::before {
+                  left: 0;
+                  top: 0;
+                  bottom: 0;
+                  border-bottom: none;
+                  border-left: 5px solid $primary;
+                }
+              }
+            }
+          }
+        }
+      }
+      &-box & {
+        &-nav {
+          @include media-breakpoint-down(sm) {
+            flex-direction: column;
+          }
+        }
+      }
+      &-icon {
+        flex-basis: auto;
+        flex-grow: inherit;
+        width: auto;
+        margin: 0;
+        .navbar-nav {
+          @include media-breakpoint-down(md) {
+            flex-direction: row;
+          }
+          .nav {
+            &-item {
+              &-mobile {
+                @include media-breakpoint-down(sm) {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+      &-nav {
+        display: flex;
+        flex-direction: row;
+        @include media-breakpoint-down(sm) {
+          flex-direction: column;
+        }
+      }
+    }
+
+    &-link {
+      display: flex;
+      align-items: center;
+      padding: 8px 4px;
+      > i {
+        margin: 0 4px;
+      }
+      > .badge {
+        margin-left: 4px;
+      }
+    }
+  }
+  .navbar-collapse {
+    &:not(.navbar-icon) {
+      opacity: 1;
+      display: block;
+      @include media-breakpoint-down(md) {
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        &.show {
+          display: block;
+          opacity: 1;
+          height: auto;
+          overflow: unset;
+        }
+      }
+
+      .navbar-nav {
+        @include media-breakpoint-down(md) {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+      i {
+        margin-left: 8px;
+      }
+
+      .nav {
+        &-item {
+          &-mobile {
+            display: none;
+            @include media-breakpoint-down(sm) {
+              display: flex;
+            }
+          }
+        }
+      }
+    }
+  }
+}

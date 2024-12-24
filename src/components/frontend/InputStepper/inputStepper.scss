@@ -1,0 +1,24 @@
+.inputStepper {
+  display: flex;
+  align-items: center;
+  background-color: $gray-200;
+  height: 40px;
+  max-width: 150px;
+  &-edit.inputStepper {
+    max-width: 100%;
+    input[type='number'] {
+      max-width: 75px;
+    }
+  }
+  &-tool {
+    margin-right: 4px;
+  }
+  input[type='number'] {
+    &::-webkit-inner-spin-button {
+      opacity: 1;
+    }
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+}

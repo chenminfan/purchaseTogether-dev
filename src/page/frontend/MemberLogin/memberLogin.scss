@@ -1,0 +1,36 @@
+.memberLogin {
+  &_page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 24px;
+  }
+  &-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 52px 0;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 1px 1px 12px 0 #ccc;
+    background-color: $white;
+    overflow: hidden;
+  }
+  &-tool {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  &-btn {
+    top: -0.5rem;
+    right: 0;
+    .btn {
+      margin-left: 16px;
+    }
+  }
+  &-content {
+    width: 100%;
+    max-width: 500px;
+  }
+}

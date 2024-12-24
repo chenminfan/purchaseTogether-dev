@@ -1,0 +1,57 @@
+.logo {
+  color: $primary;
+  font-size: 1.25rem;
+  &-BUY {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding-top: 4px;
+  }
+  &-icon {
+    display: inline-flex;
+    position: relative;
+  }
+  &-cart {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: auto;
+    margin-left: -2px;
+    width: 20px;
+    height: 24px;
+    border-radius: 0 0 60% 0;
+    background-color: $white;
+    .bi-cart3 {
+      position: absolute;
+      font-size: 16px;
+      bottom: 5px;
+      left: -4px;
+      line-height: 1;
+    }
+  }
+  &-person {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 100% 100% 0 100%;
+    background-color: $white;
+    i {
+      position: absolute;
+      top: 50%;
+      left: 2px;
+      padding-top: 2px;
+      transform: translate(0, -50%);
+      &:nth-child(2) {
+        left: 12px;
+        color: #d43232;
+      }
+    }
+  }
+  &-text {
+    margin-left: 8px;
+    @include media-breakpoint-down(md) {
+      font-size: 16px;
+    }
+  }
+}
