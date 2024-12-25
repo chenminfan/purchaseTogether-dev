@@ -20,7 +20,6 @@ export default function PaginationComponents(props: PaginationComponentsType) {
     getPagination(page)
   }
   const handleClickRight = (page: any) => {
-    console.log(page)
     if (currentPage >= page.total_pages) {
       setCurrentPage(page.total_pages)
     } else {
@@ -36,8 +35,6 @@ export default function PaginationComponents(props: PaginationComponentsType) {
   //   setCurrentPage(value)
   //   getPagination(value)
   // }
-  console.log(currentPage)
-  console.log(page.current_page)
   return (
     <>
       <nav className='Page navigation'>

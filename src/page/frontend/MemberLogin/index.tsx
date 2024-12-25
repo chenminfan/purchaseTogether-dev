@@ -46,7 +46,6 @@ export default function MemberLogin() {
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode)
         if (errorCode === 'auth/invalid-credential') {
           setLoginState({
             isCreate: false,
@@ -100,7 +99,6 @@ export default function MemberLogin() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode)
         if (errorCode === 'auth/invalid-email') {
           setCreateState({
             isCreate: false,
