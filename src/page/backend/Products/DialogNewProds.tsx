@@ -66,7 +66,6 @@ export default function DialogNewProds(props: DialogNewProdsType) {
         imageUrl: res.data.imageUrl,//變數的方式帶入屬性
       })
     } catch (error: any) {
-
     }
   }
   const handleInputChange = (e) => {
@@ -137,7 +136,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
         unit: '',
         description: '',
         is_enabled: 1,
-        imageUrl: '',
+        imageUrl: 'https://storage.googleapis.com/vue-course-api.appspot.com/shopping-minmin/1735582863803.png?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=My75%2FRW6H%2BQubCprr0x66eHjTgDdcBgc0Fk7C5Jj1slACzjLOoZGl6jp3sSV9EWBq%2FCQI3ZbxzwAlmdZYgjvjXF%2BHr9sNhhd2DaBy4%2FZv48BxfPGi5FarVUMKJeRAEAqx7b23C%2BLdxXTVGU5qzfP5JNzS67qdR20wSQdFZmCF3qfj6BCk%2FsmKeJT%2Fz13iQCT8DcCn8no9FQoc3cLW6T2%2FdfI9CBCJSZMB5igZ0MuJeTGkjTalcaDP%2BPKc751FzQEDXzqrhQu5oWp3fJLp21wqKdhI5TvtOfiysdaimVbklo3f6yjuoW0Wl6C0n05ewCIgp9nWGNxay6m47i%2FWK3LdQ%3D%3D', //預設圖
         imagesUrl: ['', '', '', '', ''],
       })
     } else if (prodType === 'edit') {
@@ -205,7 +204,7 @@ export default function DialogNewProds(props: DialogNewProdsType) {
         ]}>
           {formData.imagesUrl && formData.imagesUrl?.map((item, index) => (
             <Box component="div" key={`${item}_imagesUrl${index}`} className='imagesUrl_box' sx={[
-              { '&.MuiBox-root': { padding: '8px', display: 'flex', flexDirection: 'column', height: `${item.length !== 0 ? '220px' : 'auto'}` }, }
+              { '&.MuiBox-root': { padding: '0 8px 0 0', display: 'flex', flexDirection: 'column', height: `${item.length !== 0 ? '220px' : 'auto'}` }, }
             ]}>
               <TextField
                 required
