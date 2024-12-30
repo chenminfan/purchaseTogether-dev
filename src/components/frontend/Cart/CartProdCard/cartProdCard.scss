@@ -62,8 +62,8 @@ $borderRadius: 18px;
             }
           }
           &-image {
-            width: 150px;
-            height: 180px;
+            width: 120px;
+            height: 100%;
             @include media-breakpoint-down(md) {
               width: 120px;
               height: 120px;
@@ -73,6 +73,7 @@ $borderRadius: 18px;
       }
     }
   }
+
   &-tool {
     .card {
       &-inputStepper {
@@ -292,6 +293,50 @@ $borderRadius: 18px;
       &-code {
         text-decoration-line: unset;
         color: $danger;
+      }
+    }
+  }
+
+  &-info-checkList {
+    .card-info {
+      padding: 4px 8px;
+      margin-left: 4px;
+    }
+    .card-price {
+      margin-top: 0;
+    }
+    .card-price-total {
+      display: none;
+    }
+    .card-title {
+      display: block;
+      font-size: 16px;
+      height: 48px;
+      @include text-one-line-truncate(100%, auto, 1.5);
+      @include media-breakpoint-down(md) {
+        text-align: left;
+      }
+    }
+    .card-total {
+      @include media-breakpoint-down(md) {
+      }
+    }
+    .card-content {
+      margin-bottom: 16px;
+    }
+    &.checkout-tool {
+      .card-checkInfo {
+        left: 128px;
+        bottom: 8px;
+        @include media-breakpoint-down(md) {
+          bottom: 4px;
+          margin: 8px;
+          padding: 8px 8px 0;
+        }
+      }
+      .card-image {
+        @include media-breakpoint-down(md) {
+        }
       }
     }
   }

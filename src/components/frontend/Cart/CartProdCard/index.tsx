@@ -12,10 +12,11 @@ type Props = {
   isTool?: boolean,
   handleTrack?: (string) => {},
   trackList?: string[],
+  checkoutStyle?: string
 }
 
 export default function CartProdCard(props: Props) {
-  const { cart, checkout, isTool = true, handleTrack = () => { }, trackList } = props
+  const { cart, checkout, isTool = true, handleTrack = () => { }, trackList, checkoutStyle } = props
   const [inputStepperNum, setInputStepperNum] = useState<number>(cart.qty)
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const inputStepperValue = useRef(0)
@@ -68,7 +69,7 @@ export default function CartProdCard(props: Props) {
   }
   const trackID = trackList?.find((item) => item.match(cart.product.id))
   return (
-    <div className={`checkout checkout-card ${isTool ? '' : 'checkout-tool'}`} >
+    <div className={`checkout checkout-card ${checkoutStyle ? checkoutStyle : ''} ${isTool ? '' : 'checkout-tool'}`} >
       <div className="card-toolBar">
         <div className="card-image">
           <button className={`btn ${trackID === cart.product.id ? 'btn-primary' : 'btn-light'} card-btn btn-sm `} type="button" onClick={() => {

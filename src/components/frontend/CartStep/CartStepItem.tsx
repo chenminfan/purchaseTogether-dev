@@ -16,7 +16,7 @@ export default function CartStepItem(props: Props) {
     <div className={`cartStep-item ${active ? 'is-active' : ''} ${disabled ? 'is-disabled' : ''}`}>
       <div className="cartStep-spot"></div>
       <div className="cartStep-box">
-        <div className="cartStep-title">{title}</div>
+        <div className="cartStep-title">{title}{disabled ? <i className="bi bi-check2-circle"></i> : ''}</div>
         {(USER_TOKEN === '') && title === "購物車結帳" && <div className="cartStep-title text-danger">您尚未登入會員！</div>}
         {info && <div className="cartStep-info">{info}</div>}
       </div>

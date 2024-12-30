@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
 import { User, getAuth } from "firebase/auth";
-import { useRWD } from '@api/utilities/useRWD'
+import { useScreen } from '@api/utilities/useScreen'
 import { useForm } from "react-hook-form"
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import CartStep from '@components/frontend/CartStep';
@@ -31,6 +31,7 @@ type CartCheckoutType = {
 }
 
 export default function CartCheckoutInfo() {
+  const [windowHeight]: number[] = useScreen();
   const { USER_MEMBER, USER_TOKEN } = useContext<any>(LoginContext)
   const navigate = useNavigate()
   const { loggedIn, cartData, checkout, cartStep, setCartStep } = useOutletContext<CartCheckoutType>();
@@ -42,6 +43,7 @@ export default function CartCheckoutInfo() {
   } = useForm()
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
+  const [checkoutList, setCheckoutList] = useState(false);
   const isLoadingRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(false);
 
@@ -83,14 +85,14 @@ export default function CartCheckoutInfo() {
   }, [loggedIn])
 
   return (
-    <div className="cart_page">
+    <div className="cart_page cart_page-checkout">
       <div className='container-xl py-2 px-5'>
         <div className="row">
           <CartStep active={cartStep} />
         </div>
         <div className="row">
           <div className="col-lg-7 col-md-12">
-            <div className="checkout-from p-3">
+            <div className="checkout-from">
               <form action="" onSubmit={handleFormSubmit}>
                 <h4 className="fw-bold mb-4">結帳資訊</h4>
                 <div className="checkout-body">
@@ -156,7 +158,7 @@ export default function CartCheckoutInfo() {
                   </Checkbox>
 
                   <div className="modal fade" id="checkModal" tabIndex={-1} aria-labelledby="checkModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
+                    <div className="modal-dialog modal-dialog-centered">
                       <div className="modal-content">
                         <div className="modal-header">
                           <h1 className="modal-title fs-5" id="checkModalLabel">隱私權政策</h1>
@@ -199,14 +201,21 @@ export default function CartCheckoutInfo() {
               </form>
             </div>
           </div>
-          <div className="col-lg-5 col-md">
-            <div className="checkout-list">
-              <h4 className="fw-bold">結帳明細</h4>
+          <div className="col-lg-5 col-md-12">
+            <div className={`checkout-list ${checkoutList ? 'expand' : 'collapsed'}`}>
+              <div className="checkout-list-head" onClick={() => {
+                setCheckoutList((checkoutList) => !checkoutList)
+              }} >
+                <h4 className="fw-bold">結帳明細</h4>
+                <button type='button' className='btn' >
+                  <i className="bi bi-chevron-down"></i>
+                </button>
+              </div>
               <div className="checkout-body">
-
                 <div className="checkout-info-card">
                   {cardInfo.map((cart) => (
                     <CartProdCard
+                      checkoutStyle="checkout-info-checkList"
                       key={`cart${cart.id}`}
                       cart={cart}
                       checkout={checkout}
@@ -234,6 +243,13 @@ export default function CartCheckoutInfo() {
           </div>
         </div>
       </div >
+      {windowHeight > 200 && <button
+        className='btn btn-primary btn-BUY-top fade'
+        onClick={() => {
+          window.scrollTo(0, 0)
+        }}>
+        <i className="bi bi-arrow-up-circle"></i>
+      </button>}
     </div >
   )
 }
