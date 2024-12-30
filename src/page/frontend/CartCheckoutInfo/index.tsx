@@ -11,7 +11,6 @@ import Input from '@components/frontend/InputFrom/Input';
 import Checkbox from '@components/frontend/InputFrom/Checkbox';
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import { SnackbarContent, handleSnackbarSuccess, handleSnackbarError } from '@provider/SnackbarProvider/SnackbarContent'
-import { ProductsType } from '@typeTS/Products';
 import { postOrdersApi } from '@api/Apis';
 import './checkoutInfo.scss';
 import { CartCheckProdType } from '@typeTS/CartCheck'
@@ -41,7 +40,6 @@ export default function CartCheckoutInfo() {
     handleSubmit,
     formState: { errors },
   } = useForm()
-  const RWD_DEVICE = useRWD();
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const [check, setCheck] = useState('');
   const isLoadingRef = useRef(true)
@@ -230,7 +228,7 @@ export default function CartCheckoutInfo() {
                   <div className="checkout-title">Total</div>
                   <div className="checkout-content">NT ${Math.round(cartData.final_total).toLocaleString('zh-TW')}</div>
                 </div>
-                
+
               </div>
             </div>
           </div>

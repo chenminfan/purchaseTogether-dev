@@ -25,7 +25,9 @@ export default function Products() {
     category: ''
   })
   const isLoadingRef = useRef(true)
+  const isLoadingCardRef = useRef(true)
   const [loadingPage, setLoadingPage] = useState<boolean>(false);
+  const [loadingCard, setLoadingCard] = useState<boolean>(false);
   const [currentCategory, setCurrentCategory] = useState<string>('all')
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const { checkout, handleTrack, trackList } = useOutletContext<contextType>();
@@ -76,12 +78,12 @@ export default function Products() {
       product_id: prod,
       qty: 1,
     }
-    isLoadingRef.current = loadingPage
-    setLoadingPage(true)
+    isLoadingCardRef.current = loadingCard
+    setLoadingCard(true)
     try {
       const res = await postCartApi(type, addCart)
-      isLoadingRef.current = false
-      setLoadingPage(false)
+      isLoadingCardRef.current = false
+      setLoadingCard(false)
       checkout();
       handleSnackbarSuccess(dispatch, res);
 
@@ -121,7 +123,7 @@ export default function Products() {
                 return (
                   <Prods key={item.id} prod={item}
                     isLoadingPage={loadingPage}
-                    isLoading={loadingPage}
+                    isLoading={loadingCard}
                     handleTrack={handleTrack}
                     trackList={trackList}
                     handleClick={() => {

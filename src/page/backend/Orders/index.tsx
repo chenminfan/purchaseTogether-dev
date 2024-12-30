@@ -29,7 +29,6 @@ import { PaginationType } from '@typeTS/PaginationType'
 type CloseReason = 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick';
 export default function BackendOrders() {
   const [ordersData, setOrdersData] = useState<OrdersType[]>([]);
-  const [ordersProdData, setOrdersProdData] = useState([]);
   const [page, setPage] = useState<PaginationType>({
     total_pages: 0,
     current_page: 1,
@@ -51,13 +50,12 @@ export default function BackendOrders() {
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortOrderID, setSortOrderID] = useState('id');
   const [tableType, setTableType] = useState('');
-  const [tamp, setTamp] = useState<OrdersType>(state.dataTamp);
+  const [temp, setTemp] = useState<OrdersType>(state.dataTamp);
   const getOrders = async (getPage = 1) => {
     isLoadingRef.current = true;
     setLoadingPage(true)
     const orderRes = await getBackendOrdersApi(getPage)
     setOrdersData(orderRes.data.orders)
-    setOrdersProdData(orderRes.data.orders.products)
     isLoadingRef.current = false;
     setLoadingPage(false)
     setPage(orderRes.data.pagination)
@@ -82,13 +80,8 @@ export default function BackendOrders() {
     getOrders();
   }, [])
 
-  const handleOrderOpen = (type, order) => {
-    setTamp(order);
-    setOpen(true);
-    setTableType(type);
-  }
   const handleOrderDeleteOpen = (type, order) => {
-    setTamp(order);
+    setTemp(order);
     setOpen(true);
     setTableType(type);
   }
@@ -211,7 +204,7 @@ export default function BackendOrders() {
                     <TableCell>
                       <Button
                         disabled={CHECK_DATA_LENGTH}
-                        onClick={() => handleOrderOpen('edit', row)}
+                        onClick={() => handleOrderDeleteOpen('edit', row)}
                       >
                         編輯
                       </Button>
@@ -241,7 +234,7 @@ export default function BackendOrders() {
           page={page.current_page}
           getOrders={getOrders}
           orderType={tableType}
-          tampData={tamp}
+          tempData={temp}
           handleClose={handleOrderClose}
           theme={theme}
           color="primary"
@@ -253,7 +246,7 @@ export default function BackendOrders() {
           page={page.current_page}
           getOrders={getOrders}
           orderType={tableType}
-          tampDataALL={state.dataTamp}
+          tempDataALL={state.dataTamp}
           handleClose={handleOrderClose}
           theme={theme}
           color="primary"
@@ -264,7 +257,7 @@ export default function BackendOrders() {
           open={open}
           page={page.current_page}
           getOrders={getOrders}
-          tampData={tamp}
+          tempData={temp}
           handleClose={handleOrderClose}
         />)
       )}

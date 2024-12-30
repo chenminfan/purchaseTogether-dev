@@ -62,7 +62,6 @@ export default function Prods(props: ProdsType) {
         {trackID === prod.id ? (<i className="bi bi-bookmark-heart-fill"></i>) : (<i className="bi bi-bookmark-heart"></i>)}
       </button>
       <a className="card-link" href={`#/main/prods/detail/${prod.id}`} role="link" aria-label="img-link">
-
         <div className="card-body">
           <div className="card-prodImage">
             <div className="img_box">

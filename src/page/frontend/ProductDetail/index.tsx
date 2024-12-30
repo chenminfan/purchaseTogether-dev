@@ -104,21 +104,6 @@ export default function ProductDetail() {
   const AVERAGE_PAGE = Math.ceil(moreProds.length / SHOW_ITEM) - 1;
   const [currentItem, setCurrentItem] = useState<number>(0);
   const [indexPage, setIndexPage] = useState<number>(0);
-  // const range = useMemo(() => {
-  //   // const rangeNumber: any[] = []
-  //   // const int = Math.ceil(1 + showItem / moreProds.length + 1)
-  //   // if (moreProds.length) {
-  //   //   for (let index = 1; index <= int; index += 1) {
-  //   //     rangeNumber.push(index);
-  //   //   }
-  //   // }
-
-  //   // return rangeNumber
-  // }, [])
-  // console.log(moreProds)
-  // console.log('TOTAL_ITEM' + TOTAL_ITEM)
-  // console.log('AVERAGE_PAGE' + AVERAGE_PAGE)
-  // console.log('currentItem' + currentItem)
   const handleClickPrev = (value) => {
     setIndexPage(Math.ceil(value / SHOW_ITEM) === 1 ? 0 : Math.ceil(value / SHOW_ITEM))
     if (indexPage <= AVERAGE_PAGE) {

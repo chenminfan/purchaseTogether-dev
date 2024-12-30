@@ -20,12 +20,12 @@ type DialogDeleteCouponType = {
   handleClose;
   orderType: string,
   color: string,
-  tampData?: OrdersType,
-  tampDataALL?: OrdersType[],
+  tempData?: OrdersType,
+  tempDataALL?: OrdersType[],
   theme: object,
 }
 export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
-  const { open, page, tampData = {
+  const { open, page, tempData = {
     create_at: 0,
     id: '',
     is_paid: false,
@@ -45,20 +45,20 @@ export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
       tel: '',
     },
     num: 0
-  }, tampDataALL = [], handleClose, getOrders, theme, color, orderType } = props;
+  }, tempDataALL = [], handleClose, getOrders, theme, color, orderType } = props;
   const [_, dispatch] = useContext<any>(SnackbarContent);
 
   const handleOrdersDelete = async () => {
     try {
       if (orderType === 'delete') {
-        const res = await postBackendOrdersApi(orderType, tampData)
+        const res = await postBackendOrdersApi(orderType, tempData)
         handleSnackbarSuccess(dispatch, res);
       } else if (orderType === 'allDelete') {
         await Promise.all(
-          tampDataALL.map((item) => postBackendOrdersApi(orderType, item))
+          tempDataALL.map((item) => postBackendOrdersApi(orderType, item))
         )
-        const tampDataALL_LENGTH = tampDataALL.length
-        handleSnackbarSuccessAll(dispatch, tampDataALL_LENGTH);
+        const tempDataALL_LENGTH = tempDataALL.length
+        handleSnackbarSuccessAll(dispatch, tempDataALL_LENGTH);
       }
     } catch (error: any) {
       handleClose();
@@ -66,14 +66,14 @@ export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
     handleClose();
     getOrders(page, '');
   }
-  const Prods = Object.values(tampData.products)
+  const Prods = Object.values(tempData.products)
   return (
     <Dialog
       open={open}
       handleClose={handleClose}
       maxWidth="sm"
       fullWidth
-      dialogTitle={orderType === 'delete' ? `${tampData?.id} - 確認刪除` : '刪除多筆訂單'}
+      dialogTitle={orderType === 'delete' ? `${tempData?.id} - 確認刪除` : '刪除多筆訂單'}
       handleSubmit={handleOrdersDelete}
       dialogSubmitBtnText={"確認刪除"}
       dialogSubmitColor="error"
@@ -87,8 +87,8 @@ export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
             { '& .img_box': { width: '100%', maxWidth: '150px', paddingBottom: '150px', m: 1, } }
           ]}
         >
-          <h5>No.：{tampData.id}</h5>
-          <Box component="div" sx={{ color: '#64b5f6', fontWeight: '500', }}>訂購人：{tampData.user.name}</Box>
+          <h5>No.：{tempData.id}</h5>
+          <Box component="div" sx={{ color: '#64b5f6', fontWeight: '500', }}>訂購人：{tempData.user.name}</Box>
           <Table sx={{ padding: '8px 16px' }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -110,7 +110,7 @@ export default function DialogDeleteOrders(props: DialogDeleteCouponType) {
       ) : (
         <div>
           <Box component="div">
-            {tampDataALL.map((item, index) => (
+            {tempDataALL.map((item, index) => (
               <Box key={item.id} component="div" sx={{ padding: '8px 0', borderBottom: 1, borderColor: 'divider' }}>
                 <h5>No.：{item.id}</h5>
                 <Box component="div" sx={{ color: '#64b5f6', fontWeight: '500', }}>訂購人：{item.user.name}</Box>

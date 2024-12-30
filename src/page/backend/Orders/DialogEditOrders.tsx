@@ -20,10 +20,10 @@ type DialogNewOrderType = {
   page: number,
   getOrders;
   handleClose;
-  tampData: OrdersType,
+  tempData: OrdersType,
 }
 export default function DialogNewOrder(props: DialogNewOrderType) {
-  const { open, page, getOrders, handleClose, tampData } = props;
+  const { open, page, getOrders, handleClose, tempData } = props;
   const [_, dispatch] = useContext<any>(SnackbarContent);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -71,7 +71,7 @@ export default function DialogNewOrder(props: DialogNewOrderType) {
     }
   }
   const Prod_Id = Object.keys(ordersProdData)
-  const Prods = Object.values(tampData.products)
+  const Prods = Object.values(tempData.products)
   return (
     <Dialog
       open={open}

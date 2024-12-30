@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { dataValue } from '@api/utilities/dataValue';
-import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
+import { EmailAuthProvider, reauthenticateWithCredential, updateProfile, deleteUser, sendEmailVerification, updatePassword } from "firebase/auth";
 import LazyLoadImg from "@components/common/LazyLoadImage";
 import { LoginContext } from '@provider/LoginProvider/LoginContext'
 import Input from '@components/frontend/InputFrom/Input';
@@ -14,7 +14,6 @@ export default function Member() {
   const [userImgData, setUserImgData] = useState('');
   const [isUserDelete, setIsUserDelete] = useState(false);
   const [isUserConfirmDelete, setIsConfirmUserDelete] = useState(false);
-  const [isUserLogOut, setIsUserLogOut] = useState(false);
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [isVerifyCheck, setIsVerifyCheck] = useState(false);
   const [isNewPassword, setIsNewPassword] = useState(false);
@@ -187,18 +186,16 @@ export default function Member() {
                             }}>註銷帳號
                           </button>
                         }
-                        {!isUserLogOut &&
-                          <button className="btn btn-primary" type='button'
-                            onClick={() => {
-                              getLoginOut()
-                              setIsNewPassword(false)
-                              setIsUserOpen(false)
-                              setIsUserDelete(false)
-                              setNewPassword('')
-                              setReNewPassword('')
-                            }}>登出
-                          </button>
-                        }
+                        <button className="btn btn-primary" type='button'
+                          onClick={() => {
+                            getLoginOut()
+                            setIsNewPassword(false)
+                            setIsUserOpen(false)
+                            setIsUserDelete(false)
+                            setNewPassword('')
+                            setReNewPassword('')
+                          }}>登出
+                        </button>
                       </div>
                     </li>
                   </ul>

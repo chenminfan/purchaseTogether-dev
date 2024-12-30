@@ -24,13 +24,7 @@ const Home = () => {
   const [isShowSubscription, setIsShowSubscription] = useState(false);
   const [valueSubscription, setValueSubscription] = useState('');
 
-  const getData = async () => {
-    try {
-      const prodRes = await getProductsAllApi();
-      setProd(prodRes.data.products)
-    } catch (error) {
-    }
-  }
+
   const {
     register,
     handleSubmit,
@@ -55,7 +49,6 @@ const Home = () => {
       })
       .slice(0, 6);
   }, [prod])
-  const [sortOrder, setSortOrder] = useState<boolean>(true);
   const detail = Array.from(prod.map((item) => item.category))
   const PROD_SORT = [...prod].filter((item) => item.title)
     .sort((a, b) => {
@@ -65,7 +58,13 @@ const Home = () => {
     })
 
   useEffect(() => {
-    getData()
+    (async () => {
+      try {
+        const prodRes = await getProductsAllApi();
+        setProd(prodRes.data.products)
+      } catch (error) {
+      }
+    })()
     setTimeout(() => {
       if (isShowSubscription) {
         setIsShowSubscription((isShowSubscription) => !isShowSubscription)

@@ -122,6 +122,15 @@ $font-size-base: 16px;
         }
         .prods-btn-add {
           background-color: $primary;
+          &:disabled {
+            background-color: $gray-400;
+          }
+        }
+        &:disabled {
+          .prods-cart-icon {
+            border: 3px solid $gray-400;
+            background-color: $gray-400;
+          }
         }
       }
     }
@@ -145,9 +154,16 @@ $font-size-base: 16px;
       height: 30px;
       color: $primary;
       border-radius: 0;
+      border-width: 0;
       background-color: rgba($gray-300, $alpha: 0.8);
       cursor: pointer;
       transition: all 0.45s linear;
+      &:disabled {
+        .prods-cart-icon {
+          border: 3px solid $gray-400;
+          background-color: $gray-400;
+        }
+      }
     }
   }
   &.prods & {
