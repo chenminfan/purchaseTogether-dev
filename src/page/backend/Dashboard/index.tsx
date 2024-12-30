@@ -53,9 +53,9 @@ export default function Dashboard(props) {
   const CONTAINER =
     window !== undefined ? () => window().document.body : undefined;
   const navItems = [
-    { nameId: 1, name: '回前台', icon: 'bi-shop', link: '/' },
+    { nameId: 1, name: '回前台', icon: 'bi-shop', link: '#/' },
     { nameId: 1, name: '公告資訊', icon: 'bi-newspaper', link: '#/backend' },
-    { nameId: 2, name: '登出', icon: '', link: '/', handleClick: logout }];
+    { nameId: 2, name: '登出', icon: '', link: '#/', handleClick: logout }];
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
