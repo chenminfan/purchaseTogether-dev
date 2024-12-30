@@ -50,12 +50,16 @@ const Home = () => {
       .slice(0, 6);
   }, [prod])
   const detail = Array.from(prod.map((item) => item.category))
-  const PROD_SORT = [...prod].filter((item) => item.title)
-    .sort((a, b) => {
-      if (!detail.includes(a.title)) return 1
-      if (!detail.includes(b.title)) return -1
-      return detail.indexOf(a.title) - detail.indexOf(b.title)
+  const PROD_SORT = useMemo(() => {
+    return [...prod].filter((item) => item.title).sort(() => {
+      return 0.5 - Math.random();
     })
+      .sort((a, b) => {
+        if (!detail.includes(a.title)) return 1
+        if (!detail.includes(b.title)) return -1
+        return detail.indexOf(a.title) - detail.indexOf(b.title)
+      })
+  }, [prod])
 
   useEffect(() => {
     (async () => {

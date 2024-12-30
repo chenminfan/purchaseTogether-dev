@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState, useContext } from 'react'
+import React, { useRef, useEffect, useState, useContext } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import LazyLoadImg from "@components/common/LazyLoadImage";
 import { useParams } from 'react-router-dom'
